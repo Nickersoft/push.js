@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Push.js Example</title>
+    </head>
+    <body>
+        <button id="test_button">Test Me</button>
+
+        <script type="text/javascript" src="src/push.js"></script>
+        <script>
+            document.getElementById('test_button').onclick = function () {
+                Push.create('Hello world!', {
+                    body: 'This is an example string'
+                });
+            };
+        </script>
+    </body>
+</html>
