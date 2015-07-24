@@ -45,12 +45,12 @@ var root = (window !== 'undefined' ? window : self);
     /* Use AMD */
     if (typeof define === 'function' && define.amd) {
         define(function () {
-            return factory(global, global.document);
+            return new (factory(global, global.document))();
         });
     }
     /* Use CommonJS */
     else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(global, global.document);
+        module.exports = (factory(global, global.document))();
     }
     /* Use Browser */
     else {
