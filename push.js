@@ -1,7 +1,15 @@
 /**
  * push.js
- * --------
+ * =======
  * A compact, cross-browser solution for Javascript desktop notifications
+ *
+ * Credits
+ * -------
+ * Tsvetan Tsvetkov (ttsvetko)
+ * Alex Gibson (alexgibson)
+ *
+ * License
+ * -------
  *
  * The MIT License (MIT)
  *
@@ -25,8 +33,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Inspired by the work of
- * Tsvetan Tsvetkov (ttsvetko) and Alex Gibson (alexgibson)
  */
 
 // Window root
@@ -61,11 +67,17 @@ var root = (window !== 'undefined' ? window : self);
         isString   = function (obj) { return obj && obj.constructor === String; },
         isFunction = function (obj) { return obj && obj.constructor === Function; },
 
+        /* Whether Push has permission to notify */
+        hasPermission = false,
+
         /**
          * Callback function for the 'create' method
          * @return {void}
          */
         create_callback = function (title, options) {
+
+            /* Set empty settings if none are specified */
+            options = options || {};
 
             /* Safari 6+, Chrome 23+ */
             if (w.Notification) {
@@ -135,18 +147,10 @@ var root = (window !== 'undefined' ? window : self);
             };
 
             /* Autoclose timeout */
-            if (notification &&
-                notification.addEventListener &&
-                options.timeout) {
-
-                notification.addEventListener('show', function () {
-
-                    setTimeout(function () {
-                        wrapper.close();
-                    }, options.timeout);
-
-                });
-
+            if (options.timeout) {
+                setTimeout(function () {
+                    wrapper.close();
+                }, options.timeout);
             }
 
             /* Notification callbacks */
@@ -189,13 +193,29 @@ var root = (window !== 'undefined' ? window : self);
          * @param {Function} callback - Function to execute once permission is granted
          * @return {void}
          */
-        self.Permission.request = function (callback) {
+        self.Permission.request = function (onGranted, onDenied) {
 
             /* Return if Push not supported */
             if (!self.isSupported) { return; }
 
-            /* Set an empty callback if an invalid one is specified */
-            callback = isFunction(callback) ? callback : function () {};
+            /* Default callback */
+            callback = function (result) {
+
+                switch (result) {
+
+                    case self.Permission.GRANTED:
+                        hasPermission = true;
+                        if (onGranted) onGranted();
+                        break;
+
+                    case self.Permission.DENIED:
+                        hasPermission = false;
+                        if (onDenied) onDenied();
+                        break;
+
+                }
+
+            };
 
             /* Legacy webkit browsers */
             if (w.webkitNotifications && w.webkitNotifications.checkPermission) {
@@ -206,6 +226,14 @@ var root = (window !== 'undefined' ? window : self);
                 w.Notification.requestPermission(callback);
             }
 
+        };
+
+        /**
+         * Returns whether Push has been granted permission to run
+         * @return {Boolean}
+         */
+        self.Permission.has = function () {
+            return hasPermission;
         };
 
         /**
@@ -290,15 +318,24 @@ var root = (window !== 'undefined' ? window : self);
 
             /* Fail if the browser is not supported */
             if (!self.isSupported) {
-                console.error('push.js is incompatible with self browser.');
+                console.error('PushError: push.js is incompatible with self browser.');
                 return;
             }
 
+            /* Fail if no or an invalid title is provided */
+            if (typeof title !== 'string') {
+                throw 'PushError: Title of notification must be a string';
+            }
+
+            console.log(self.Permission.has());
+
             /* Request permission if it isn't granted */
-            if (self.Permission.get() !== self.Permission.GRANTED) {
+            if (!self.Permission.has()) {
                 self.Permission.request(function () {
                     create_callback(title, options);
                 });
+            } else {
+                create_callback(title, options);
             }
 
         };
