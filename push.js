@@ -70,6 +70,43 @@ var root = (window !== 'undefined' ? window : self);
         /* Whether Push has permission to notify */
         hasPermission = false,
 
+        /* List of active notifications */
+        notifications = [],
+
+        /**
+         * Closes a notification
+         * @param {Notification} notification
+         * @return {void}
+         */
+        close_notification = function (notification) {
+
+            /* Safari 6+, Chrome 23+ */
+            if (notification.close) {
+
+                notification.close();
+
+            /* Legacy webkit browsers */
+            } else if (notification.cancel) {
+
+                notification.cancel();
+
+            /* IE9+ */
+            } else if (w.external && w.external.msIsSiteMode) {
+
+                w.external.msSiteModeClearIconOverlay();
+
+            }
+
+        },
+
+        /**
+         * Updates the notification count
+         * @return {void}
+         */
+        updateCount = function () {
+            self.count = notifications.length;
+        },
+
         /**
          * Callback function for the 'create' method
          * @return {void}
@@ -128,20 +165,7 @@ var root = (window !== 'undefined' ? window : self);
             wrapper = {
 
                 close: function () {
-
-                    /* Safari 6+, Chrome 23+ */
-                    if (notification.close) {
-                        notification.close();
-
-                    /* Legacy webkit browsers */
-                    } else if (notification.cancel) {
-                        notification.cancel();
-
-                    /* IE9+ */
-                    } else if (w.external && win.external.msIsSiteMode) {
-                        w.external.msSiteModeClearIconOverlay();
-                    }
-
+                    close_notification(notification);
                 }
 
             };
@@ -167,6 +191,15 @@ var root = (window !== 'undefined' ? window : self);
                 notification.addEventListener('close', options.onClose);
                 notification.addEventListener('cancel', options.onClose);
             }
+
+            /* Add it to the global array */
+            notifications.push(notification);
+
+            /* Update the notification count */
+            updateCount();
+
+            /* Return the wrapper so the user can call close() */
+            return wrapper;
         },
 
         /**
@@ -183,6 +216,9 @@ var root = (window !== 'undefined' ? window : self);
 
         /* Allow enums to be accessible from Push object */
         self.Permission = Permission;
+
+        /* Number of open notifications */
+        self.count = 0;
 
         /*****************
             Permissions
@@ -327,17 +363,67 @@ var root = (window !== 'undefined' ? window : self);
                 throw 'PushError: Title of notification must be a string';
             }
 
-            console.log(self.Permission.has());
-
             /* Request permission if it isn't granted */
             if (!self.Permission.has()) {
                 self.Permission.request(function () {
-                    create_callback(title, options);
+                    return create_callback(title, options);
                 });
             } else {
-                create_callback(title, options);
+                return create_callback(title, options);
             }
 
+        };
+
+        /**
+         * Closes a notification with the given tag
+         * @param {String} tag - Tag of the notification to close
+         * @return {void}
+         */
+        self.close = function (tag) {
+
+            var i, notification;
+
+            for (i = 0; i < notifications.length; i++) {
+
+                notification = notifications[i];
+
+                /* Run only if the tags match */
+                if (notification.tag === tag) {
+
+                    /* Call the notification's close() method */
+                    close_notification(notification);
+
+                    /* Remove the notification from the global array */
+                    notifications.splice(i, 1);
+
+                    /* Update the notification count */
+                    updateCount();
+
+                    /* Return after the first notification is closed */
+                    return;
+
+                }
+            }
+
+        };
+
+        /**
+         * Clears all notifications
+         * @return {void}
+         */
+        self.clear = function () {
+
+            var i;
+
+            for (i = 0; i < notifications.length; i++) {
+                close_notification(notifications[i]);
+            }
+
+            /* Reset the global array */
+            notifications = [];
+
+            /* Update the notification count */
+            updateCount();
         };
     };
 

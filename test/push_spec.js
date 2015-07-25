@@ -39,6 +39,20 @@ describe('permission', function () {
         }, 500);
     });
 
+    it('should request permission if permission is not granted', function () {
+
+        spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
+            cb(Push.Permission.DENIED);
+        });
+
+        Push.Permission.request();
+
+        Push.create('hello world!');
+
+        expect(window.Notification.requestPermission).toHaveBeenCalled();
+    });
+
+
     it('should update permission value if permission is granted and execute callback', function (done) {
 
         spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
@@ -61,12 +75,18 @@ describe('creating notifications', function () {
     var callback;
 
     beforeAll(function () {
+
         jasmine.clock().install();
+
+        spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
+            cb(Push.Permission.GRANTED);
+        });
     });
 
     beforeEach(function () {
         callback = jasmine.createSpy('callback');
     });
+
 
     it('should throw exception if no title is provided', function () {
         expect(function() {
@@ -74,18 +94,30 @@ describe('creating notifications', function () {
         }).toThrow();
     });
 
-    it('should request permission if permission is not granted', function () {
+    it('should return wrapper successfully', function () {
 
-        spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
-            cb(Push.Permission.DENIED);
-        });
+        var wrapper = Push.create('hello world');
 
-        Push.Permission.request();
+        expect(wrapper.close).not.toBe(undefined);
+        expect(wrapper.close.constructor).toBe(Function);
+
+    });
+
+    it('should return the correct notification count', function () {
+
+        var count;
+
+        count = Push.count;
 
         Push.create('hello world!');
 
-        expect(window.Notification.requestPermission).toHaveBeenCalled();
+        expect(Push.count).toBe(count + 1);
+
     });
+
+});
+
+describe('closing notifications', function () {
 
     it('should close notifications if a timeout is specified', function () {
 
@@ -104,6 +136,42 @@ describe('creating notifications', function () {
         jasmine.clock().tick(1000);
 
         expect(window.Notification.prototype.close).toHaveBeenCalled();
+
+    });
+
+    it('should close a notification given a tag', function () {
+
+        var count;
+
+        spyOn(window.Notification.prototype, 'close');
+
+        Push.create('hello world!', {
+            tag: 'foo'
+        });
+
+        count = Push.count;
+
+        Push.close('foo');
+
+        expect(window.Notification.prototype.close).toHaveBeenCalled();
+        expect(Push.count).toBe(count - 1);
+
+    });
+
+    it('should close all notifications when cleared', function () {
+
+        spyOn(window.Notification.prototype, 'close');
+
+        Push.create('hello world!', {
+            tag: 'foo'
+        });
+
+        expect(Push.count).toBeGreaterThan(0);
+
+        Push.clear();
+
+        expect(window.Notification.prototype.close).toHaveBeenCalled();
+        expect(Push.count).toBe(0);
 
     });
 });
