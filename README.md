@@ -4,6 +4,7 @@
 
 Push is the fastest way to get up and running with Javascript desktop notifications. A fairly new addition to the official specification, the Notification API allows modern browsers such as Chrome, Safari, and IE 9+ to push notifications to a user's desktop. Push acts as a cross-browser solution to this API, falling back to use  older implementations if the user's browser does not support the new API.
 
+#### Creating Notifications ####
 So just how easy is it to create a notification using Push? We can do it in just one line, actually:
 
 ```javascript
@@ -16,6 +17,35 @@ No constructors, just a universal API you can access from anywhere. Push is even
 define(['pushjs'], function (Push) {
    Push.create('Hello World!');
 });
+```
+
+#### Closing Notifications ####
+When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification object and call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:
+
+```javascript
+Push.create('Hello World!', {
+    tag: 'foo'
+});
+
+// Somewhere later in your code...
+
+Push.close('foo');
+```
+
+Alternatively, you can assign the Notification wrapper returned by Push to a variable and close it directly:
+
+```javascript
+var notification = Push.create('Hello World!');
+
+// Somewhere later in your code...
+
+notification.close();
+```
+
+When it comes to clearing all open notifications, that's just as easy as well:
+
+```javascript
+Push.clear();
 ```
 
 ### Options ###
