@@ -24,6 +24,9 @@
 
 <p>Push is the fastest way to get up and running with Javascript desktop notifications. A fairly new addition to the official specification, the Notification API allows modern browsers such as Chrome, Safari, and IE 9+ to push notifications to a user's desktop. Push acts as a cross-browser solution to this API, falling back to use  older implementations if the user's browser does not support the new API.</p>
 
+<h4>
+<a id="creating-notifications" class="anchor" href="#creating-notifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating Notifications</h4>
+
 <p>So just how easy is it to create a notification using Push? We can do it in just one line, actually:</p>
 
 <div class="highlight highlight-javascript"><pre>Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>)</pre></div>
@@ -33,6 +36,31 @@
 <div class="highlight highlight-javascript"><pre>define([<span class="pl-s"><span class="pl-pds">'</span>pushjs<span class="pl-pds">'</span></span>], <span class="pl-k">function</span> (<span class="pl-smi">Push</span>) {
    Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
 });</pre></div>
+
+<h4>
+<a id="closing-notifications" class="anchor" href="#closing-notifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Closing Notifications</h4>
+
+<p>When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification object and call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:</p>
+
+<div class="highlight highlight-javascript"><pre>Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
+    tag<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>
+});
+
+<span class="pl-c">// Somewhere later in your code...</span>
+
+Push.<span class="pl-c1">close</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>Alternatively, you can assign the Notification wrapper returned by Push to a variable and close it directly:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> notification <span class="pl-k">=</span> Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
+
+<span class="pl-c">// Somewhere later in your code...</span>
+
+notification.<span class="pl-c1">close</span>();</pre></div>
+
+<p>When it comes to clearing all open notifications, that's just as easy as well:</p>
+
+<div class="highlight highlight-javascript"><pre>Push.<span class="pl-c1">clear</span>();</pre></div>
 
 <h3>
 <a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
