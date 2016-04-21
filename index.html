@@ -1,73 +1,85 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <title>Push.js by Nickersoft</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Push.js by Nickersoft</title>
   </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Push.js</h1>
-      <h2 class="project-tagline">A compact, cross-browser solution for Javascript desktop notifications</h2>
-      <a href="https://github.com/Nickersoft/push.js" class="btn">View on GitHub</a>
-      <a href="https://github.com/Nickersoft/push.js/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/Nickersoft/push.js/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
 
-    <section class="main-content">
-      <h3>
-<a id="what-is-push" class="anchor" href="#what-is-push" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Push?</h3>
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Push.js</h1>
+          <h2>A compact, cross-browser solution for Javascript desktop notifications</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Nickersoft/push.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Nickersoft/push.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Nickersoft/push.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h3>
+<a id="what-is-push" class="anchor" href="#what-is-push" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is Push?</h3>
 
 <p>Push is the fastest way to get up and running with Javascript desktop notifications. A fairly new addition to the official specification, the Notification API allows modern browsers such as Chrome, Safari, and IE 9+ to push notifications to a user's desktop. Push acts as a cross-browser solution to this API, falling back to use  older implementations if the user's browser does not support the new API.</p>
 
 <h4>
-<a id="creating-notifications" class="anchor" href="#creating-notifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating Notifications</h4>
+<a id="creating-notifications" class="anchor" href="#creating-notifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating Notifications</h4>
 
 <p>So just how easy is it to create a notification using Push? We can do it in just one line, actually:</p>
 
-<div class="highlight highlight-javascript"><pre>Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>)</pre></div>
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>)</pre></div>
 
 <p>No constructors, just a universal API you can access from anywhere. Push is even compatible with AMD as well:</p>
 
-<div class="highlight highlight-javascript"><pre>define([<span class="pl-s"><span class="pl-pds">'</span>pushjs<span class="pl-pds">'</span></span>], <span class="pl-k">function</span> (<span class="pl-smi">Push</span>) {
-   Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-en">define</span>([<span class="pl-s"><span class="pl-pds">'</span>pushjs<span class="pl-pds">'</span></span>], <span class="pl-k">function</span> (<span class="pl-smi">Push</span>) {
+   <span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
 });</pre></div>
 
 <h4>
-<a id="closing-notifications" class="anchor" href="#closing-notifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Closing Notifications</h4>
+<a id="closing-notifications" class="anchor" href="#closing-notifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Closing Notifications</h4>
 
 <p>When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification object and call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:</p>
 
-<div class="highlight highlight-javascript"><pre>Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
     tag<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>
 });
 
 <span class="pl-c">// Somewhere later in your code...</span>
 
-Push.<span class="pl-c1">close</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>);</pre></div>
+<span class="pl-smi">Push</span>.<span class="pl-c1">close</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>);</pre></div>
 
 <p>Alternatively, you can assign the Notification wrapper returned by Push to a variable and close it directly:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> notification <span class="pl-k">=</span> Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> notification <span class="pl-k">=</span> <span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
 
 <span class="pl-c">// Somewhere later in your code...</span>
 
-notification.<span class="pl-c1">close</span>();</pre></div>
+<span class="pl-smi">notification</span>.<span class="pl-c1">close</span>();</pre></div>
 
 <p>When it comes to clearing all open notifications, that's just as easy as well:</p>
 
-<div class="highlight highlight-javascript"><pre>Push.<span class="pl-c1">clear</span>();</pre></div>
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-c1">clear</span>();</pre></div>
 
 <h3>
-<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Options</h3>
 
 <p>The only required argument in a Push call is a title. However, that doesn't mean you can't add a little something extra. You can pass in options to Push as well, like so:</p>
 
-<div class="highlight highlight-javascript"><pre>Push.create(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
     body<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>This is some body content!<span class="pl-pds">'</span></span>,
     icon<span class="pl-k">:</span> {
         x16<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>images/icon-x16.png<span class="pl-pds">'</span></span>,
@@ -77,7 +89,7 @@ notification.<span class="pl-c1">close</span>();</pre></div>
 });</pre></div>
 
 <h4>
-<a id="available-options" class="anchor" href="#available-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Available Options</h4>
+<a id="available-options" class="anchor" href="#available-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Available Options</h4>
 
 <ul>
 <li>
@@ -97,16 +109,15 @@ notification.<span class="pl-c1">close</span>();</pre></div>
 <li>
 <strong>timeout</strong>: Time in milliseconds until notification closes automatically.</li>
 </ul>
+        </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/Nickersoft/push.js">Push.js</a> is maintained by <a href="https://github.com/Nickersoft">Nickersoft</a>.</span>
+        <footer>
+          Push.js is maintained by <a href="https://github.com/Nickersoft">Nickersoft</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
+        
+      </div>
+    </div>
   </body>
 </html>
-
