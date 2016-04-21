@@ -23,6 +23,8 @@ define(['pushjs'], function (Push) {
 });
 ```
 
+If the browser does not have permission to send push notifications, Push will automatically request permission as soon as create() is called. Simple as that.
+
 #### Closing Notifications ####
 When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification object and call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:
 
