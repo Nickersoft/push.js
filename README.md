@@ -77,3 +77,9 @@ Push.create('Hello World!', {
 * __onShow__: Callback to execute when the notification is shown (obsolete).
 * __tag__: Unique tag used to identify the notification. Can be used to later close the notification manually.
 * __timeout__: Time in milliseconds until notification closes automatically.
+
+### Credits ###
+Push is based off work the following work:
+
+1. [HTML5-Desktop-Notifications](https://github.com/ttsvetko/HTML5-Desktop-Notifications) by [Tsvetan Tsvetkov](https://github.com/ttsvetko)
+2. [notify.js](https://github.com/alexgibson/notify.js) by [Alex Gibson](alexgibson)
