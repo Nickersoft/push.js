@@ -84,4 +84,4 @@ Push.create('Hello World!', {
 Push is based off work the following work:
 
 1. [HTML5-Desktop-Notifications](https://github.com/ttsvetko/HTML5-Desktop-Notifications) by [Tsvetan Tsvetkov](https://github.com/ttsvetko)
-2. [notify.js](https://github.com/alexgibson/notify.js) by [Alex Gibson](alexgibson)
+2. [notify.js](https://github.com/alexgibson/notify.js) by [Alex Gibson](https://github.com/alexgibson)
