@@ -1,6 +1,6 @@
 {
   "name": "push.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A compact, cross-browser solution for Javascript desktop notifications",
   "main": "bin/push.js",
   "scripts": {
