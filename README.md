@@ -8,6 +8,8 @@ Push is the fastest way to get up and running with Javascript desktop notificati
 npm install push.js --save
 ```
 
+For more information regarding the Push.js NPM package, [see here](https://www.npmjs.com/package/push.js).
+
 #### Creating Notifications ####
 So just how easy is it to create a notification using Push? We can do it in just one line, actually:
 
