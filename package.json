@@ -4,8 +4,11 @@
   "description": "A compact, cross-browser solution for Javascript desktop notifications",
   "main": "dist/push.js",
   "scripts": {
-    "clean": "shx rm -rf dist",
-    "build": "shx rm -rf dist && shx mkdir -p dist && shx cp push.js dist/. && uglifyjs push.js -o dist/push.min.js",
+    "clean": "shx rm -rf dist && shx mkdir -p dist",
+    "uglify": "uglifyjs push.js -o dist/push.min.js",
+    "copy": "shx cp push.js dist/.",
+    "bannerize": "bannerize dist/*.js --banner=banner.ejs",
+    "build": "npm-run-all -s clean uglify copy bannerize",
     "test": "karma start",
     "prepublish": "npm run build"
   },
@@ -23,12 +26,14 @@
   },
   "homepage": "https://github.com/Nickersoft/push.js",
   "devDependencies": {
+    "bannerize": "^1.0.2",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.2",
     "karma-coverage": "^0.4.2",
     "karma-firefox-launcher": "^0.1.6",
     "karma-jasmine": "^0.3.6",
     "karma-mocha-reporter": "^1.0.2",
+    "npm-run-all": "^2.1.0",
     "shx": "^0.1.2",
     "uglify-js": "^2.6.2"
   }
