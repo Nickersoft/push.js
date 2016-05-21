@@ -35,9 +35,6 @@
  *
  */
 
-// Window root
-var root = (window !== 'undefined' ? window : self);
-
 (function (global, factory) {
 
     'use strict';
@@ -57,7 +54,7 @@ var root = (window !== 'undefined' ? window : self);
         global.Push = new (factory(global, global.document))();
     }
 
-})(root, function (w, d) {
+})(window !== 'undefined' ? window : self, function (w, d) {
 
     var Push = function () {
 
