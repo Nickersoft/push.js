@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node_modules/.bin/yuicompressor push.js -o push.min.js",
     "test": "node_modules/.bin/karma start",
-    "prepublish": "npm build"
+    "prepublish": "npm run build"
   },
   "files": [
     "test",
