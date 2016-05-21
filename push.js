@@ -229,7 +229,10 @@
         self.Permission.request = function (onGranted, onDenied) {
 
             /* Return if Push not supported */
-            if (!self.isSupported) { return; }
+            if (!self.isSupported) {
+                console.error("This browser is not supported");
+                return;
+            }
 
             /* Default callback */
             callback = function (result) {
@@ -250,13 +253,13 @@
 
             };
 
-            /* Legacy webkit browsers */
-            if (w.webkitNotifications && w.webkitNotifications.checkPermission) {
-                w.webkitNotifications.requestPermission(callback);
-
             /* Safari 6+, Chrome 23+ */
-            } else if (w.Notification && w.Notification.requestPermission) {
-                w.Notification.requestPermission(callback);
+            if (w.Notification && w.Notification.requestPermission) {
+                Notification.requestPermission(callback);
+            }
+            /* Legacy webkit browsers */
+            else if (w.webkitNotifications && w.webkitNotifications.checkPermission) {
+                w.webkitNotifications.requestPermission(callback);
             }
 
         };
@@ -345,7 +348,6 @@
           * @return {void}
           */
         self.create = function (title, options) {
-
             var notification,
                 wrapper;
 
