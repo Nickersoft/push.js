@@ -18,6 +18,12 @@ bower install push.js --save
 
 For more information regarding the Push NPM package, [see here](https://www.npmjs.com/package/push.js).
 
+#### See It In Action ####
+
+Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?
+
+Lucky for you a demo is available [here](http://nickersoft.github.io/push.js/demo.html).
+
 #### Creating Notifications ####
 So just how easy is it to create a notification using Push? We can do it in just one line, actually:
 
