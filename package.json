@@ -1,7 +1,7 @@
 {
   "name": "push.js",
   "version": "0.0.3",
-  "description": "A compact, cross-browser solution for Javascript desktop notifications",
+  "description": "A compact, cross-browser solution for the Javascript Notifications API",
   "main": "dist/push.js",
   "scripts": {
     "prepublish": "gulp build"
