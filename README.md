@@ -42,7 +42,7 @@ define(['pushjs'], function (Push) {
 If the browser does not have permission to send push notifications, Push will automatically request permission as soon as create() is called. Simple as that.
 
 #### Closing Notifications ####
-When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification object and call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:
+When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification's promise object and then call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:
 
 ```javascript
 Push.create('Hello World!', {
@@ -54,14 +54,16 @@ Push.create('Hello World!', {
 Push.close('foo');
 ```
 
-Alternatively, you can assign the Notification wrapper returned by Push to a variable and close it directly:
+Alternatively, you can assign the notification promise returned by Push to a variable and close it directly using the promise's then() method:
 
 ```javascript
-var notification = Push.create('Hello World!');
+var promise = Push.create('Hello World!');
 
 // Somewhere later in your code...
 
-notification.close();
+promise.then(function(notification) {
+    notification.close();
+});
 ```
 
 When it comes to clearing all open notifications, that's just as easy as well:

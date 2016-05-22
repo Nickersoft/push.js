@@ -1,7 +1,7 @@
-/*!
- * push.js
+/**
+ * Push
  * =======
- * A compact, cross-browser solution for Javascript desktop notifications
+ * A compact, cross-browser solution for the JavaScript Notifications API
  *
  * Credits
  * -------
@@ -33,6 +33,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
+ * @preserve
  */
 
 (function (global, factory) {
@@ -230,7 +231,7 @@
 
             /* Return if Push not supported */
             if (!self.isSupported) {
-                console.error("This browser is not supported");
+                console.error('PushError: push.js is incompatible with browser.');
                 return;
             }
 
@@ -353,7 +354,7 @@
 
             /* Fail if the browser is not supported */
             if (!self.isSupported) {
-                console.error('PushError: push.js is incompatible with self browser.');
+                console.error('PushError: push.js is incompatible with browser.');
                 return;
             }
 
@@ -364,11 +365,17 @@
 
             /* Request permission if it isn't granted */
             if (!self.Permission.has()) {
-                self.Permission.request(function () {
-                    return create_callback(title, options);
+                return new Promise(function(resolve, reject) {
+                    self.Permission.request(function() {
+                        resolve(create_callback(title, options));
+                    }, function() {
+                        reject("Permission request declined");
+                    });
                 });
             } else {
-                return create_callback(title, options);
+                return new Promise(function(resolve, reject) {
+                    resolve(create_callback(title, options));
+                });
             }
 
         };

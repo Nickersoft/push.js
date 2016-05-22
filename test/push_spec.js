@@ -94,13 +94,10 @@ describe('creating notifications', function () {
         }).toThrow();
     });
 
-    it('should return wrapper successfully', function () {
-
+    it('should return promise successfully', function () {
         var wrapper = Push.create('hello world');
 
-        expect(wrapper.close).not.toBe(undefined);
-        expect(wrapper.close.constructor).toBe(Function);
-
+        expect(wrapper.then).not.toBe(undefined);
     });
 
     it('should return the correct notification count', function () {

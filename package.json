@@ -4,7 +4,7 @@
   "description": "A compact, cross-browser solution for the Javascript Notifications API",
   "main": "push.js",
   "scripts": {
-    "build": "node_modules/.bin/yuicompressor push.js -o push.min.js",
+    "build": "node_modules/.bin/uglifyjs  push.js node_modules/promise-polyfill/promise.js -o push.min.js --comments",
     "test": "node_modules/.bin/karma start",
     "prepublish": "npm run build"
   },
@@ -31,6 +31,9 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.8",
     "karma-mocha-reporter": "^1.3.0",
-    "yuicompressor": "^2.4.8"
+    "uglify-js": "^2.6.2"
+  },
+  "dependencies": {
+    "promise-polyfill": "^5.2.1"
   }
 }
