@@ -48,7 +48,7 @@
     }
     /* Use CommonJS */
     else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = (factory(global, global.document))();
+        module.exports = new (factory(global, global.document))();
     }
     /* Use Browser */
     else {
