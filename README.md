@@ -18,12 +18,6 @@ bower install push.js --save
 
 For more information regarding the Push NPM package, [see here](https://www.npmjs.com/package/push.js).
 
-#### See It In Action ####
-
-Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?
-
-Lucky for you a demo is available [here](http://nickersoft.github.io/push.js/demo.html).
-
 #### Creating Notifications ####
 So just how easy is it to create a notification using Push? We can do it in just one line, actually:
 
@@ -97,6 +91,17 @@ Push.create('Hello World!', {
 * __onShow__: Callback to execute when the notification is shown (obsolete).
 * __tag__: Unique tag used to identify the notification. Can be used to later close the notification manually.
 * __timeout__: Time in milliseconds until notification closes automatically.
+* __vibrate__: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.
+
+### Mobile Support ###
+
+Push can be used on Android Chrome (apparently Safari on iOS does not have notification support), but the website in which it is running on ***must*** use have a valid SSL certificate (HTTPS only!!) otherwise it will not work. This is due to Google's [decision to drop the Notification constructor](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/BygptYClroM) from mobile Chrome. Sucks but hey, that's life, am I right?
+
+### See It In Action ###
+
+Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?
+
+Lucky for you a demo is available [here](http://nickersoft.github.io/push.js/demo.html).
 
 ### Credits ###
 Push is based off work the following work:
