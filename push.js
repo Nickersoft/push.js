@@ -110,6 +110,8 @@
          * @return {void}
          */
         create_callback = function (title, options) {
+            var notification,
+                wrapper;
 
             /* Set empty settings if none are specified */
             options = options || {};
@@ -117,14 +119,30 @@
             /* Safari 6+, Chrome 23+ */
             if (w.Notification) {
 
-                notification =  new w.Notification(
-                    title,
-                    {
-                        icon: (isString(options.icon) || isUndefined(options.icon)) ? options.icon : options.icon.x32,
-                        body: options.body,
-                        tag: options.tag,
+                try {
+                    notification =  new w.Notification(
+                        title,
+                        {
+                            icon: (isString(options.icon) || isUndefined(options.icon)) ? options.icon : options.icon.x32,
+                            body: options.body,
+                            tag: options.tag,
+                        }
+                    );
+                } catch (e) {
+                    if (w.navigator) {
+                        w.navigator.serviceWorker.register('sw.js');
+                        w.navigator.serviceWorker.ready.then(function(registration) {
+                            registration.showNotification(
+                                title,
+                                {
+                                    body: options.body,
+                                    vibrate: options.vibrate,
+                                    tag: options.tag
+                                }
+                            );
+                        });
                     }
-                );
+                }
 
             /* Legacy webkit browsers */
             } else if (w.webkitNotifications) {
@@ -349,8 +367,6 @@
           * @return {void}
           */
         self.create = function (title, options) {
-            var notification,
-                wrapper;
 
             /* Fail if the browser is not supported */
             if (!self.isSupported) {
