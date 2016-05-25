@@ -1,6 +1,6 @@
 {
   "name": "push.js",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A compact, cross-browser solution for the Javascript Notifications API",
   "main": "push.js",
   "authors": [
