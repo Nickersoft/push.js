@@ -55,7 +55,7 @@
         global.Push = new (factory(global, global.document))();
     }
 
-})(window !== 'undefined' ? window : self, function (w, d) {
+})(typeof window !== 'undefined' ? window : self, function (w, d) {
 
     var Push = function () {
 
