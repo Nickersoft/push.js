@@ -2,7 +2,7 @@
   "name": "push.js",
   "version": "0.0.7",
   "description": "A compact, cross-browser solution for the Javascript Notifications API",
-  "main": "push.js",
+  "main": "push.min.js",
   "scripts": {
     "build": "node_modules/.bin/uglifyjs  push.js node_modules/promise-polyfill/promise.js -o push.min.js --comments",
     "test": "node_modules/.bin/karma start",
