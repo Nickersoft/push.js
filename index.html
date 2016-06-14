@@ -41,13 +41,6 @@
 <p>For more information regarding the Push NPM package, <a href="https://www.npmjs.com/package/push.js">see here</a>.</p>
 
 <h4>
-<a id="see-it-in-action" class="anchor" href="#see-it-in-action" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>See It In Action</h4>
-
-<p>Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?</p>
-
-<p>Lucky for you a demo is available <a href="http://nickersoft.github.io/push.js/demo.html">here</a>.</p>
-
-<h4>
 <a id="creating-notifications" class="anchor" href="#creating-notifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating Notifications</h4>
 
 <p>So just how easy is it to create a notification using Push? We can do it in just one line, actually:</p>
@@ -123,7 +116,21 @@
 <strong>tag</strong>: Unique tag used to identify the notification. Can be used to later close the notification manually.</li>
 <li>
 <strong>timeout</strong>: Time in milliseconds until notification closes automatically.</li>
+<li>
+<strong>vibrate</strong>: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.</li>
 </ul>
+
+<h3>
+<a id="mobile-support" class="anchor" href="#mobile-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mobile Support</h3>
+
+<p>Push can be used on Android Chrome (apparently Safari on iOS does not have notification support), but the website in which it is running on <strong><em>must</em></strong> use have a valid SSL certificate (HTTPS only!!) otherwise it will not work. This is due to Google's <a href="https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/BygptYClroM">decision to drop the Notification constructor</a> from mobile Chrome. Sucks but hey, that's life, am I right?</p>
+
+<h3>
+<a id="see-it-in-action" class="anchor" href="#see-it-in-action" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>See It In Action</h3>
+
+<p>Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?</p>
+
+<p>Lucky for you a demo is available <a href="http://nickersoft.github.io/push.js/demo.html">here</a>.</p>
 
 <h3>
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits</h3>
