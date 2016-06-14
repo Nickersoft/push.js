@@ -66,6 +66,8 @@ When it comes to clearing all open notifications, that's just as easy as well:
 Push.clear();
 ```
 
+**Important:** Although Javascript promises are [decently supported](http://caniuse.com/#search=promises) across browsers, there are still some browsers that lack support. If you find that you are trying to support a browser that doesn't support promises, chances are it won't support notifications either. However, if you are really determined, I encourage you to checkout the lightweight [promise-polyfill](https://github.com/taylorhakes/promise-polyfill) library by Taylor Hakes (or something similar). This library used to be bundled with Push, until it was decided that it'd be better to leave that sort of dependency to the user's discretion.
+
 ### Options ###
 
 The only required argument in a Push call is a title. However, that doesn't mean you can't add a little something extra. You can pass in options to Push as well, like so:
