@@ -68,7 +68,7 @@
         },
         
         /* Message to show if there is no suport to Push Notifications */
-        incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
+        incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.'
 
         /* Whether Push has permission to notify */
         hasPermission = false,
