@@ -62,8 +62,10 @@
         var
         self = this,
         isUndefined   = function (obj) { return obj === undefined; },
-        isString   = function (obj) { return obj && obj.constructor === String; },
-        isFunction = function (obj) { return obj && obj.constructor === Function; },
+        isString   = function (obj) { return String(obj) === obj },
+        isFunction = function (obj) { return functionToCheck && 
+            {}.toString.call(functionToCheck) === '[object Function]'; 
+        },
         
         /* Message to show if there is no suport to Push Notifications */
         incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.'
