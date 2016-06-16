@@ -64,6 +64,9 @@
         isUndefined   = function (obj) { return obj === undefined; },
         isString   = function (obj) { return obj && obj.constructor === String; },
         isFunction = function (obj) { return obj && obj.constructor === Function; },
+        
+        /* Message to show if there is no suport to Push Notifications */
+        incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.'
 
         /* Whether Push has permission to notify */
         hasPermission = false,
@@ -76,7 +79,7 @@
          * @param {Notification} notification
          * @return {void}
          */
-        close_notification = function (notification) {
+        closeNotification = function (notification) {
 
             /* Safari 6+, Chrome 23+ */
             if (notification.close) {
@@ -93,6 +96,10 @@
 
                 w.external.msSiteModeClearIconOverlay();
 
+            } else {
+                
+                throw new Error('Unable to close notification: unknown interface');
+                
             }
 
         },
@@ -109,7 +116,7 @@
          * Callback function for the 'create' method
          * @return {void}
          */
-        create_callback = function (title, options) {
+        createCallback = function (title, options) {
             var notification,
                 wrapper;
 
@@ -179,13 +186,15 @@
                 w.external.msSiteModeActivate();
 
                 notification = {};
+            } else {
+                throw new Error('Unable to create notification: unknown interface');
             }
 
             /* Wrapper used to close notification later on */
             wrapper = {
 
                 close: function () {
-                    close_notification(notification);
+                    closeNotification(notification);
                 }
 
             };
@@ -253,8 +262,7 @@
 
             /* Return if Push not supported */
             if (!self.isSupported) {
-                console.error('PushError: push.js is incompatible with browser.');
-                return;
+                throw new Error(incompatibilityErrorMessage);
             }
 
             /* Default callback */
@@ -283,6 +291,8 @@
             /* Legacy webkit browsers */
             else if (w.webkitNotifications && w.webkitNotifications.checkPermission) {
                 w.webkitNotifications.requestPermission(callback);
+            } else {
+                throw new Error(incompatibilityErrorMessage);
             }
 
         };
@@ -304,7 +314,7 @@
             var permission;
 
             /* Return if Push not supported */
-            if (!self.isSupported) { return; }
+            if (!self.isSupported) { throw new Error(incompatibilityErrorMessage); }
 
             /* Safari 6+, Chrome 23+ */
             if (w.Notification && w.Notification.permissionLevel) {
@@ -325,6 +335,8 @@
             /* IE9+ */
             } else if (w.external && w.external.msIsSiteMode() !== undefined) {
                 permission = w.external.msIsSiteMode() ? Permission.GRANTED : Permission.DEFAULT;
+            } else {
+                throw new Error(incompatibilityErrorMessage);
             }
 
             return permission;
@@ -374,27 +386,34 @@
 
             /* Fail if the browser is not supported */
             if (!self.isSupported) {
-                console.error('PushError: push.js is incompatible with browser.');
-                return;
+                throw new Error(incompatibilityErrorMessage);
             }
 
             /* Fail if no or an invalid title is provided */
-            if (typeof title !== 'string') {
-                throw 'PushError: Title of notification must be a string';
+            if (!isString(title)) {
+                throw new Error('PushError: Title of notification must be a string');
             }
 
             /* Request permission if it isn't granted */
             if (!self.Permission.has()) {
                 return new Promise(function(resolve, reject) {
                     self.Permission.request(function() {
-                        resolve(create_callback(title, options));
+                        try {
+                            resolve(createCallback(title, options));
+                        } catch (e) {
+                            reject(e);
+                        }
                     }, function() {
                         reject("Permission request declined");
                     });
                 });
             } else {
                 return new Promise(function(resolve, reject) {
-                    resolve(create_callback(title, options));
+                    try {
+                        resolve(createCallback(title, options));
+                    } catch (e) {
+                        reject(e);
+                    }
                 });
             }
 
@@ -417,7 +436,7 @@
                 if (notification.tag === tag) {
 
                     /* Call the notification's close() method */
-                    close_notification(notification);
+                    closeNotification(notification);
 
                     /* Remove the notification from the global array */
                     notifications.splice(i, 1);
@@ -442,7 +461,7 @@
             var i;
 
             for (i = 0; i < notifications.length; i++) {
-                close_notification(notifications[i]);
+                closeNotification(notifications[i]);
             }
 
             /* Reset the global array */
