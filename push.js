@@ -192,6 +192,7 @@
                 throw new Error('Unable to create notification: unknown interface');
             }
 
+
             /* Wrapper used to close notification later on */
             wrapper = {
 
@@ -200,6 +201,13 @@
                 }
 
             };
+
+            /* Add it to the global array */
+            notifications.push(notification);
+
+            /* Update the notification count */
+            updateCount();
+
 
             /* Autoclose timeout */
             if (options.timeout) {
@@ -222,12 +230,6 @@
                 notification.addEventListener('close', options.onClose);
                 notification.addEventListener('cancel', options.onClose);
             }
-
-            /* Add it to the global array */
-            notifications.push(notification);
-
-            /* Update the notification count */
-            updateCount();
 
             /* Return the wrapper so the user can call close() */
             return wrapper;
