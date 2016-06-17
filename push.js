@@ -62,8 +62,10 @@
         var
         self = this,
         isUndefined   = function (obj) { return obj === undefined; },
-        isString   = function (obj) { return obj && obj.constructor === String; },
-        isFunction = function (obj) { return obj && obj.constructor === Function; },
+        isString   = function (obj) { return String(obj) === obj },
+        isFunction = function (obj) { return functionToCheck && 
+            {}.toString.call(functionToCheck) === '[object Function]'; 
+        },
 
         /* Whether Push has permission to notify */
         hasPermission = false,
@@ -379,8 +381,8 @@
             }
 
             /* Fail if no or an invalid title is provided */
-            if (typeof title !== 'string') {
-                throw 'PushError: Title of notification must be a string';
+            if (!isString(title)) {
+                throw new Error('PushError: Title of notification must be a string');
             }
 
             /* Request permission if it isn't granted */
