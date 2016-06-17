@@ -147,7 +147,7 @@
             /* Legacy webkit browsers */
             } else if (w.webkitNotifications) {
 
-                notification = win.webkitNotifications.createNotification(
+                notification = w.webkitNotifications.createNotification(
                     options.icon,
                     title,
                     options.body
@@ -167,11 +167,15 @@
                 notification.show();
 
             /* IE9+ */
-            } else if (win.external && win.external.msIsSiteMode()) {
+            } else if (w.external && w.external.msIsSiteMode()) {
 
                 //Clear any previous notifications
                 w.external.msSiteModeClearIconOverlay();
-                w.external.msSiteModeSetIconOverlay(((isString(options.icon) || isUndefined(options.icon)) ? options.icon : options.icon.x16), title);
+                w.external.msSiteModeSetIconOverlay(
+                    ((isString(options.icon) || isUndefined(options.icon))
+                    ? options.icon
+                    : options.icon.x16), title
+                );
                 w.external.msSiteModeActivate();
 
                 notification = {};
