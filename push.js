@@ -81,7 +81,7 @@
          * @param {Notification} notification
          * @return {void}
          */
-        close_notification = function (notification) {
+        closeNotification = function (notification) {
 
             /* Safari 6+, Chrome 23+ */
             if (notification.close) {
@@ -118,7 +118,7 @@
          * Callback function for the 'create' method
          * @return {void}
          */
-        create_callback = function (title, options) {
+        createCallback = function (title, options) {
             var notification,
                 wrapper;
 
@@ -197,7 +197,7 @@
             wrapper = {
 
                 close: function () {
-                    close_notification(notification);
+                    closeNotification(notification);
                 }
 
             };
@@ -403,7 +403,7 @@
                 return new Promise(function(resolve, reject) {
                     self.Permission.request(function() {
                         try {
-                            resolve(create_callback(title, options));
+                            resolve(createCallback(title, options));
                         } catch (e) {
                             reject(e);
                         }
@@ -414,7 +414,7 @@
             } else {
                 return new Promise(function(resolve, reject) {
                     try {
-                        resolve(create_callback(title, options));
+                        resolve(createCallback(title, options));
                     } catch (e) {
                         reject(e);
                     }
@@ -440,7 +440,7 @@
                 if (notification.tag === tag) {
 
                     /* Call the notification's close() method */
-                    close_notification(notification);
+                    closeNotification(notification);
 
                     /* Remove the notification from the global array */
                     notifications.splice(i, 1);
@@ -465,7 +465,7 @@
             var i;
 
             for (i = 0; i < notifications.length; i++) {
-                close_notification(notifications[i]);
+                closeNotification(notifications[i]);
             }
 
             /* Reset the global array */
