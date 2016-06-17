@@ -66,6 +66,9 @@
         isFunction = function (obj) { return functionToCheck && 
             {}.toString.call(functionToCheck) === '[object Function]'; 
         },
+        
+        /* Message to show if there is no suport to Push Notifications */
+        incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
 
         /* Whether Push has permission to notify */
         hasPermission = false,
@@ -95,6 +98,10 @@
 
                 w.external.msSiteModeClearIconOverlay();
 
+            } else {
+                
+                throw new Error('Unable to close notification: unknown interface');
+                
             }
 
         },
@@ -181,7 +188,10 @@
                 w.external.msSiteModeActivate();
 
                 notification = {};
+            } else {
+                throw new Error('Unable to create notification: unknown interface');
             }
+
 
             /* Wrapper used to close notification later on */
             wrapper = {
@@ -191,6 +201,13 @@
                 }
 
             };
+
+            /* Add it to the global array */
+            notifications.push(notification);
+
+            /* Update the notification count */
+            updateCount();
+
 
             /* Autoclose timeout */
             if (options.timeout) {
@@ -213,12 +230,6 @@
                 notification.addEventListener('close', options.onClose);
                 notification.addEventListener('cancel', options.onClose);
             }
-
-            /* Add it to the global array */
-            notifications.push(notification);
-
-            /* Update the notification count */
-            updateCount();
 
             /* Return the wrapper so the user can call close() */
             return wrapper;
@@ -255,8 +266,7 @@
 
             /* Return if Push not supported */
             if (!self.isSupported) {
-                console.error('PushError: push.js is incompatible with browser.');
-                return;
+                throw new Error(incompatibilityErrorMessage);
             }
 
             /* Default callback */
@@ -285,6 +295,8 @@
             /* Legacy webkit browsers */
             else if (w.webkitNotifications && w.webkitNotifications.checkPermission) {
                 w.webkitNotifications.requestPermission(callback);
+            } else {
+                throw new Error(incompatibilityErrorMessage);
             }
 
         };
@@ -306,7 +318,7 @@
             var permission;
 
             /* Return if Push not supported */
-            if (!self.isSupported) { return; }
+            if (!self.isSupported) { throw new Error(incompatibilityErrorMessage); }
 
             /* Safari 6+, Chrome 23+ */
             if (w.Notification && w.Notification.permissionLevel) {
@@ -327,6 +339,8 @@
             /* IE9+ */
             } else if (w.external && w.external.msIsSiteMode() !== undefined) {
                 permission = w.external.msIsSiteMode() ? Permission.GRANTED : Permission.DEFAULT;
+            } else {
+                throw new Error(incompatibilityErrorMessage);
             }
 
             return permission;
@@ -376,8 +390,7 @@
 
             /* Fail if the browser is not supported */
             if (!self.isSupported) {
-                console.error('PushError: push.js is incompatible with browser.');
-                return;
+                throw new Error(incompatibilityErrorMessage);
             }
 
             /* Fail if no or an invalid title is provided */
@@ -389,14 +402,22 @@
             if (!self.Permission.has()) {
                 return new Promise(function(resolve, reject) {
                     self.Permission.request(function() {
-                        resolve(create_callback(title, options));
+                        try {
+                            resolve(create_callback(title, options));
+                        } catch (e) {
+                            reject(e);
+                        }
                     }, function() {
                         reject("Permission request declined");
                     });
                 });
             } else {
                 return new Promise(function(resolve, reject) {
-                    resolve(create_callback(title, options));
+                    try {
+                        resolve(create_callback(title, options));
+                    } catch (e) {
+                        reject(e);
+                    }
                 });
             }
 
