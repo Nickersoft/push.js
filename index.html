@@ -82,7 +82,7 @@
 
 <div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-c1">clear</span>();</pre></div>
 
-<p><strong>Disclaimer:</strong> Although Javascript promises are <a href="http://caniuse.com/#search=promises">decently supported</a> across browsers, there are still some browsers that lack support. If you find that you are trying to support a browser that doesn't support promises, chances are it won't support notifications either. However, if you are really determined, I encourage you to checkout the lightweight <a href="https://github.com/taylorhakes/promise-polyfill">promise-polyfill</a> library by Taylor Hakes (or something similar). This library used to be bundled with Push, until it was decided that it'd be better to leave that sort of dependency to the user's discretion.</p>
+<p><strong>Important:</strong> Although Javascript promises are <a href="http://caniuse.com/#search=promises">decently supported</a> across browsers, there are still some browsers that lack support. If you find that you are trying to support a browser that doesn't support promises, chances are it won't support notifications either. However, if you are really determined, I encourage you to checkout the lightweight <a href="https://github.com/taylorhakes/promise-polyfill">promise-polyfill</a> library by Taylor Hakes (or something similar). This library used to be bundled with Push, until it was decided that it'd be better to leave that sort of dependency to the user's discretion.</p>
 
 <h3>
 <a id="options" class="anchor" href="#options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Options</h3>
@@ -122,8 +122,8 @@
 <strong>vibrate</strong>: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.</li>
 </ul>
 
-<h3>
-<a id="mobile-support" class="anchor" href="#mobile-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mobile Support</h3>
+<h4>
+<a id="mobile-support" class="anchor" href="#mobile-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mobile Support</h4>
 
 <p>Push can be used on Android Chrome (apparently Safari on iOS does not have notification support), but the website in which it is running on <strong><em>must</em></strong> use have a valid SSL certificate (HTTPS only!!) otherwise it will not work. This is due to Google's <a href="https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/BygptYClroM">decision to drop the Notification constructor</a> from mobile Chrome. Sucks but hey, that's life, am I right?</p>
 
@@ -133,6 +133,11 @@
 <p>Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?</p>
 
 <p>Lucky for you a demo is available <a href="http://nickersoft.github.io/push.js/demo.html">here</a>.</p>
+
+<h3>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development</h3>
+
+<p>If you feel like this library is your jam and you want to contribute (or you think I'm an idiot who missed something), check out Push's neat <a href="CONTRIBUTING.md">contributing guidelines</a> on how you can make your mark.</p>
 
 <h3>
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits</h3>
