@@ -64,7 +64,7 @@
         isUndefined   = function (obj) { return obj === undefined; },
         isString   = function (obj) { return String(obj) === obj },
         isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; },
-        
+
         /* Message to show if there is no suport to Push Notifications */
         incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
 
@@ -97,9 +97,9 @@
                 w.external.msSiteModeClearIconOverlay();
 
             } else {
-                
+
                 throw new Error('Unable to close notification: unknown interface');
-                
+
             }
 
         },
@@ -123,7 +123,7 @@
             /* Set empty settings if none are specified */
             options = options || {};
 
-            /* Safari 6+, Chrome 23+ */
+            /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
             if (w.Notification) {
 
                 try {
