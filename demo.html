@@ -47,6 +47,10 @@
         document.getElementById('test_button').onclick = function () {
             Push.create('Hello world!', {
                 body: 'This is an example string',
+                onClick: function () {
+                    window.focus();
+                    this.close();
+                },
                 vibrate: [200, 100, 200, 100, 200, 100, 200]
             });
         };
