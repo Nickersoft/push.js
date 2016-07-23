@@ -59,11 +59,18 @@
 
     var Push = function () {
 
+        /**********************
+            Local Variables
+        /**********************/
+
         var
         self = this,
         isUndefined   = function (obj) { return obj === undefined; },
         isString   = function (obj) { return String(obj) === obj },
         isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; },
+
+        /* ID to use for new notifications */
+        currentId = 0,
 
         /* Message to show if there is no suport to Push Notifications */
         incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
@@ -71,45 +78,76 @@
         /* Whether Push has permission to notify */
         hasPermission = false,
 
-        /* List of active notifications */
-        notifications = [],
+        /* Map of open notifications */
+        notifications = {},
+
+        /**********************
+            Helper Functions
+        /**********************/
 
         /**
          * Closes a notification
          * @param {Notification} notification
-         * @return {void}
+         * @return {Boolean} boolean denoting whether the operation was successful
          */
-        closeNotification = function (notification) {
-
+        closeNotification = function (id) {
+            var errored = false,
+                notification = notifications[id];
             /* Safari 6+, Chrome 23+ */
             if (notification.close) {
-
                 notification.close();
-
             /* Legacy webkit browsers */
             } else if (notification.cancel) {
-
                 notification.cancel();
-
             /* IE9+ */
             } else if (w.external && w.external.msIsSiteMode) {
-
                 w.external.msSiteModeClearIconOverlay();
-
             } else {
-
+                errored = true;
                 throw new Error('Unable to close notification: unknown interface');
-
             }
 
+            if (!errored) {
+                return removeNotification(id);
+            }
+
+            return false;
         },
 
         /**
-         * Updates the notification count
-         * @return {void}
+         * Adds a notification to the global dictionary of notifications
+         * @param {Notification} notification
+         * @return {Integer} Dictionary key of the notification
          */
-        updateCount = function () {
-            self.count = notifications.length;
+        addNotification = function (notification) {
+            var id = currentId;
+            notifications[id] = notification;
+            currentId++;
+            return id;
+        },
+
+        /**
+         * Removes a notification with the given ID
+         * @param  {Integer} id - Dictionary key/ID of the notification to remove
+         * @return {Boolean} boolean denoting success
+         */
+        removeNotification = function (id) {
+            var dict = {},
+                success = false,
+                key;
+            for (key in notifications) {
+                if (notifications.hasOwnProperty(key)) {
+                    if (key != id) {
+                        dict[key] = notifications[key];
+                    } else {
+                        // We're successful if we omit the given ID from the new array
+                        success = true;
+                    }
+                }
+            }
+            // Overwrite the current notifications dictionary with the filtered one
+            notifications = dict;
+            return success;
         },
 
         /**
@@ -118,7 +156,9 @@
          */
         createCallback = function (title, options) {
             var notification,
-                wrapper;
+                wrapper,
+                id,
+                onClose;
 
             /* Set empty settings if none are specified */
             options = options || {};
@@ -190,22 +230,17 @@
                 throw new Error('Unable to create notification: unknown interface');
             }
 
+            /* Add it to the global array */
+            id = addNotification(notification);
 
             /* Wrapper used to close notification later on */
             wrapper = {
 
                 close: function () {
-                    closeNotification(notification);
+                    closeNotification(id);
                 }
 
             };
-
-            /* Add it to the global array */
-            notifications.push(notification);
-
-            /* Update the notification count */
-            updateCount();
-
 
             /* Autoclose timeout */
             if (options.timeout) {
@@ -224,10 +259,16 @@
             if (isFunction(options.onClick))
                 notification.addEventListener('click', options.onClick);
 
-            if (isFunction(options.onClose)) {
-                notification.addEventListener('close', options.onClose);
-                notification.addEventListener('cancel', options.onClose);
+            onClose = function () {
+                /* A bit redundant, but covers the cases when close() isn't explicitly called */
+                removeNotification(id);
+                if (isFunction(options.onClose)) {
+                    options.onClose.call(this);
+                }
             }
+
+            notification.addEventListener('close', onClose);
+            notification.addEventListener('cancel', onClose);
 
             /* Return the wrapper so the user can call close() */
             return wrapper;
@@ -247,9 +288,6 @@
 
         /* Allow enums to be accessible from Push object */
         self.Permission = Permission;
-
-        /* Number of open notifications */
-        self.count = 0;
 
         /*****************
             Permissions
@@ -296,7 +334,6 @@
             } else {
                 throw new Error(incompatibilityErrorMessage);
             }
-
         };
 
         /**
@@ -422,36 +459,33 @@
         };
 
         /**
+         * Returns the notification count
+         * @return {Integer} The notification count
+         */
+        self.count = function () {
+            var count = 0,
+                key;
+            for (key in notifications) {
+                count++;
+            }
+            return count;
+        },
+
+        /**
          * Closes a notification with the given tag
          * @param {String} tag - Tag of the notification to close
-         * @return {void}
+         * @return {Boolean} boolean denoting success
          */
         self.close = function (tag) {
-
-            var i, notification;
-
-            for (i = 0; i < notifications.length; i++) {
-
-                notification = notifications[i];
-
+            var key;
+            for (key in notifications) {
+                notification = notifications[key];
                 /* Run only if the tags match */
                 if (notification.tag === tag) {
-
                     /* Call the notification's close() method */
-                    closeNotification(notification);
-
-                    /* Remove the notification from the global array */
-                    notifications.splice(i, 1);
-
-                    /* Update the notification count */
-                    updateCount();
-
-                    /* Return after the first notification is closed */
-                    return;
-
+                    return closeNotification(key);
                 }
             }
-
         };
 
         /**
@@ -459,18 +493,13 @@
          * @return {void}
          */
         self.clear = function () {
-
-            var i;
-
-            for (i = 0; i < notifications.length; i++) {
-                closeNotification(notifications[i]);
+            var i,
+                success = true;
+            for (key in notifications) {
+                var didClose = closeNotification(key);
+                success = success && didClose;
             }
-
-            /* Reset the global array */
-            notifications = [];
-
-            /* Update the notification count */
-            updateCount();
+            return success;
         };
     };
 
