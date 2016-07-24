@@ -173,6 +173,7 @@
                             icon: (isString(options.icon) || isUndefined(options.icon)) ? options.icon : options.icon.x32,
                             body: options.body,
                             tag: options.tag,
+                            requireInteraction: options.requireInteraction
                         }
                     );
                 } catch (e) {
@@ -184,7 +185,8 @@
                                 {
                                     body: options.body,
                                     vibrate: options.vibrate,
-                                    tag: options.tag
+                                    tag: options.tag,
+                                    requireInteraction: options.requireInteraction
                                 }
                             );
                         });
@@ -233,13 +235,15 @@
             /* Add it to the global array */
             id = addNotification(notification);
 
-            /* Wrapper used to close notification later on */
+            /* Wrapper used to get/close notification later on */
             wrapper = {
+                get: function () {
+                    return notification;
+                },
 
                 close: function () {
                     closeNotification(id);
                 }
-
             };
 
             /* Autoclose timeout */
