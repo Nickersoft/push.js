@@ -1,176 +1,84 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Push.js by Nickersoft</title>
+    <title>Push.js</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Push.js</h1>
-      <h2 class="project-tagline">A compact, cross-browser solution for using the JavaScript Notifications API</h2>
-      <a href="https://github.com/Nickersoft/push.js" class="btn">View on GitHub</a>
-      <a href="https://github.com/Nickersoft/push.js/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/Nickersoft/push.js/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <meta charset="UTF-8">
+    <meta name="description" content="A cross-browser solution for the JavaScript Notifications API">
+    <meta name="keywords" content="Push,Notifications,JavaScript,jQuery,Desktop,Mobile,JS">
+    <meta name="author" content="Tyler Nickerson">
+    <link rel="icon" href="favicon.ico" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css">
+    <link rel="stylesheet" type="text/css" href="normalize.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheet.css" media="screen">
+</head>
+<body>
+    <main>
+        <h1>Push.js</h1>
+        <h2>JavaScript notifications for every browser<sup>*</sup></h2>
+        <section class="buttons">
+            <a class="button" href="https://github.com/Nickersoft/push.js" target="_blank">Github</a>
+            <a class="button" href="https://npmjs.com/package/push.js" target="_blank">NPM</a>
+            <a class="button" href="javascript:void(0);" id="demoButton">Demo</a>
+        </section>
+        <section class="content">
+            <p>Installing Push is easily installable via <a href="https://npmjs.com" target="_blank">NPM</a>:</p>
+            <pre><code class="language-bash"><span class="cursor">></span> npm install push.js</code></pre>
+            <p>Or, if you prefer, you can use <a href="https://bower.io" target="_blank">Bower</a> instead:</p>
+            <pre><code class="language-bash"><span class="cursor">></span> bower install push.js</code></pre>
+            <p>Then, creating a notification is as easy as:</p>
+            <pre><code class="language-javascript">Push.create("Hello world!", {
+    body: "How's it hangin'?",
+    icon: 'icon.png',
+    timeout: 4000,
+    onClick: function () {
+        window.focus();
+        this.close();
+    }
+});</code></pre>
+            <p>
+                Go ahead and try it by clicking the "Demo" button above! For more documentation, checkout
+                <a href="https://github.com/Nickersoft/push.js" target="_blank">the official repo</a>.
+            </p>
+            <p>
+                If you're really feeling fiesty, you can check out
+                <a href="http://tylernickerson.com" target="_blank">the kid who made this.</a>
+            </p>
+        </section>
+        <footer>
+            "Every browser" being Firefox 22+, Chrome 5+, Safari 6+, Opera 25+, Android Browser 4.4+,
+            Blackberry Browser 10+, Opera Mobile 37+, Firefox Android 47+, and Samsung Internet. Trying to get IE included
+            on the list :)
+        </footer>
+    </main>
 
-    <section class="main-content">
-      <h1>
-<a id="push-" class="anchor" href="#push-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Push <a href="https://travis-ci.org/Nickersoft/push.js"><img src="https://travis-ci.org/Nickersoft/push.js.svg?branch=master" alt="Build Status"></a>
-</h1>
+    <script type="text/javascript" src="push.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-<h3>
-<a id="what-is-push" class="anchor" href="#what-is-push" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is Push?</h3>
+        ga('create', 'UA-24989915-5', 'auto');
+        ga('send', 'pageview');
 
-<p>Push is the fastest way to get up and running with Javascript desktop notifications. A fairly new addition to the official specification, the Notification API allows modern browsers such as Chrome, Safari, Firefox, and IE 9+ to push notifications to a user's desktop. Push acts as a cross-browser solution to this API, falling back to use  older implementations if the user's browser does not support the new API.</p>
+        document.getElementById('demoButton').onclick = function () {
+            Push.create('Hello world!', {
+                body: 'How\'s it hangin\'?',
+                icon: 'icon.png',
+                timeout: 4000,
+                onClick: function () {
+                    window.focus();
+                    this.close();
+                },
+                vibrate: [200, 100, 200, 100, 200, 100, 200]
+            });
+        };
+    </script>
 
-<p>You can quickly install Push via <a href="http://npmjs.com">npm</a>:</p>
+</body>
 
-<pre><code>npm install push.js --save
-</code></pre>
-
-<p>Or, if you want something a little more lightweight, you can give <a href="http://bower.io">Bower</a> a try:</p>
-
-<pre><code>bower install push.js --save
-</code></pre>
-
-<p>For more information regarding the Push NPM package, <a href="https://www.npmjs.com/package/push.js">see here</a>.</p>
-
-<h4>
-<a id="creating-notifications" class="anchor" href="#creating-notifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating Notifications</h4>
-
-<p>So just how easy is it to create a notification using Push? We can do it in just one line, actually:</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>)</pre></div>
-
-<p>No constructors, just a universal API you can access from anywhere. Push is even compatible with AMD as well:</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-en">define</span>([<span class="pl-s"><span class="pl-pds">'</span>pushjs<span class="pl-pds">'</span></span>], <span class="pl-k">function</span> (<span class="pl-smi">Push</span>) {
-   <span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
-});</pre></div>
-
-<p>If the browser does not have permission to send push notifications, Push will automatically request permission as soon as create() is called. Simple as that.</p>
-
-<h4>
-<a id="closing-notifications" class="anchor" href="#closing-notifications" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Closing Notifications</h4>
-
-<p>When it comes to closing notifications, you have a few options. You can either set a timeout (see "Options"), call Push's close() method, or pass around the notification's promise object and then call close() directly. Push's close() method will only work with newer browsers, taking in a notification's unique tag name and closing the first notification it finds with that tag:</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
-    tag<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>
-});
-
-<span class="pl-c">// Somewhere later in your code...</span>
-
-<span class="pl-smi">Push</span>.<span class="pl-c1">close</span>(<span class="pl-s"><span class="pl-pds">'</span>foo<span class="pl-pds">'</span></span>);</pre></div>
-
-<p>Alternatively, you can assign the notification promise returned by Push to a variable and close it directly using the promise's then() method:</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> promise <span class="pl-k">=</span> <span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>);
-
-<span class="pl-c">// Somewhere later in your code...</span>
-
-<span class="pl-smi">promise</span>.<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">notification</span>) {
-    <span class="pl-smi">notification</span>.<span class="pl-c1">close</span>();
-});</pre></div>
-
-<p>When it comes to clearing all open notifications, that's just as easy as well:</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-c1">clear</span>();</pre></div>
-
-<p><strong>Important:</strong> Although Javascript promises are <a href="http://caniuse.com/#search=promises">decently supported</a> across browsers, there are still some browsers that lack support. If you find that you are trying to support a browser that doesn't support promises, chances are it won't support notifications either. However, if you are really determined, I encourage you to checkout the lightweight <a href="https://github.com/taylorhakes/promise-polyfill">promise-polyfill</a> library by Taylor Hakes (or something similar). This library used to be bundled with Push, until it was decided that it'd be better to leave that sort of dependency to the user's discretion.</p>
-
-<h3>
-<a id="options" class="anchor" href="#options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Options</h3>
-
-<p>The only required argument in a Push call is a title. However, that doesn't mean you can't add a little something extra. You can pass in options to Push as well, like so:</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">Push</span>.<span class="pl-en">create</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello World!<span class="pl-pds">'</span></span>, {
-    body<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>This is some body content!<span class="pl-pds">'</span></span>,
-    icon<span class="pl-k">:</span> {
-        x16<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>images/icon-x16.png<span class="pl-pds">'</span></span>,
-        x32<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>images/icon-x32.png<span class="pl-pds">'</span></span>
-    },
-    timeout<span class="pl-k">:</span> <span class="pl-c1">5000</span>
-});</pre></div>
-
-<h4>
-<a id="available-options" class="anchor" href="#available-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Available Options</h4>
-
-<ul>
-<li>
-<strong>body</strong>: The body text of the notification.</li>
-<li>
-<strong>icon</strong>: Can be either the URL to an icon image or an array containing 16x16 and 32x32 pixel icon images (see above).</li>
-<li>
-<strong>onClick</strong>: Callback to execute when the notification is clicked.</li>
-<li>
-<strong>onClose</strong>: Callback to execute when the notification is closed (obsolete).</li>
-<li>
-<strong>onError</strong>: Callback to execute when if the notification throws an error.</li>
-<li>
-<strong>onShow</strong>: Callback to execute when the notification is shown (obsolete).</li>
-<li>
-<strong>tag</strong>: Unique tag used to identify the notification. Can be used to later close the notification manually.</li>
-<li>
-<strong>timeout</strong>: Time in milliseconds until notification closes automatically.</li>
-<li>
-<strong>vibrate</strong>: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.</li>
-</ul>
-
-<h4>
-<a id="mobile-support" class="anchor" href="#mobile-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mobile Support</h4>
-
-<p>Push can be used on Android Chrome (apparently Safari on iOS does not have notification support), but the website in which it is running on <strong><em>must</em></strong> use have a valid SSL certificate (HTTPS only!!) otherwise it will not work. This is due to Google's <a href="https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/BygptYClroM">decision to drop the Notification constructor</a> from mobile Chrome. Sucks but hey, that's life, am I right?</p>
-
-<h3>
-<a id="see-it-in-action" class="anchor" href="#see-it-in-action" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>See It In Action</h3>
-
-<p>Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?</p>
-
-<p>Lucky for you a demo is available <a href="http://nickersoft.github.io/push.js/demo.html">here</a>.</p>
-
-<h3>
-<a id="development" class="anchor" href="#development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development</h3>
-
-<p>If you feel like this library is your jam and you want to contribute (or you think I'm an idiot who missed something), check out Push's neat <a href="https://github.com/Nickersoft/push.js/blob/master/CONTRIBUTING.md">contributing guidelines</a> on how you can make your mark.</p>
-
-<h3>
-<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits</h3>
-
-<p>Push is based off work the following work:</p>
-
-<ol>
-<li>
-<a href="https://github.com/ttsvetko/HTML5-Desktop-Notifications">HTML5-Desktop-Notifications</a> by <a href="https://github.com/ttsvetko">Tsvetan Tsvetkov</a>
-</li>
-<li>
-<a href="https://github.com/alexgibson/notify.js">notify.js</a> by <a href="https://github.com/alexgibson">Alex Gibson</a>
-</li>
-</ol>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/Nickersoft/push.js">Push.js</a> is maintained by <a href="https://github.com/Nickersoft">Nickersoft</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-            <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-24989915-5");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-  </body>
 </html>
