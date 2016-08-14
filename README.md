@@ -104,12 +104,6 @@ Push.create('Hello World!', {
 
 Push can be used on Android Chrome (apparently Safari on iOS does not have notification support), but the website in which it is running on ***must*** use have a valid SSL certificate (HTTPS only!!) otherwise it will not work. This is due to Google's [decision to drop the Notification constructor](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/BygptYClroM) from mobile Chrome. Sucks but hey, that's life, am I right?
 
-### See It In Action ###
-
-Before you go out and try Push for yourself, you probably want to confirm it actually works in your browser, right?
-
-Lucky for you a demo is available [here](http://nickersoft.github.io/push.js/demo.html).
-
 ### Development ###
 
 If you feel like this library is your jam and you want to contribute (or you think I'm an idiot who missed something), check out Push's neat [contributing guidelines](CONTRIBUTING.md) on how you can make your mark.
