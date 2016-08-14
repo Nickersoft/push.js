@@ -93,22 +93,25 @@
         closeNotification = function (id) {
             var errored = false,
                 notification = notifications[id];
-            /* Safari 6+, Chrome 23+ */
-            if (notification.close) {
-                notification.close();
-            /* Legacy webkit browsers */
-            } else if (notification.cancel) {
-                notification.cancel();
-            /* IE9+ */
-            } else if (w.external && w.external.msIsSiteMode) {
-                w.external.msSiteModeClearIconOverlay();
-            } else {
-                errored = true;
-                throw new Error('Unable to close notification: unknown interface');
-            }
 
-            if (!errored) {
-                return removeNotification(id);
+            if (typeof notification !== 'undefined') {
+                /* Safari 6+, Chrome 23+ */
+                if (notification.close) {
+                    notification.close();
+                /* Legacy webkit browsers */
+                } else if (notification.cancel) {
+                    notification.cancel();
+                /* IE9+ */
+                } else if (w.external && w.external.msIsSiteMode) {
+                    w.external.msSiteModeClearIconOverlay();
+                } else {
+                    errored = true;
+                    throw new Error('Unable to close notification: unknown interface');
+                }
+
+                if (!errored) {
+                    return removeNotification(id);
+                }
             }
 
             return false;
