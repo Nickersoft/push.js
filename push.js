@@ -81,6 +81,9 @@
         /* Map of open notifications */
         notifications = {},
 
+        /* Testing variable for the last service worker path used */
+        lastWorkerPath = null,
+
         /**********************
             Helper Functions
         /**********************/
@@ -166,6 +169,9 @@
             /* Set empty settings if none are specified */
             options = options || {};
 
+            /* Set the last service worker path for testing */
+            self.lastWorkerPath = options.serviceWorker || 'sw.js';
+
             /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
             if (w.Notification) {
 
@@ -181,7 +187,7 @@
                     );
                 } catch (e) {
                     if (w.navigator) {
-                        w.navigator.serviceWorker.register('sw.js');
+                        w.navigator.serviceWorker.register(options.serviceWorker || 'sw.js');
                         w.navigator.serviceWorker.ready.then(function(registration) {
                             registration.showNotification(
                                 title,
@@ -476,6 +482,15 @@
                 count++;
             }
             return count;
+        },
+
+        /**
+         * Internal function that returns the path of the last service worker used
+         * For testing purposes only
+         * @return {String} The service worker path
+         */
+        self.__lastWorkerPath = function () {
+            return self.lastWorkerPath;
         },
 
         /**
