@@ -7,6 +7,8 @@ TEST_TAG = 'foo',
 TEST_TAG_2 = 'bar',
 TEST_ICON = 'icon',
 TEST_ICON_ARRAY = { x16: TEST_ICON, x32: TEST_ICON },
+TEST_SW = 'customServiceWorker.js',
+TEST_SW_DEFAULT = "sw.js"
 NOOP = function () {}; // NO OPerator (empty function)
 
 describe('initialization', function () {
@@ -96,13 +98,19 @@ describe('creating notifications', function () {
         });
     });
 
+    it('should return promise successfully', function () {
+        var promise = Push.create(TEST_TITLE);
+        expect(promise.then).not.toBe(undefined);
+    });
+
     it('should pass in all API options correctly', function(done) {
         // Vibrate omitted because Firefox will default to using the Notification API, not service workers
         // Timeout, requestPermission, and event listeners also omitted from this test :(
         var promise = Push.create(TEST_TITLE, {
             body: TEST_BODY,
             icon: TEST_ICON,
-            tag: TEST_TAG
+            tag: TEST_TAG,
+            serviceWorker: TEST_SW
         });
 
         promise.then(function(wrapper) {
@@ -111,13 +119,17 @@ describe('creating notifications', function () {
             expect(notification.body).toBe(TEST_BODY);
             expect(notification.icon).toBe(TEST_ICON);
             expect(notification.tag).toBe(TEST_TAG);
+            expect(Push.__lastWorkerPath()).toBe(TEST_SW);
             done();
         });
     });
 
-    it('should return promise successfully', function () {
+    it('should use "sw.js" as a service worker path if one is not specified', function(done) {
         var promise = Push.create(TEST_TITLE);
-        expect(promise.then).not.toBe(undefined);
+        promise.then(function(wrapper) {
+            expect(Push.__lastWorkerPath()).toBe(TEST_SW_DEFAULT);
+            done();
+        });
     });
 
     it('should return the increase the notification count', function () {

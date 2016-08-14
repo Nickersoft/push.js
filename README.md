@@ -96,6 +96,7 @@ Push.create('Hello World!', {
 * __onError__: Callback to execute when if the notification throws an error.
 * __onShow__: Callback to execute when the notification is shown (obsolete).
 * __requireInteraction__: When set to true, the notification will not close unless the user manually closes or clicks on it.
+* __serviceWorker__: Path to the [service worker](https://developers.google.com/web/fundamentals/getting-started/push-notifications/step-03?hl=en) script registered on Push mobile. Defaults to "sw.js" if a path is not specified.
 * __tag__: Unique tag used to identify the notification. Can be used to later close the notification manually.
 * __timeout__: Time in milliseconds until the notification closes automatically.
 * __vibrate__: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.
