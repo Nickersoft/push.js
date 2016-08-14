@@ -1,6 +1,4 @@
-![Logo](logo.png)
-
-[![Build Status](https://travis-ci.org/Nickersoft/push.js.svg?branch=master)](https://travis-ci.org/Nickersoft/push.js)
+# Push.js [![Build Status](https://travis-ci.org/Nickersoft/push.js.svg?branch=master)](https://travis-ci.org/Nickersoft/push.js)
 
 ### What is Push? ###
 
