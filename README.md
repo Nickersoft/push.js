@@ -90,6 +90,7 @@ Push.create('Hello World!', {
 #### Available Options ####
 
 * __body__: The body text of the notification.
+* __data__: Data to pass to ServiceWorker notifications
 * __icon__: Can be either the URL to an icon image or an array containing 16x16 and 32x32 pixel icon images (see above).
 * __onClick__: Callback to execute when the notification is clicked.
 * __onClose__: Callback to execute when the notification is closed (obsolete).
