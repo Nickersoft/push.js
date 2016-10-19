@@ -172,9 +172,17 @@
             /* Set the last service worker path for testing */
             self.lastWorkerPath = options.serviceWorker || 'sw.js';
 
+            /* onClose event handler */
+            onClose = function () {
+                /* A bit redundant, but covers the cases when close() isn't explicitly called */
+                removeNotification(id);
+                if (isFunction(options.onClose)) {
+                    options.onClose.call(this);
+                }
+            };
+
             /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
             if (w.Notification) {
-
                 try {
                     notification =  new w.Notification(
                         title,
@@ -192,9 +200,11 @@
                             registration.showNotification(
                                 title,
                                 {
+                                    icon: options.icon,
                                     body: options.body,
                                     vibrate: options.vibrate,
                                     tag: options.tag,
+                                    data: options.data,
                                     requireInteraction: options.requireInteraction
                                 }
                             );
@@ -262,26 +272,32 @@
                 }, options.timeout);
             }
 
-            /* Notification callbacks */
-            if (isFunction(options.onShow))
-                notification.addEventListener('show', options.onShow);
+            if (typeof(notification) !== 'undefined') {
+                /* Notification callbacks */
+                if (isFunction(options.onShow))
+                    notification.addEventListener('show', options.onShow);
 
-            if (isFunction(options.onError))
-                notification.addEventListener('error', options.onError);
+                if (isFunction(options.onError))
+                    notification.addEventListener('error', options.onError);
 
-            if (isFunction(options.onClick))
-                notification.addEventListener('click', options.onClick);
+                if (isFunction(options.onClick))
+                    notification.addEventListener('click', options.onClick);
 
-            onClose = function () {
-                /* A bit redundant, but covers the cases when close() isn't explicitly called */
-                removeNotification(id);
-                if (isFunction(options.onClose)) {
-                    options.onClose.call(this);
+                notification.addEventListener('close', onClose);
+                notification.addEventListener('cancel', onClose);
+            } else if (isFunction(options.onClick)) {
+                /* Notification callback for service worker */
+                if (isFunction(options.onClick)) {
+                    w.addEventListener('notificationclick', function(event) {
+                        options.onClick.call(event.notification);
+                    });
                 }
+
+                w.addEventListener('notificationclose', function(event) {
+                    onClose.call(event.notification);
+                });
             }
 
-            notification.addEventListener('close', onClose);
-            notification.addEventListener('cancel', onClose);
 
             /* Return the wrapper so the user can call close() */
             return wrapper;
