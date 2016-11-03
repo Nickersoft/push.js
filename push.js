@@ -195,8 +195,8 @@
                     );
                 } catch (e) {
                     if (w.navigator) {
-                        w.navigator.serviceWorker.register(options.serviceWorker || 'sw.js');
-                        w.navigator.serviceWorker.ready.then(function(registration) {
+                        w.navigator.serviceWorker.register(options.serviceWorker || 'sw.js')
+                        .then(function(registration) {
                             registration.showNotification(
                                 title,
                                 {
