@@ -540,7 +540,7 @@
          * @return {void}
          */
         self.clear = function () {
-            var i,
+            var key,
                 success = true;
             for (key in notifications) {
                 var didClose = closeNotification(key);
