@@ -125,10 +125,8 @@
          * @param {Notification} notification
          * @return {Integer} Dictionary key of the notification
          */
-        addNotification = function (notification) {
-            var id = currentId;
+        addNotification = function (id, notification) {
             notifications[id] = notification;
-            currentId++;
             return id;
         },
 
@@ -172,6 +170,8 @@
             /* Set the last service worker path for testing */
             self.lastWorkerPath = options.serviceWorker || 'sw.js';
 
+            id = options.tag || currentId++;
+
             /* onClose event handler */
             onClose = function () {
                 /* A bit redundant, but covers the cases when close() isn't explicitly called */
@@ -207,7 +207,15 @@
                                     data: options.data,
                                     requireInteraction: options.requireInteraction
                                 }
-                            );
+                            ).then(function() {
+                                return registration.getNotifications({tag: options.tag});
+                            }).then(function(notifications) {
+                                if (notifications && notifications.length) {
+                                    addNotification(id, notifications[0]);
+                                }
+                            });
+
+                            return null;
                         });
                     }
                 }
@@ -252,7 +260,7 @@
             }
 
             /* Add it to the global array */
-            id = addNotification(notification);
+            addNotification(id, notification);
 
             /* Wrapper used to get/close notification later on */
             wrapper = {
@@ -515,7 +523,8 @@
          * @return {Boolean} boolean denoting success
          */
         self.close = function (tag) {
-            var key;
+            var key,
+                notification;
             for (key in notifications) {
                 notification = notifications[key];
                 /* Run only if the tags match */
