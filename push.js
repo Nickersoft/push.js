@@ -398,7 +398,7 @@
 
             /* Firefox Mobile */
             } else if (navigator.mozNotification) {
-                permission = Permissions.GRANTED;
+                permission = Permission.GRANTED;
 
             /* IE9+ */
             } else if (w.external && w.external.msIsSiteMode() !== undefined) {
