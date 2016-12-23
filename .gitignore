@@ -59,6 +59,8 @@ dist
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
+.idea
+
 # User-specific stuff:
 .idea/workspace.xml
 .idea/tasks.xml
