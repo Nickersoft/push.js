@@ -32,5 +32,8 @@
     "karma-jasmine": "^0.3.8",
     "karma-mocha-reporter": "^1.3.0",
     "uglify-js": "^2.6.2"
+  },
+  "dependencies": {
+    "coveralls": "^2.11.15"
   }
 }

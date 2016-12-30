@@ -6,3 +6,4 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 addons:
   firefox: "29.0"
+after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js" 
