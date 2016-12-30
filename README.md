@@ -1,4 +1,6 @@
-# Push.js [![Build Status](https://travis-ci.org/Nickersoft/push.js.svg?branch=master)](https://travis-ci.org/Nickersoft/push.js)
+# Push.js
+
+[![Build Status](https://travis-ci.org/Nickersoft/push.js.svg?branch=master)](https://travis-ci.org/Nickersoft/push.js) [![npm version](https://badge.fury.io/js/push.js.svg)](https://badge.fury.io/js/push.js) [![Coverage Status](https://coveralls.io/repos/github/Nickersoft/push.js/badge.svg?branch=master)](https://coveralls.io/github/Nickersoft/push.js?branch=master) [![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
 
 ### What is Push? ###
 
