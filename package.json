@@ -31,9 +31,7 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.8",
     "karma-mocha-reporter": "^1.3.0",
-    "uglify-js": "^2.6.2"
-  },
-  "dependencies": {
+    "uglify-js": "^2.6.2",
     "coveralls": "^2.11.15"
   }
 }
