@@ -353,8 +353,14 @@
 
             };
 
+            var existing = self.Permission.get();
+
+            /* Permissions already set */
+            if (existing !== self.Permission.DEFAULT) {
+                callback(existing);
+            }
             /* Safari 6+, Chrome 23+ */
-            if (w.Notification && w.Notification.requestPermission) {
+            else if (w.Notification && w.Notification.requestPermission) {
                 Notification.requestPermission(callback);
             }
             /* Legacy webkit browsers */

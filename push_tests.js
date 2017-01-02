@@ -55,7 +55,6 @@ describe('permission', function () {
         expect(window.Notification.requestPermission).toHaveBeenCalled();
     });
 
-
     it('should update permission value if permission is granted and execute callback', function (done) {
         spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
             cb(Push.Permission.GRANTED);
@@ -68,6 +67,15 @@ describe('permission', function () {
         }, 500);
     });
 
+    it('should not request permission if permission is already granted', function () {
+        spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.GRANTED);
+        spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
+            cb(Push.Permission.GRANTED);
+        });
+        Push.Permission.request();
+        Push.create(TEST_TITLE);
+        expect(window.Notification.requestPermission).not.toHaveBeenCalled();
+    });
 });
 
 describe('creating notifications', function () {
