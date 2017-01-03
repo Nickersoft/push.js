@@ -446,6 +446,12 @@
          })();
 
          /**
+          * Sets hasPermission to the current permission level
+          * @return {void}
+          */
+        hasPermission = Permission.get() === Permission.GRANTED;
+
+         /**
           * Creates and displays a new notification
           * @param {Array} options
           * @return {void}
