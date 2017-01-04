@@ -328,6 +328,7 @@
          * @return {void}
          */
         self.Permission.request = function (onGranted, onDenied) {
+            var existing = self.Permission.get();
 
             /* Return if Push not supported */
             if (!self.isSupported) {
@@ -352,8 +353,6 @@
                 }
 
             };
-
-            var existing = self.Permission.get();
 
             /* Permissions already set */
             if (existing !== self.Permission.DEFAULT) {
