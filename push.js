@@ -141,6 +141,7 @@
             var dict = {},
                 success = false,
                 key;
+
             for (key in notifications) {
                 if (notifications.hasOwnProperty(key)) {
                     if (key != id) {
@@ -156,28 +157,50 @@
             return success;
         },
 
+        prepareNotification = function (id, options) {
+            var wrapper;
+            console.log(notifications);
+            /* Wrapper used to get/close notification later on */
+            wrapper = {
+                get: function () {
+                    return notifications[id];
+                },
+
+                close: function () {
+                    closeNotification(id);
+                }
+            };
+
+            /* Autoclose timeout */
+            if (options.timeout) {
+                setTimeout(function () {
+                    wrapper.close();
+                }, options.timeout);
+            }
+
+            return wrapper;
+        },
+
         /**
          * Callback function for the 'create' method
          * @return {void}
          */
-        createCallback = function (title, options) {
+        createCallback = function (title, options, resolve) {
             var notification,
-                wrapper,
-                id,
                 onClose;
 
             /* Set empty settings if none are specified */
             options = options || {};
 
             /* Set the last service worker path for testing */
-            self.lastWorkerPath = options.serviceWorker || 'sw.js';
+            self.lastWorkerPath = options.serviceWorker || 'serviceWorker.js';
 
             /* onClose event handler */
-            onClose = function () {
+            onClose = function (id) {
                 /* A bit redundant, but covers the cases when close() isn't explicitly called */
                 removeNotification(id);
                 if (isFunction(options.onClose)) {
-                    options.onClose.call(this);
+                    options.onClose.call(this, notification);
                 }
             };
 
@@ -195,8 +218,20 @@
                     );
                 } catch (e) {
                     if (w.navigator) {
-                        w.navigator.serviceWorker.register(options.serviceWorker || 'sw.js');
+                        /* Register ServiceWorker using lastWorkerPath */
+                        w.navigator.serviceWorker.register(self.lastWorkerPath);
                         w.navigator.serviceWorker.ready.then(function(registration) {
+                            var localData = {
+                                id: currentId,
+                                link: options.link,
+                                onClick: options.onClick,
+                                onClose: options.onClose
+                            };
+
+                            if (typeof options.data !== 'undefined' && options.data !== null)
+                                Object.assign(localData, options.data);
+
+                            /* Show the notification */
                             registration.showNotification(
                                 title,
                                 {
@@ -207,7 +242,25 @@
                                     data: options.data,
                                     requireInteraction: options.requireInteraction
                                 }
-                            );
+                            ).then(function() {
+                                var id;
+
+                                /* Find the most recent notification and add it to the global array */
+                                registration.getNotifications().then(function(notifications) {
+                                    id = addNotification(notifications[notifications.length - 1]);
+                                    registration.active.postMessage(JSON.stringify({ id: id }));
+
+                                    /* Listen for close requests from the ServiceWorker */
+                                    navigator.serviceWorker.addEventListener('message', function (event) {
+                                        var data = JSON.parse(event.data);
+
+                                        if (data.action === 'close' && Number.isInteger(data.id))
+                                            removeNotification(data.id);
+                                    });
+
+                                    resolve(prepareNotification(id, options));
+                                });
+                            });
                         });
                     }
                 }
@@ -251,28 +304,10 @@
                 throw new Error('Unable to create notification: unknown interface');
             }
 
-            /* Add it to the global array */
-            id = addNotification(notification);
-
-            /* Wrapper used to get/close notification later on */
-            wrapper = {
-                get: function () {
-                    return notification;
-                },
-
-                close: function () {
-                    closeNotification(id);
-                }
-            };
-
-            /* Autoclose timeout */
-            if (options.timeout) {
-                setTimeout(function () {
-                    wrapper.close();
-                }, options.timeout);
-            }
-
             if (typeof(notification) !== 'undefined') {
+                var id = addNotification(notification),
+                    wrapper = prepareNotification(id, options);
+
                 /* Notification callbacks */
                 if (isFunction(options.onShow))
                     notification.addEventListener('show', options.onShow);
@@ -283,24 +318,19 @@
                 if (isFunction(options.onClick))
                     notification.addEventListener('click', options.onClick);
 
-                notification.addEventListener('close', onClose);
-                notification.addEventListener('cancel', onClose);
-            } else if (isFunction(options.onClick)) {
-                /* Notification callback for service worker */
-                if (isFunction(options.onClick)) {
-                    w.addEventListener('notificationclick', function(event) {
-                        options.onClick.call(event.notification);
-                    });
-                }
-
-                w.addEventListener('notificationclose', function(event) {
-                    onClose.call(event.notification);
+                notification.addEventListener('close', function() {
+                    onClose(id);
                 });
+
+                notification.addEventListener('cancel', function() {
+                    onClose(id);
+                });
+
+                /* Return the wrapper so the user can call close() */
+                resolve(wrapper);
             }
 
-
-            /* Return the wrapper so the user can call close() */
-            return wrapper;
+            resolve({}); // By default, pass an empty wrapper
         },
 
         /**
@@ -453,9 +483,10 @@
          /**
           * Creates and displays a new notification
           * @param {Array} options
-          * @return {void}
+          * @return {Promise}
           */
         self.create = function (title, options) {
+            var promiseCallback;
 
             /* Fail if the browser is not supported */
             if (!self.isSupported) {
@@ -469,27 +500,28 @@
 
             /* Request permission if it isn't granted */
             if (!self.Permission.has()) {
-                return new Promise(function(resolve, reject) {
+                promiseCallback = function(resolve, reject) {
                     self.Permission.request(function() {
                         try {
-                            resolve(createCallback(title, options));
+                            createCallback(title, options, resolve);
                         } catch (e) {
                             reject(e);
                         }
                     }, function() {
                         reject("Permission request declined");
                     });
-                });
+                };
             } else {
-                return new Promise(function(resolve, reject) {
+                promiseCallback = function(resolve, reject) {
                     try {
-                        resolve(createCallback(title, options));
+                        createCallback(title, options, resolve);
                     } catch (e) {
                         reject(e);
                     }
-                });
+                };
             }
 
+            return new Promise(promiseCallback);
         };
 
         /**
@@ -499,9 +531,10 @@
         self.count = function () {
             var count = 0,
                 key;
-            for (key in notifications) {
+
+            for (key in notifications)
                 count++;
-            }
+
             return count;
         },
 
@@ -536,12 +569,11 @@
          * @return {void}
          */
         self.clear = function () {
-            var i,
-                success = true;
-            for (key in notifications) {
-                var didClose = closeNotification(key);
-                success = success && didClose;
-            }
+            var success = true;
+
+            for (key in notifications)
+                success = success && closeNotification(key);
+
             return success;
         };
     };

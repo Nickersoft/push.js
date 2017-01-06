@@ -8,7 +8,7 @@ TEST_TAG_2 = 'bar',
 TEST_ICON = 'icon',
 TEST_ICON_ARRAY = { x16: TEST_ICON, x32: TEST_ICON },
 TEST_SW = 'customServiceWorker.js',
-TEST_SW_DEFAULT = "sw.js"
+TEST_SW_DEFAULT = "serviceWorker.js"
 NOOP = function () {}; // NO OPerator (empty function)
 
 describe('initialization', function () {
@@ -132,7 +132,7 @@ describe('creating notifications', function () {
         });
     });
 
-    it('should use "sw.js" as a service worker path if one is not specified', function(done) {
+    it('should use "serviceWorker.js" as a service worker path if one is not specified', function(done) {
         var promise = Push.create(TEST_TITLE);
         promise.then(function(wrapper) {
             expect(Push.__lastWorkerPath()).toBe(TEST_SW_DEFAULT);
@@ -205,6 +205,20 @@ describe('closing notifications', function () {
     beforeEach(function () {
         spyOn(window.Notification.prototype, 'close');
         Push.clear();
+    });
+
+    it('should close notifications on close callback', function (done) {
+        var promise;
+        promise = Push.create(TEST_TITLE, {
+            onClose: callback
+        });
+        expect(Push.count()).toBe(1);
+        promise.then(function(wrapper) {
+            var notification = wrapper.get();
+            notification.dispatchEvent(new Event('close'));
+            expect(Push.count()).toBe(0);
+            done();
+        });
     });
 
     it('should close notifications using wrapper', function (done) {
