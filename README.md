@@ -184,5 +184,6 @@ Push is based off work the following work:
 ### Additional Resources ###
 Feel free to expand this list as you find more cool Push.js resources online, or a tutorial in your language:
 
+- [Push.js: An Introduction](https://blog.tylernickerson.com/push-js-an-introduction-49291ac986e8#.t7o5izwi9)
 - [Push.js by Keen Dev](https://techstory.shma.so/push-js-897d5d467f94#.3m6cp34ok) (Korean Tutorial)
 - [Web Push Notification with Push.js](https://www.youtube.com/watch?v=s19Mr5AzrmA) (Spanish Video Tutorial)
