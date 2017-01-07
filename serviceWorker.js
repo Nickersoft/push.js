@@ -1,21 +1,19 @@
-var isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; };
+var isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; },
+
+runFunctionString = function(funcStr) {
+    if (funcStr.trim().length > 0) {
+        eval('var func = ' + funcStr);
+        if (isFunction(func))
+            func();
+    }
+};
 
 self.addEventListener('message', function(event) {
-    var data = JSON.parse(event.data);
-
-    console.log(data);
     self.client = event.source;
-
-    if (typeof data.link !== 'undefined' && data.link !== null && !self.hasOwnProperty('link'))
-        self.link = data.link;
-
-    if (typeof data.id !== 'undefined' && data.id !== null && !self.hasOwnProperty('id'))
-        self.id = data.id;
 });
 
 self.onnotificationclose = function (event) {
-    if (event.notification.hasOwnProperty('data') && isFunction(event.notification.data.onClose))
-        event.notification.data.onClose();
+    runFunctionString(event.notification.data.onClose);
 
     /* Tell Push to execute close callback */
     self.client.postMessage(JSON.stringify({
@@ -27,12 +25,9 @@ self.onnotificationclose = function (event) {
 self.onnotificationclick = function (event) {
     var link;
 
-    if (typeof event.notification.data !== 'undefined' &&
-        isFunction(event.notification.data.onClick))
-        event.notification.data.onClick();
+    runFunctionString(event.notification.data.onClick);
 
-    if (typeof event.notification.data !== 'undefined' &&
-        typeof event.notification.data.link !== 'undefined') {
+    if (typeof event.notification.data.link !== 'undefined' && event.notification.data.link !== null) {
         link = event.notification.data.link;
 
         event.notification.close();
@@ -48,6 +43,8 @@ self.onnotificationclick = function (event) {
 
                 if (link[link.length - 1] !== '/' && client.url[client.url.length - 1] == '/')
                     link = link + '/';
+
+                console.log(link);
 
                 if ((client.url == '/' + link) && ('focus' in client))
                     return client.focus();

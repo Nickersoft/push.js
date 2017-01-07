@@ -159,7 +159,7 @@
 
         prepareNotification = function (id, options) {
             var wrapper;
-            console.log(notifications);
+
             /* Wrapper used to get/close notification later on */
             wrapper = {
                 get: function () {
@@ -224,12 +224,12 @@
                             var localData = {
                                 id: currentId,
                                 link: options.link,
-                                onClick: options.onClick,
-                                onClose: options.onClose
+                                onClick: (isFunction(options.onClick)) ? options.onClick.toString() : '',
+                                onClose: (isFunction(options.onClose)) ? options.onClose.toString() : ''
                             };
 
                             if (typeof options.data !== 'undefined' && options.data !== null)
-                                Object.assign(localData, options.data);
+                                localData = Object.assign(localData, options.data);
 
                             /* Show the notification */
                             registration.showNotification(
@@ -239,7 +239,7 @@
                                     body: options.body,
                                     vibrate: options.vibrate,
                                     tag: options.tag,
-                                    data: options.data,
+                                    data: localData,
                                     requireInteraction: options.requireInteraction
                                 }
                             ).then(function() {
@@ -248,7 +248,9 @@
                                 /* Find the most recent notification and add it to the global array */
                                 registration.getNotifications().then(function(notifications) {
                                     id = addNotification(notifications[notifications.length - 1]);
-                                    registration.active.postMessage(JSON.stringify({ id: id }));
+
+                                    /* Send an empty message so the ServiceWorker knows who the client is */
+                                    registration.active.postMessage('');
 
                                     /* Listen for close requests from the ServiceWorker */
                                     navigator.serviceWorker.addEventListener('message', function (event) {
