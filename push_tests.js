@@ -56,6 +56,7 @@ describe('permission', function () {
     });
 
     it('should update permission value if permission is granted and execute callback', function (done) {
+        spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.GRANTED);
         spyOn(window.Notification, 'requestPermission').and.callFake(function (cb) {
             cb(Push.Permission.GRANTED);
         });

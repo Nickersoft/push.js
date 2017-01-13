@@ -75,9 +75,6 @@
         /* Message to show if there is no suport to Push Notifications */
         incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
 
-        /* Whether Push has permission to notify */
-        hasPermission = false,
-
         /* Map of open notifications */
         notifications = {},
 
@@ -337,16 +334,13 @@
 
             /* Default callback */
             callback = function (result) {
-
                 switch (result) {
 
                     case self.Permission.GRANTED:
-                        hasPermission = true;
                         if (onGranted) onGranted();
                         break;
 
                     case self.Permission.DENIED:
-                        hasPermission = false;
                         if (onDenied) onDenied();
                         break;
 
@@ -375,7 +369,7 @@
          * @return {Boolean}
          */
         self.Permission.has = function () {
-            return hasPermission;
+            return Permission.get() === Permission.GRANTED;
         };
 
         /**
