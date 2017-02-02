@@ -23,12 +23,14 @@ self.onnotificationclose = function (event) {
 };
 
 self.onnotificationclick = function (event) {
-    var link;
+    var link, origin, href;
 
     runFunctionString(event.notification.data.onClick);
 
     if (typeof event.notification.data.link !== 'undefined' && event.notification.data.link !== null) {
+        origin = event.notification.data.origin;
         link = event.notification.data.link;
+        href = origin.substring(0, origin.indexOf('/', 8)) + '/';
 
         event.notification.close();
 
@@ -36,17 +38,16 @@ self.onnotificationclick = function (event) {
         event.waitUntil(clients.matchAll({
             type: "window"
         }).then(function (clientList) {
-            var client;
+            var client, full_url;
 
             for (var i = 0; i < clientList.length; i++) {
                 client = clientList[i];
+                full_url = href + link;
 
-                if (link[link.length - 1] !== '/' && client.url[client.url.length - 1] == '/')
-                    link = link + '/';
+                if (full_url[full_url.length - 1] !== '/' && client.url[client.url.length - 1] == '/')
+                    full_url += '/';
 
-                console.log(link);
-
-                if ((client.url == '/' + link) && ('focus' in client))
+                if ((client.url == full_url) && ('focus' in client))
                     return client.focus();
             }
 

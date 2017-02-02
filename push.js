@@ -224,6 +224,7 @@
                             var localData = {
                                 id: currentId,
                                 link: options.link,
+                                origin: document.location.href,
                                 onClick: (isFunction(options.onClick)) ? options.onClick.toString() : '',
                                 onClose: (isFunction(options.onClose)) ? options.onClose.toString() : ''
                             };
