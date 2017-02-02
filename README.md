@@ -152,12 +152,13 @@ Push.create('Hello World!', {
 * __body__: The body text of the notification.
 * __data__: Data to pass to ServiceWorker notifications
 * __icon__: Can be either the URL to an icon image or an array containing 16x16 and 32x32 pixel icon images (see above).
+* __link__: A relative URL path to navigate to when the user clicks on the notification on mobile (e.g. if you want users to navigate to your page `http://example.com/page`, then the relative URL is just `page`). If the page is already open in the background, then the browser window will automatically become focused. Requires the `serviceWorker.js` file to be present on your server to work.
 * __onClick__: Callback to execute when the notification is clicked.
 * __onClose__: Callback to execute when the notification is closed (obsolete).
 * __onError__: Callback to execute when if the notification throws an error.
 * __onShow__: Callback to execute when the notification is shown (obsolete).
 * __requireInteraction__: When set to true, the notification will not close unless the user manually closes or clicks on it.
-* __serviceWorker__: Path to the [service worker](https://developers.google.com/web/fundamentals/getting-started/push-notifications/step-03?hl=en) script registered on Push mobile. Defaults to "sw.js" if a path is not specified.
+* __serviceWorker__: Path to the [service worker](https://developers.google.com/web/fundamentals/getting-started/push-notifications/step-03?hl=en) script registered on Push mobile. Defaults to "serviceWorker.js" if a path is not specified.
 * __tag__: Unique tag used to identify the notification. Can be used to later close the notification manually.
 * __timeout__: Time in milliseconds until the notification closes automatically.
 * __vibrate__: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.
