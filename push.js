@@ -66,7 +66,7 @@
         var
         self = this,
         isUndefined   = function (obj) { return obj === undefined; },
-        isString   = function (obj) { return String(obj) === obj },
+        isString   = function (obj) { return typeof obj === 'string' },
         isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; },
 
         /* ID to use for new notifications */
