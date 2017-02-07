@@ -12,13 +12,13 @@ implementations if the user's browser does not support the new API.
 You can quickly install Push via [npm](http://npmjs.com):
 
 ```
-npm install push.js --save
+npm install Push.js --save
 ```
 
 Or, if you want something a little more lightweight, you can give [Bower](http://bower.io) a try:
 
 ```
-bower install push.js --save
+bower install Push.js --save
 ```
 
 For more information regarding the Push NPM package, [see here](https://www.npmjs.com/package/push.js).

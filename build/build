@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+const {StringDecoder} = require('string_decoder');
+const UglifyJS = require("uglify-js");
+const browserify = require('browserify')
+const fs = require('fs');
+const yaml = require('js-yaml');
+const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/build.config.yml`, 'utf8'));
+
+const outputDirectory = `${__dirname}/${config.outputDirectory}`;
+const license = fs.readFileSync(`${__dirname}/license.txt`, 'utf8').trim();
+
+if (!fs.existsSync(outputDirectory)) {
+  fs.mkdirSync(outputDirectory);
+}
+const bundler = browserify(`${__dirname}/${config.inputPath}`, {standalone: "Push"});
+
+if(config.hasOwnProperty('transforms')) {
+  config.transforms.forEach((transform) => {
+    const name = transform.name;
+    delete transform.name;
+    bundler.transform(name, transform);
+  });
+}
+
+bundler.bundle((error, data) => {
+  if(error)
+    console.error(error);
+
+  fs.writeFileSync(
+    `${outputDirectory}/${config.outputFile}`,
+    UglifyJS.minify(
+      new StringDecoder('utf8').write(data),
+      {
+        output: {
+          comments: true,
+          preamble: license
+        }
+      }
+    ).code
+  );
+});
+
+console.log("File compiled successfully");

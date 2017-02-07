@@ -1,0 +1,7 @@
+inputPath: "../src/index.js"
+outputDirectory: '../bin'
+outputFile: "push.min.js"
+transforms:
+  - name: uglifyify
+  - name: babelify
+    presets: ["es2015"]

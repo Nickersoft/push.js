@@ -5,7 +5,7 @@ module.exports = function(config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
+        basePath: '../',
 
         coverageReporter: {
             // specify a common output directory
@@ -24,18 +24,20 @@ module.exports = function(config) {
             'karma-jasmine',
             'karma-firefox-launcher',
             'karma-mocha-reporter',
-            'karma-coverage'
+            'karma-coverage',
+            'karma-sourcemap-loader'
         ],
 
         // list of files / patterns to load in the browser
         files: [
-            'push.js',
-            'push_tests.js'
+            './bin/push.min.js',
+            './tests/push.tests.js'
         ],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
+            '**/*.js': ['sourcemap'],
             'push.js': ['coverage']
         },
 
