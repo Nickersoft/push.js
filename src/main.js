@@ -35,7 +35,7 @@
  *
  * @preserve
  */
-
+import Push from './classes/Push';
 
 (((global, factory) => {
 
@@ -55,6 +55,5 @@
     }
 
 }))(typeof window !== 'undefined' ? window : this, (w, d) => {
-    import Push from './classes/Push';
     return new Push(w, d);
 });

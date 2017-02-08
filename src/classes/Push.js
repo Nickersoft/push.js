@@ -1,12 +1,17 @@
 import Helpers from './Helpers';
+import Permission from './Permission';
 
 export default class Push {
     constructor(win, doc) {
+        // Private variables
         this._currentId = 0; // ID to use for new notifications
         this._notifications = {}; // Map of open notifications
         this._lastWorkerPath = null; // Testing variable for the last service worker path used
-        this.win = win;
-        this.doc = doc;
+        this._win = win; // Window object
+        this._doc = doc; // Document object
+
+        // Public variables
+        this.Permission = new Permission(win, doc);
     }
 
     /**
@@ -15,7 +20,7 @@ export default class Push {
      * @return {Boolean} boolean denoting whether the operation was successful
      * @private
      */
-    _closeNotification = id => {
+    _closeNotification(id) {
         let errored = false;
         const notification = this._notifications[id];
 
@@ -30,8 +35,8 @@ export default class Push {
                 notification.cancel();
 
             /* IE9+ */
-            else if (this.win.external && this.win.external.msIsSiteMode)
-                this.win.external.msSiteModeClearIconOverlay();
+            else if (this._win.external && this._win.external.msIsSiteMode)
+                this._win.external.msSiteModeClearIconOverlay();
 
             else {
                 errored = true;
@@ -52,7 +57,7 @@ export default class Push {
      * @return {Integer} Dictionary key of the notification
      * @private
      */
-    _addNotification = notification => {
+    _addNotification(notification) {
         const id = currentId;
         this._notifications[id] = notification;
         this._currentId++;
@@ -65,7 +70,7 @@ export default class Push {
      * @return {Boolean} boolean denoting success
      * @private
      */
-    _removeNotification = id => {
+    _removeNotification(id) {
         const dict = {};
         let success = false;
         let key;
@@ -93,7 +98,7 @@ export default class Push {
      * @returns {Map} wrapper hashmap object
      * @private
      */
-    _prepareNotification = (id, options) => {
+    _prepareNotification(id, options) {
         let wrapper;
 
         /* Wrapper used to get/close notification later on */
@@ -122,7 +127,7 @@ export default class Push {
      * @return {void}
      * @private
      */
-    _createCallback = (title, options, resolve) => {
+    _createCallback(title, options, resolve) {
         let notification;
         let onClose;
 
@@ -142,9 +147,9 @@ export default class Push {
         };
 
         /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
-        if (this.win.Notification) {
+        if (this._win.Notification) {
             try {
-                notification =  new this.win.Notification(
+                notification =  new this._win.Notification(
                     title,
                     {
                         icon: (Helpers.isString(options.icon) || Helpers.isUndefined(options.icon)) ? options.icon : options.icon.x32,
@@ -154,10 +159,10 @@ export default class Push {
                     }
                 );
             } catch (e) {
-                if (this.win.navigator) {
+                if (this._win.navigator) {
                     /* Register ServiceWorker using lastWorkerPath */
-                    this.win.navigator.serviceWorker.register(this._lastWorkerPath);
-                    this.win.navigator.serviceWorker.ready.then(registration => {
+                    this._win.navigator.serviceWorker.register(this._lastWorkerPath);
+                    this._win.navigator.serviceWorker.ready.then(registration => {
                         let localData = {
                             id: this._currentId,
                             link: options.link,
@@ -206,9 +211,9 @@ export default class Push {
             }
 
             /* Legacy webkit browsers */
-        } else if (this.win.webkitNotifications) {
+        } else if (this._win.webkitNotifications) {
 
-            notification = this.win.webkitNotifications.createNotification(
+            notification = this._win.webkitNotifications.createNotification(
                 options.icon,
                 title,
                 options.body
@@ -228,16 +233,16 @@ export default class Push {
             notification.show();
 
             /* IE9+ */
-        } else if (this.win.external && this.win.external.msIsSiteMode()) {
+        } else if (this._win.external && this._win.external.msIsSiteMode()) {
 
             //Clear any previous notifications
-            this.win.external.msSiteModeClearIconOverlay();
-            this.win.external.msSiteModeSetIconOverlay(
+            this._win.external.msSiteModeClearIconOverlay();
+            this._win.external.msSiteModeSetIconOverlay(
                 ((Helpers.isString(options.icon) || Helpers.isUndefined(options.icon))
                     ? options.icon
                     : options.icon.x16), title
             );
-            this.win.external.msSiteModeActivate();
+            this._win.external.msSiteModeActivate();
 
             notification = {};
         } else {
@@ -271,5 +276,101 @@ export default class Push {
         }
 
         resolve({}); // By default, pass an empty wrapper
+    };
+
+    /**
+     * Internal function that returns the path of the last service worker used
+     * For testing purposes only
+     * @return {String} The service worker path
+     * @private
+     */
+    _lastWorkerPath() {
+        return self._lastWorkerPath;
+    }
+
+    /**
+     * Creates and displays a new notification
+     * @param {Array} options
+     * @return {Promise}
+     */
+    create(title, options) {
+        let promiseCallback;
+
+        /* Fail if no or an invalid title is provided */
+        if (!Helpers.isString(title)) {
+            throw new Error('PushError: Title of notification must be a string');
+        }
+
+        /* Request permission if it isn't granted */
+        if (!this.Permission.has()) {
+            promiseCallback = (resolve, reject) => {
+                self.Permission.request(() => {
+                    try {
+                        createCallback(title, options, resolve);
+                    } catch (e) {
+                        reject(e);
+                    }
+                }, () => {
+                    reject("Permission request declined");
+                });
+            };
+        } else {
+            promiseCallback = (resolve, reject) => {
+                try {
+                    createCallback(title, options, resolve);
+                } catch (e) {
+                    reject(e);
+                }
+            };
+        }
+
+        return new Promise(promiseCallback);
+    };
+
+    /**
+     * Returns the notification count
+     * @return {Integer} The notification count
+     */
+    count() {
+        let count = 0;
+        let key;
+
+        for (key in this._notifications)
+            count++;
+
+        return count;
+    };
+
+    /**
+     * Closes a notification with the given tag
+     * @param {String} tag - Tag of the notification to close
+     * @return {Boolean} boolean denoting success
+     */
+    close(tag) {
+        let key, notification;
+
+        for (key in this._notifications) {
+            notification = this._notifications[key];
+
+            /* Run only if the tags match */
+            if (notification.tag === tag) {
+
+                /* Call the notification's close() method */
+                return this._closeNotification(key);
+            }
+        }
+    };
+
+    /**
+     * Clears all notifications
+     * @return {Boolean} boolean denoting whether the clear was successful in closing all notifications
+     */
+    clear() {
+        let key, success = true;
+
+        for (key in this._notifications)
+            success = success && this._closeNotification(key);
+
+        return success;
     };
 }
