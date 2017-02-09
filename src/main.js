@@ -38,22 +38,25 @@
 import Push from './classes/Push';
 
 (((global, factory) => {
+    console.log('called4');
+    'use strict';
 
     /* Use AMD */
     if (typeof define === 'function' && define.amd) {
-        define(() => new (factory(global, global.document))());
+        console.log('called3');
+        define(() => new factory(global, global.document));
     }
 
     /* Use CommonJS */
     else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = new (factory(global, global.document))();
+        console.log('called2');
+        module.exports = new factory(global, global.document);
     }
 
     /* Use Browser */
     else {
-        global.Push = new (factory(global, global.document))();
+        console.log('called');
+        global.Push = new factory(global, global.document);
     }
 
-}))(typeof window !== 'undefined' ? window : this, (w, d) => {
-    return new Push(w, d);
-});
+}))(typeof window !== 'undefined' ? window : this, Push);

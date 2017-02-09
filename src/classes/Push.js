@@ -1,16 +1,35 @@
-import Helpers from './Helpers';
+import Messages from './Messages';
 import Permission from './Permission';
+import Util from './Util';
+
+/* Import notification agents */
+import DesktopAgent from './agents/DesktopAgent';
+import MobileChromeAgent from './agents/MobileChromeAgent';
+import MobileFirefoxAgent from './agents/MobileFirefoxAgent';
+import MSAgent from './agents/MSAgent';
+import WebKitAgent from './agents/WebKitAgent';
 
 export default class Push {
-    constructor(win, doc) {
-        // Private variables
-        this._currentId = 0; // ID to use for new notifications
-        this._notifications = {}; // Map of open notifications
-        this._lastWorkerPath = null; // Testing variable for the last service worker path used
-        this._win = win; // Window object
-        this._doc = doc; // Document object
 
-        // Public variables
+    constructor(win, doc) {
+        /* Private variables */
+
+        /* ID to use for new notifications */
+        this._currentId = 0;
+
+        /* Map of open notifications */
+        this._notifications = {};
+
+        /* Testing variable for the last service worker path used */
+        this._lastWorkerPath = null;
+
+        /* Window object */
+        this._win = win;
+
+        /* Document object */
+        this._doc = doc;
+
+        /* Public variables */
         this.Permission = new Permission(win, doc);
     }
 
@@ -21,34 +40,31 @@ export default class Push {
      * @private
      */
     _closeNotification(id) {
-        let errored = false;
+        let success = true;
         const notification = this._notifications[id];
 
-        if (typeof notification !== 'undefined') {
+        if (notification !== undefined) {
 
-            /* Safari 6+, Chrome 23+ */
-            if (notification.close)
-                notification.close();
+            /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
+            if (DesktopAgent.isSupported())
+                DesktopAgent.close(notification);
 
-            /* Legacy webkit browsers */
-            else if (notification.cancel)
-                notification.cancel();
+            /* Legacy WebKit browsers */
+            else if (WebKitAgent.isSupported())
+                WebKitAgent.close(notification);
 
-            /* IE9+ */
-            else if (this._win.external && this._win.external.msIsSiteMode)
-                this._win.external.msSiteModeClearIconOverlay();
+            /* IE9 */
+            else if (MSAgent.isSupported())
+                MSAgent.close();
 
             else {
-                errored = true;
+                success = false;
+                this._removeNotification(id);
                 throw new Error('Unable to close notification: unknown interface');
-            }
-
-            if (!errored) {
-                return this._removeNotification(id);
             }
         }
 
-        return false;
+        return success;
     };
 
     /**
@@ -72,21 +88,22 @@ export default class Push {
      */
     _removeNotification(id) {
         const dict = {};
-        let success = false;
-        let key;
+        let key, success = false;
 
         for (key in this._notifications) {
             if (this._notifications.hasOwnProperty(key)) {
-                if (key != id) {
+                if (key != id)
                     dict[key] = this._notifications[key];
-                } else {
-                    // We're successful if we omit the given ID from the new array
+                else {
+                    /* We're successful if we omit the given ID from the new array */
                     success = true;
                 }
             }
         }
-        // Overwrite the current notifications dictionary with the filtered one
+
+        /* Overwrite the current notifications dictionary with the filtered one */
         this._notifications = dict;
+
         return success;
     };
 
@@ -128,7 +145,7 @@ export default class Push {
      * @private
      */
     _createCallback(title, options, resolve) {
-        let notification;
+        let notification = null;
         let onClose;
 
         /* Set empty settings if none are specified */
@@ -147,120 +164,60 @@ export default class Push {
         };
 
         /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
-        if (this._win.Notification) {
+        if (DesktopAgent.isSupported()) {
             try {
-                notification =  new this._win.Notification(
-                    title,
-                    {
-                        icon: (Helpers.isString(options.icon) || Helpers.isUndefined(options.icon)) ? options.icon : options.icon.x32,
-                        body: options.body,
-                        tag: options.tag,
-                        requireInteraction: options.requireInteraction
-                    }
-                );
+                notification = DesktopAgent.create(title, options);
             } catch (e) {
-                if (this._win.navigator) {
-                    /* Register ServiceWorker using lastWorkerPath */
-                    this._win.navigator.serviceWorker.register(this._lastWorkerPath);
-                    this._win.navigator.serviceWorker.ready.then(registration => {
-                        let localData = {
-                            id: this._currentId,
-                            link: options.link,
-                            origin: document.location.href,
-                            onClick: (Helpers.isFunction(options.onClick)) ? options.onClick.toString() : '',
-                            onClose: (Helpers.isFunction(options.onClose)) ? options.onClose.toString() : ''
-                        };
+                if (MobileChromeAgent.isSupported()) {
+                    MobileChromeAgent.create(
+                        this._currentId,
+                        title,
+                        options,
+                        this._lastWorkerPath(),
+                        (notifications) => {
+                            let id = this._addNotification(notifications[notifications.length - 1]);
 
-                        if (typeof options.data !== 'undefined' && options.data !== null)
-                            localData = Object.assign(localData, options.data);
+                            /* Listen for close requests from the ServiceWorker */
+                            navigator.serviceWorker.addEventListener('message', event => {
+                                const data = JSON.parse(event.data);
 
-                        /* Show the notification */
-                        registration.showNotification(
-                            title,
-                            {
-                                icon: options.icon,
-                                body: options.body,
-                                vibrate: options.vibrate,
-                                tag: options.tag,
-                                data: localData,
-                                requireInteraction: options.requireInteraction
-                            }
-                        ).then(() => {
-                            let id;
-
-                            /* Find the most recent notification and add it to the global array */
-                            registration.getNotifications().then(notifications => {
-                                id = this._addNotification(notifications[notifications.length - 1]);
-
-                                /* Send an empty message so the ServiceWorker knows who the client is */
-                                registration.active.postMessage('');
-
-                                /* Listen for close requests from the ServiceWorker */
-                                navigator.serviceWorker.addEventListener('message', event => {
-                                    const data = JSON.parse(event.data);
-
-                                    if (data.action === 'close' && Number.isInteger(data.id))
-                                        this._removeNotification(data.id);
-                                });
-
-                                resolve(this._prepareNotification(id, options));
+                                if (data.action === 'close' && Number.isInteger(data.id))
+                                    this._removeNotification(data.id);
                             });
-                        });
-                    });
+
+                            resolve(this._prepareNotification(id, options));
+                        }
+                    );
                 }
             }
+        /* Legacy WebKit browsers */
+        } else if (WebKitAgent.isSupported())
+            notification = WebKitAgent.create(title, options);
 
-            /* Legacy webkit browsers */
-        } else if (this._win.webkitNotifications) {
+        /* Firefox Mobile */
+        else if (MobileFirefoxAgent.isSupported())
+            MobileFirefoxAgent.create(title, options);
 
-            notification = this._win.webkitNotifications.createNotification(
-                options.icon,
-                title,
-                options.body
-            );
+        /* IE9 */
+        else if (MSAgent.isSupported())
+            notification = MSAgent.create(title, options);
 
-            notification.show();
+        /* Unknown */
+        else
+            throw new Error(Messages.errors.unknown_interface);
 
-            /* Firefox Mobile */
-        } else if (navigator.mozNotification) {
-
-            notification = navigator.mozNotification.createNotification(
-                title,
-                options.body,
-                options.icon
-            );
-
-            notification.show();
-
-            /* IE9+ */
-        } else if (this._win.external && this._win.external.msIsSiteMode()) {
-
-            //Clear any previous notifications
-            this._win.external.msSiteModeClearIconOverlay();
-            this._win.external.msSiteModeSetIconOverlay(
-                ((Helpers.isString(options.icon) || Helpers.isUndefined(options.icon))
-                    ? options.icon
-                    : options.icon.x16), title
-            );
-            this._win.external.msSiteModeActivate();
-
-            notification = {};
-        } else {
-            throw new Error('Unable to create notification: unknown interface');
-        }
-
-        if (typeof(notification) !== 'undefined') {
+        if (notification !== null) {
             const id = this._addNotification(notification);
             const wrapper = this._prepareNotification(id, options);
 
             /* Notification callbacks */
-            if (isFunction(options.onShow))
+            if (Util.isFunction(options.onShow))
                 notification.addEventListener('show', options.onShow);
 
-            if (isFunction(options.onError))
+            if (Util.isFunction(options.onError))
                 notification.addEventListener('error', options.onError);
 
-            if (isFunction(options.onClick))
+            if (Util.isFunction(options.onClick))
                 notification.addEventListener('click', options.onClick);
 
             notification.addEventListener('close', () => {
@@ -275,7 +232,8 @@ export default class Push {
             resolve(wrapper);
         }
 
-        resolve({}); // By default, pass an empty wrapper
+        /* By default, pass an empty wrapper */
+        resolve({});
     };
 
     /**
@@ -285,7 +243,7 @@ export default class Push {
      * @private
      */
     _lastWorkerPath() {
-        return self._lastWorkerPath;
+        return this._lastWorkerPath;
     }
 
     /**
@@ -297,14 +255,14 @@ export default class Push {
         let promiseCallback;
 
         /* Fail if no or an invalid title is provided */
-        if (!Helpers.isString(title)) {
+        if (!Util.isString(title)) {
             throw new Error('PushError: Title of notification must be a string');
         }
 
         /* Request permission if it isn't granted */
         if (!this.Permission.has()) {
             promiseCallback = (resolve, reject) => {
-                self.Permission.request(() => {
+                this.Permission.request(() => {
                     try {
                         createCallback(title, options, resolve);
                     } catch (e) {

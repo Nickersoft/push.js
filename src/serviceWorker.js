@@ -1,18 +1,18 @@
-var isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; },
+const isFunction = obj => obj && {}.toString.call(obj) === '[object Function]';
 
-runFunctionString = function(funcStr) {
+const runFunctionString = funcStr => {
     if (funcStr.trim().length > 0) {
-        eval('var func = ' + funcStr);
+        eval(`var func = ${funcStr}`);
         if (isFunction(func))
             func();
     }
 };
 
-self.addEventListener('message', function(event) {
+self.addEventListener('message', event => {
     self.client = event.source;
 });
 
-self.onnotificationclose = function (event) {
+self.onnotificationclose = event => {
     runFunctionString(event.notification.data.onClose);
 
     /* Tell Push to execute close callback */
@@ -22,25 +22,28 @@ self.onnotificationclose = function (event) {
     }));
 };
 
-self.onnotificationclick = function (event) {
-    var link, origin, href;
+self.onnotificationclick = event => {
+    let link;
+    let origin;
+    let href;
 
     runFunctionString(event.notification.data.onClick);
 
     if (typeof event.notification.data.link !== 'undefined' && event.notification.data.link !== null) {
         origin = event.notification.data.origin;
         link = event.notification.data.link;
-        href = origin.substring(0, origin.indexOf('/', 8)) + '/';
+        href = `${origin.substring(0, origin.indexOf('/', 8))}/`;
 
         event.notification.close();
 
-        // This looks to see if the current is already open and focuses if it is
+        /* This looks to see if the current is already open and focuses if it is */
         event.waitUntil(clients.matchAll({
             type: "window"
-        }).then(function (clientList) {
-            var client, full_url;
+        }).then(clientList => {
+            let client;
+            let full_url;
 
-            for (var i = 0; i < clientList.length; i++) {
+            for (let i = 0; i < clientList.length; i++) {
                 client = clientList[i];
                 full_url = href + link;
 
@@ -52,7 +55,7 @@ self.onnotificationclick = function (event) {
             }
 
             if (clients.openWindow)
-                return clients.openWindow('/' + link);
+                return clients.openWindow(`/${link}`);
         }));
     }
 };

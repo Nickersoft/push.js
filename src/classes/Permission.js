@@ -17,14 +17,15 @@ export default class Permission {
 
     /**
      * Requests permission for desktop notifications
-     * @param {Function} callback - Function to execute once permission is granted
+     * @param {Function} onGranted - Function to execute once permission is granted
+     * @param {Function} onDenied - Function to execute once permission is denied
      * @return {void}
      */
     request(onGranted, onDenied) {
         const existing = this.get();
 
         /* Default callback */
-        callback = result => {
+        let callback = result => {
             switch (result) {
 
                 case this.GRANTED:
