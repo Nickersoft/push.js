@@ -181,11 +181,3 @@ Push is based off work the following work:
 
 1. [HTML5-Desktop-Notifications](https://github.com/ttsvetko/HTML5-Desktop-Notifications) by [Tsvetan Tsvetkov](https://github.com/ttsvetko)
 2. [notify.js](https://github.com/alexgibson/notify.js) by [Alex Gibson](https://github.com/alexgibson)
-
-### Additional Resources ###
-Feel free to expand this list as you find more cool Push.js resources online, or a tutorial in your language:
-
-- [Push.js: An Introduction](https://blog.tylernickerson.com/push-js-an-introduction-49291ac986e8#.t7o5izwi9)
-- [Push.js by Keen Dev](https://techstory.shma.so/push-js-897d5d467f94#.3m6cp34ok) (Korean Tutorial)
-- [世界一簡単にブラウザのプッシュ通知を実装できる「Push.js」の使い方を徹底解説 by Ryo Sakai](https://ferret-plus.com/6035) (Japanese Tutorial)
-- [Notificaciones web Push (WebPush Notification) con Push.js by Carlos Alfaro](https://www.youtube.com/watch?v=s19Mr5AzrmA) (Spanish Video Tutorial)
