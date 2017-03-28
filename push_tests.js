@@ -119,7 +119,8 @@ describe('creating notifications', function () {
             body: TEST_BODY,
             icon: TEST_ICON,
             tag: TEST_TAG,
-            serviceWorker: TEST_SW
+            serviceWorker: TEST_SW,
+            silent: true
         });
 
         promise.then(function(wrapper) {
@@ -128,6 +129,7 @@ describe('creating notifications', function () {
             expect(notification.body).toBe(TEST_BODY);
             expect(notification.icon).toBe(TEST_ICON);
             expect(notification.tag).toBe(TEST_TAG);
+            expect(notification.silent).toBe(undefined);
             expect(Push.__lastWorkerPath()).toBe(TEST_SW);
             done();
         });
