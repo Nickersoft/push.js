@@ -300,7 +300,7 @@
                 );
                 w.external.msSiteModeActivate();
 
-                notification = {};
+                notifications = {};
             } else {
                 throw new Error('Unable to create notification: unknown interface');
             }
