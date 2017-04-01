@@ -162,7 +162,7 @@ Push.create('Hello World!', {
 * __tag__: Unique tag used to identify the notification. Can be used to later close the notification manually.
 * __timeout__: Time in milliseconds until the notification closes automatically.
 * __vibrate__: An array of durations for a mobile device receiving the notification to vibrate. For example, [200, 100] would vibrate first for 200 milliseconds, pause, then continue for 100 milliseconds. For more information, see below.
-* __silent__: Specifies whether the notification should be silent, i.e. no sounds or vibrations should be issued, regardless of the device settings. [Supported only Chrome 43.0 or higher](https://developer.mozilla.org/en-US/docs/Web/API/notification#Browser_compatibility) .
+* __silent__: Specifies whether the notification should be silent, i.e. no sounds or vibrations should be issued, regardless of the device settings. [Supported only Chrome 43.0 or higher](https://developer.mozilla.org/en-US/docs/Web/API/notification#Browser_compatibility).
 
 #### Mobile Support ####
 
