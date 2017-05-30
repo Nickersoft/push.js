@@ -360,6 +360,7 @@
          */
         self.Permission.request = function (onGranted, onDenied) {
             var existing = self.Permission.get();
+            var callback;
 
             /* Return if Push not supported */
             if (!self.isSupported) {
