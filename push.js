@@ -1,6 +1,6 @@
 /**
- * Push
- * =======
+ * Push.js v1.0-beta
+ * =================
  * A compact, cross-browser solution for the JavaScript Notifications API
  *
  * Credits
@@ -59,299 +59,323 @@
 
     var Push = function () {
 
-        /**********************
-            Local Variables
-        /**********************/
+        /***************
+         Local Variables
+         ***************/
 
-        var
-        self = this,
-        isUndefined   = function (obj) { return obj === undefined; },
-        isString   = function (obj) { return typeof obj === 'string' },
-        isFunction = function (obj) { return obj && {}.toString.call(obj) === '[object Function]'; },
+        var self = this,
+            isUndefined = function (obj) {
+                return obj === undefined;
+            },
+            isString = function (obj) {
+                return typeof obj === 'string'
+            },
+            isObject = function (obj) {
+                return typeof obj === 'object'
+            },
+            isFunction = function (obj) {
+                return obj && {}.toString.call(obj) === '[object Function]';
+            },
 
-        /* ID to use for new notifications */
-        currentId = 0,
+            /* ID to use for new notifications */
+            currentId = 0,
 
-        /* Message to show if there is no suport to Push Notifications */
-        incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
+            /* Message to show if there is no suport to Push Notifications */
+            incompatibilityErrorMessage = 'PushError: push.js is incompatible with browser.',
 
-        /* Map of open notifications */
-        notifications = {},
+            /* Map of open notifications */
+            notifications = {},
 
-        /* Testing variable for the last service worker path used */
-        lastWorkerPath = null,
+            /* Testing variable for the last service worker path used */
+            lastWorkerPath = null,
 
-        /**********************
-            Helper Functions
-        /**********************/
+            /****************
+             Helper Functions
+             ****************/
 
-        /**
-         * Closes a notification
-         * @param {Notification} notification
-         * @return {Boolean} boolean denoting whether the operation was successful
-         */
-        closeNotification = function (id) {
-            var errored = false,
-                notification = notifications[id];
+            /**
+             * Closes a notification
+             * @param {Notification} notification
+             * @return {Boolean} boolean denoting whether the operation was successful
+             */
+            closeNotification = function (id) {
+                var errored = false,
+                    notification = notifications[id];
 
-            if (typeof notification !== 'undefined') {
-                /* Safari 6+, Chrome 23+ */
-                if (notification.close) {
-                    notification.close();
-                /* Legacy webkit browsers */
-                } else if (notification.cancel) {
-                    notification.cancel();
-                /* IE9+ */
-                } else if (w.external && w.external.msIsSiteMode) {
-                    w.external.msSiteModeClearIconOverlay();
-                } else {
-                    errored = true;
-                    throw new Error('Unable to close notification: unknown interface');
-                }
-
-                if (!errored) {
-                    return removeNotification(id);
-                }
-            }
-
-            return false;
-        },
-
-        /**
-         * Adds a notification to the global dictionary of notifications
-         * @param {Notification} notification
-         * @return {Integer} Dictionary key of the notification
-         */
-        addNotification = function (notification) {
-            var id = currentId;
-            notifications[id] = notification;
-            currentId++;
-            return id;
-        },
-
-        /**
-         * Removes a notification with the given ID
-         * @param  {Integer} id - Dictionary key/ID of the notification to remove
-         * @return {Boolean} boolean denoting success
-         */
-        removeNotification = function (id) {
-            var dict = {},
-                success = false,
-                key;
-
-            for (key in notifications) {
-                if (notifications.hasOwnProperty(key)) {
-                    if (key != id) {
-                        dict[key] = notifications[key];
+                if (typeof notification !== 'undefined') {
+                    /* Safari 6+, Chrome 23+ */
+                    if (notification.close) {
+                        notification.close();
+                        /* Legacy webkit browsers */
+                    } else if (notification.cancel) {
+                        notification.cancel();
+                        /* IE9+ */
+                    } else if (w.external && w.external.msIsSiteMode) {
+                        w.external.msSiteModeClearIconOverlay();
                     } else {
-                        // We're successful if we omit the given ID from the new array
-                        success = true;
+                        errored = true;
+                        throw new Error('Unable to close notification: unknown interface');
+                    }
+
+                    if (!errored) {
+                        return removeNotification(id);
                     }
                 }
-            }
-            // Overwrite the current notifications dictionary with the filtered one
-            notifications = dict;
-            return success;
-        },
 
-        prepareNotification = function (id, options) {
-            var wrapper;
+                return false;
+            },
 
-            /* Wrapper used to get/close notification later on */
-            wrapper = {
-                get: function () {
-                    return notifications[id];
-                },
+            /**
+             * Adds a notification to the global dictionary of notifications
+             * @param {Notification} notification
+             * @return {Integer} Dictionary key of the notification
+             */
+            addNotification = function (notification) {
+                var id = currentId;
+                notifications[id] = notification;
+                currentId++;
+                return id;
+            },
 
-                close: function () {
-                    closeNotification(id);
-                }
-            };
+            /**
+             * Removes a notification with the given ID
+             * @param  {Integer} id - Dictionary key/ID of the notification to remove
+             * @return {Boolean} boolean denoting success
+             */
+            removeNotification = function (id) {
+                var dict = {},
+                    success = false,
+                    key;
 
-            /* Autoclose timeout */
-            if (options.timeout) {
-                setTimeout(function () {
-                    wrapper.close();
-                }, options.timeout);
-            }
-
-            return wrapper;
-        },
-
-        /**
-         * Callback function for the 'create' method
-         * @return {void}
-         */
-        createCallback = function (title, options, resolve) {
-            var notification,
-                onClose;
-
-            /* Set empty settings if none are specified */
-            options = options || {};
-
-            /* Set the last service worker path for testing */
-            self.lastWorkerPath = options.serviceWorker || 'serviceWorker.js';
-
-            /* onClose event handler */
-            onClose = function (id) {
-                /* A bit redundant, but covers the cases when close() isn't explicitly called */
-                removeNotification(id);
-                if (isFunction(options.onClose)) {
-                    options.onClose.call(this, notification);
-                }
-            };
-
-            /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
-            if (w.Notification) {
-                try {
-                    notification =  new w.Notification(
-                        title,
-                        {
-                            icon: (isString(options.icon) || isUndefined(options.icon)) ? options.icon : options.icon.x32,
-                            body: options.body,
-                            tag: options.tag,
-                            requireInteraction: options.requireInteraction,
-                            silent: options.silent
+                for (key in notifications) {
+                    if (notifications.hasOwnProperty(key)) {
+                        if (key != id) {
+                            dict[key] = notifications[key];
+                        } else {
+                            // We're successful if we omit the given ID from the new array
+                            success = true;
                         }
-                    );
-                } catch (e) {
-                    if (w.navigator) {
-                        /* Register ServiceWorker using lastWorkerPath */
-                        w.navigator.serviceWorker.register(self.lastWorkerPath);
-                        w.navigator.serviceWorker.ready.then(function(registration) {
-                            var localData = {
-                                id: currentId,
-                                link: options.link,
-                                origin: document.location.href,
-                                onClick: (isFunction(options.onClick)) ? options.onClick.toString() : '',
-                                onClose: (isFunction(options.onClose)) ? options.onClose.toString() : ''
-                            };
+                    }
+                }
+                // Overwrite the current notifications dictionary with the filtered one
+                notifications = dict;
+                return success;
+            },
 
-                            if (typeof options.data !== 'undefined' && options.data !== null)
-                                localData = Object.assign(localData, options.data);
+            prepareNotification = function (id, options) {
+                var wrapper;
 
-                            /* Show the notification */
-                            registration.showNotification(
-                                title,
-                                {
-                                    icon: options.icon,
-                                    body: options.body,
-                                    vibrate: options.vibrate,
-                                    tag: options.tag,
-                                    data: localData,
-                                    requireInteraction: options.requireInteraction
-                                }
-                            ).then(function() {
-                                var id;
+                /* Wrapper used to get/close notification later on */
+                wrapper = {
+                    get: function () {
+                        return notifications[id];
+                    },
 
-                                /* Find the most recent notification and add it to the global array */
-                                registration.getNotifications().then(function(notifications) {
-                                    id = addNotification(notifications[notifications.length - 1]);
+                    close: function () {
+                        closeNotification(id);
+                    }
+                };
 
-                                    /* Send an empty message so the ServiceWorker knows who the client is */
-                                    registration.active.postMessage('');
+                /* Autoclose timeout */
+                if (options.timeout) {
+                    setTimeout(function () {
+                        wrapper.close();
+                    }, options.timeout);
+                }
 
-                                    /* Listen for close requests from the ServiceWorker */
-                                    navigator.serviceWorker.addEventListener('message', function (event) {
-                                        var data = JSON.parse(event.data);
+                return wrapper;
+            },
 
-                                        if (data.action === 'close' && Number.isInteger(data.id))
-                                            removeNotification(data.id);
+            /**
+             * Callback function for the 'create' method
+             * @return {void}
+             */
+            createCallback = function (title, options, resolve) {
+                var notification,
+                    onClose;
+
+                /* Set empty settings if none are specified */
+                options = options || {};
+
+                /* onClose event handler */
+                onClose = function (id) {
+                    /* A bit redundant, but covers the cases when close() isn't explicitly called */
+                    removeNotification(id);
+                    if (isFunction(options.onClose)) {
+                        options.onClose.call(this, notification);
+                    }
+                };
+
+                /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
+                if (w.Notification) {
+                    try {
+                        notification = new w.Notification(
+                            title,
+                            {
+                                icon: (isString(options.icon) || isUndefined(options.icon)) ? options.icon : options.icon.x32,
+                                body: options.body,
+                                tag: options.tag,
+                                requireInteraction: options.requireInteraction,
+                                silent: options.silent
+                            }
+                        );
+                    } catch (e) {
+                        if (w.navigator) {
+                            /* Register ServiceWorker using lastWorkerPath */
+                            w.navigator.serviceWorker.register(self.config.serviceWorker);
+                            w.navigator.serviceWorker.ready.then(function (registration) {
+                                var localData = {
+                                    id: currentId,
+                                    link: options.link,
+                                    origin: document.location.href,
+                                    onClick: (isFunction(options.onClick)) ? options.onClick.toString() : '',
+                                    onClose: (isFunction(options.onClose)) ? options.onClose.toString() : ''
+                                };
+
+                                if (typeof options.data !== 'undefined' && options.data !== null)
+                                    localData = Object.assign(localData, options.data);
+
+                                /* Show the notification */
+                                registration.showNotification(
+                                    title,
+                                    {
+                                        icon: options.icon,
+                                        body: options.body,
+                                        vibrate: options.vibrate,
+                                        tag: options.tag,
+                                        data: localData,
+                                        requireInteraction: options.requireInteraction
+                                    }
+                                ).then(function () {
+                                    var id;
+
+                                    /* Find the most recent notification and add it to the global array */
+                                    registration.getNotifications().then(function (notifications) {
+                                        id = addNotification(notifications[notifications.length - 1]);
+
+                                        /* Send an empty message so the ServiceWorker knows who the client is */
+                                        registration.active.postMessage('');
+
+                                        /* Listen for close requests from the ServiceWorker */
+                                        navigator.serviceWorker.addEventListener('message', function (event) {
+                                            var data = JSON.parse(event.data);
+
+                                            if (data.action === 'close' && Number.isInteger(data.id))
+                                                removeNotification(data.id);
+                                        });
+
+                                        resolve(prepareNotification(id, options));
                                     });
-
-                                    resolve(prepareNotification(id, options));
                                 });
                             });
-                        });
+                        }
                     }
+
+                    /* Legacy webkit browsers */
+                } else if (w.webkitNotifications) {
+
+                    notification = w.webkitNotifications.createNotification(
+                        options.icon,
+                        title,
+                        options.body
+                    );
+
+                    notification.show();
+
+                    /* Firefox Mobile */
+                } else if (navigator.mozNotification) {
+
+                    notification = navigator.mozNotification.createNotification(
+                        title,
+                        options.body,
+                        options.icon
+                    );
+
+                    notification.show();
+
+                    /* IE9+ */
+                } else if (w.external && w.external.msIsSiteMode()) {
+
+                    //Clear any previous notifications
+                    w.external.msSiteModeClearIconOverlay();
+                    w.external.msSiteModeSetIconOverlay(
+                        ((isString(options.icon) || isUndefined(options.icon))
+                            ? options.icon
+                            : options.icon.x16), title
+                    );
+                    w.external.msSiteModeActivate();
+
+                    notification = {};
+                } else {
+                    throw new Error('Unable to create notification: unknown interface');
                 }
 
-            /* Legacy webkit browsers */
-            } else if (w.webkitNotifications) {
+                if (typeof(notification) !== 'undefined') {
+                    var id = addNotification(notification),
+                        wrapper = prepareNotification(id, options);
 
-                notification = w.webkitNotifications.createNotification(
-                    options.icon,
-                    title,
-                    options.body
-                );
+                    /* Notification callbacks */
+                    if (isFunction(options.onShow))
+                        notification.addEventListener('show', options.onShow);
 
-                notification.show();
+                    if (isFunction(options.onError))
+                        notification.addEventListener('error', options.onError);
 
-            /* Firefox Mobile */
-            } else if (navigator.mozNotification) {
+                    if (isFunction(options.onClick))
+                        notification.addEventListener('click', options.onClick);
 
-                notification = navigator.mozNotification.createNotification(
-                    title,
-                    options.body,
-                    options.icon
-                );
+                    notification.addEventListener('close', function () {
+                        onClose(id);
+                    });
 
-                notification.show();
+                    notification.addEventListener('cancel', function () {
+                        onClose(id);
+                    });
 
-            /* IE9+ */
-            } else if (w.external && w.external.msIsSiteMode()) {
+                    /* Return the wrapper so the user can call close() */
+                    resolve(wrapper);
+                }
 
-                //Clear any previous notifications
-                w.external.msSiteModeClearIconOverlay();
-                w.external.msSiteModeSetIconOverlay(
-                    ((isString(options.icon) || isUndefined(options.icon))
-                    ? options.icon
-                    : options.icon.x16), title
-                );
-                w.external.msSiteModeActivate();
+                resolve({}); // By default, pass an empty wrapper
+            },
 
-                notification = {};
-            } else {
-                throw new Error('Unable to create notification: unknown interface');
-            }
+            /**
+             * Performs a deep merge of two objects
+             * @param target
+             * @param source
+             */
+            objectMerge = function (target, source) {
+                for (var key in source) {
+                    if (target.hasOwnProperty(key) && isObject(target[key]) && isObject(source[key])) {
+                        objectMerge(target[key], source[key]);
+                    } else {
+                        target[key] = source[key]
+                    }
+                }
+            },
 
-            if (typeof(notification) !== 'undefined') {
-                var id = addNotification(notification),
-                    wrapper = prepareNotification(id, options);
+            /**
+             * Permission types
+             * @enum {String}
+             */
+            Permission = {
+                DEFAULT: 'default',
+                GRANTED: 'granted',
+                DENIED: 'denied'
+            },
 
-                /* Notification callbacks */
-                if (isFunction(options.onShow))
-                    notification.addEventListener('show', options.onShow);
+            Permissions = [Permission.GRANTED, Permission.DEFAULT, Permission.DENIED],
 
-                if (isFunction(options.onError))
-                    notification.addEventListener('error', options.onError);
-
-                if (isFunction(options.onClick))
-                    notification.addEventListener('click', options.onClick);
-
-                notification.addEventListener('close', function() {
-                    onClose(id);
-                });
-
-                notification.addEventListener('cancel', function() {
-                    onClose(id);
-                });
-
-                /* Return the wrapper so the user can call close() */
-                resolve(wrapper);
-            }
-
-            resolve({}); // By default, pass an empty wrapper
-        },
-
-        /**
-         * Permission types
-         * @enum {String}
-         */
-        Permission = {
-            DEFAULT: 'default',
-            GRANTED: 'granted',
-            DENIED: 'denied'
-        },
-
-        Permissions = [Permission.GRANTED, Permission.DEFAULT, Permission.DENIED];
+            configurationMap = {
+                serviceWorker: './serviceWorker.js'
+            };
 
         /* Allow enums to be accessible from Push object */
         self.Permission = Permission;
 
-        /*****************
-            Permissions
-        /*****************/
+        /***********
+         Permissions
+         ***********/
 
         /**
          * Requests permission for desktop notifications
@@ -367,7 +391,7 @@
             }
 
             /* Default callback */
-            callback = function (result) {
+            var callback = function (result) {
                 switch (result) {
 
                     case self.Permission.GRANTED:
@@ -415,25 +439,27 @@
             var permission;
 
             /* Return if Push not supported */
-            if (!self.isSupported) { throw new Error(incompatibilityErrorMessage); }
+            if (!self.isSupported) {
+                throw new Error(incompatibilityErrorMessage);
+            }
 
             /* Safari 6+, Chrome 23+ */
             if (w.Notification && w.Notification.permissionLevel) {
                 permission = w.Notification.permissionLevel;
 
-            /* Legacy webkit browsers */
+                /* Legacy webkit browsers */
             } else if (w.webkitNotifications && w.webkitNotifications.checkPermission) {
                 permission = Permissions[w.webkitNotifications.checkPermission()];
 
-            /* Firefox 23+ */
+                /* Firefox 23+ */
             } else if (w.Notification && w.Notification.permission) {
                 permission = w.Notification.permission;
 
-            /* Firefox Mobile */
+                /* Firefox Mobile */
             } else if (navigator.mozNotification) {
                 permission = Permission.GRANTED;
 
-            /* IE9+ */
+                /* IE9+ */
             } else if (w.external && w.external.msIsSiteMode() !== undefined) {
                 permission = w.external.msIsSiteMode() ? Permission.GRANTED : Permission.DEFAULT;
             } else {
@@ -444,9 +470,34 @@
 
         };
 
-        /*********************
-            Other Functions
-        /*********************/
+        /***************
+         Other Functions
+         ***************/
+
+        /**
+         * Copies the functions from a plugin to the main library
+         * @param plugin
+         */
+        self.extend = function (manifest) {
+            var plugin, Plugin,
+                hasProp = {}.hasOwnProperty;
+
+            if (!hasProp.call(manifest, 'plugin')) {
+                throw new Error('PushError: plugin class missing from plugin manifest (invalid plugin). Please check the documentation.');
+            } else {
+                if (hasProp.call(manifest, 'config') && isObject(manifest.config) && manifest.config !== null) {
+                    self.config(manifest.config);
+                }
+
+                Plugin = manifest.plugin;
+                plugin = new Plugin(self.config())
+
+                for (var member in plugin) {
+                    if (hasProp.call(plugin, member) && isFunction(plugin[member]))
+                        self[member] = plugin[member];
+                }
+            }
+        }
 
         /**
          * Detects whether the user's browser supports notifications
@@ -454,35 +505,36 @@
          */
         self.isSupported = (function () {
 
-             var isSupported = false;
+            var isSupported = false;
 
-             try {
+            try {
 
-                 isSupported =
+                isSupported =
 
-                     /* Safari, Chrome */
-                     !!(w.Notification ||
+                    /* Safari, Chrome */
+                    !!(w.Notification ||
 
-                     /* Chrome & ff-html5notifications plugin */
-                     w.webkitNotifications ||
+                    /* Chrome & ff-html5notifications plugin */
+                    w.webkitNotifications ||
 
-                     /* Firefox Mobile */
-                     navigator.mozNotification ||
+                    /* Firefox Mobile */
+                    navigator.mozNotification ||
 
-                     /* IE9+ */
-                     (w.external && w.external.msIsSiteMode() !== undefined));
+                    /* IE9+ */
+                    (w.external && w.external.msIsSiteMode() !== undefined));
 
-             } catch (e) {}
+            } catch (e) {
+            }
 
-             return isSupported;
+            return isSupported;
 
-         })();
+        })();
 
-         /**
-          * Creates and displays a new notification
-          * @param {Array} options
-          * @return {Promise}
-          */
+        /**
+         * Creates and displays a new notification
+         * @param {Array} options
+         * @return {Promise}
+         */
         self.create = function (title, options) {
             var promiseCallback;
 
@@ -498,19 +550,19 @@
 
             /* Request permission if it isn't granted */
             if (!self.Permission.has()) {
-                promiseCallback = function(resolve, reject) {
-                    self.Permission.request(function() {
+                promiseCallback = function (resolve, reject) {
+                    self.Permission.request(function () {
                         try {
                             createCallback(title, options, resolve);
                         } catch (e) {
                             reject(e);
                         }
-                    }, function() {
+                    }, function () {
                         reject("Permission request declined");
                     });
                 };
             } else {
-                promiseCallback = function(resolve, reject) {
+                promiseCallback = function (resolve, reject) {
                     try {
                         createCallback(title, options, resolve);
                     } catch (e) {
@@ -534,16 +586,7 @@
                 count++;
 
             return count;
-        },
-
-        /**
-         * Internal function that returns the path of the last service worker used
-         * For testing purposes only
-         * @return {String} The service worker path
-         */
-        self.__lastWorkerPath = function () {
-            return self.lastWorkerPath;
-        },
+        };
 
         /**
          * Closes a notification with the given tag
@@ -551,7 +594,8 @@
          * @return {Boolean} boolean denoting success
          */
         self.close = function (tag) {
-            var key;
+            var key, notification;
+
             for (key in notifications) {
                 notification = notifications[key];
                 /* Run only if the tags match */
@@ -564,7 +608,7 @@
 
         /**
          * Clears all notifications
-         * @return {void}
+         * @return {Boolean}
          */
         self.clear = function () {
             var success = true;
@@ -574,6 +618,17 @@
 
             return success;
         };
+
+        /**
+         * Modifies settings or returns all settings if no parameter passed
+         * @param settings
+         */
+        self.config = function (settings) {
+            if (typeof settings !== 'undefined' || settings !== null && isObject(settings))
+                objectMerge(configurationMap, settings);
+            return configurationMap;
+        }
+
     };
 
     return Push;

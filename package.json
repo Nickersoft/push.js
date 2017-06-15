@@ -4,8 +4,8 @@
   "description": "A compact, cross-browser solution for the Javascript Notifications API",
   "main": "push.js",
   "scripts": {
-    "build": "node_modules/.bin/uglifyjs push.js -o push.min.js --comments",
-    "test": "node_modules/.bin/karma start",
+    "build": "uglifyjs push.js -o push.min.js --comments -m",
+    "test": "karma start",
     "prepublish": "npm run build"
   },
   "files": [
@@ -25,13 +25,13 @@
   },
   "homepage": "https://github.com/Nickersoft/push.js",
   "devDependencies": {
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^1.0.0",
-    "karma-firefox-launcher": "^0.1.7",
-    "karma-jasmine": "^0.3.8",
-    "karma-mocha-reporter": "^1.3.0",
-    "uglify-js": "^2.6.2",
-    "coveralls": "^2.11.15"
+    "coveralls": "^2.13.1",
+    "jasmine-core": "^2.6.3",
+    "karma": "^1.7.0",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-mocha-reporter": "^2.2.3",
+    "uglify-js": "^3.0.17"
   }
 }
