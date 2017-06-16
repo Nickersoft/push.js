@@ -5,7 +5,8 @@ var TEST_TITLE = 'title',
     TEST_TAG_2 = 'bar',
     TEST_ICON = 'icon',
     TEST_SW_DEFAULT = "./serviceWorker.js"
-    NOOP = function () { }; // NO OPerator (empty function)
+NOOP = function () {
+}; // NO OPerator (empty function)
 
 describe('initialization', function () {
 
@@ -291,7 +292,8 @@ describe('closing notifications', function () {
 describe('adding plugins', function () {
     it('reject invalid plugin manifests', function () {
         var testPlugin = function () {
-            this.testFunc = function () { }
+            this.testFunc = function () {
+            }
         };
 
         expect(Push.extend.bind(Push, testPlugin)).toThrow()
@@ -300,7 +302,8 @@ describe('adding plugins', function () {
     it('accept valid plugin manifests', function () {
         var testPlugin = {
             plugin: function () {
-                this.testFunc = function () { }
+                this.testFunc = function () {
+                }
             }
         };
 
@@ -315,7 +318,8 @@ describe('adding plugins', function () {
         var testPlugin = {
             config: null,
             plugin: function () {
-                this.testFunc = function () { }
+                this.testFunc = function () {
+                }
             }
         };
 
@@ -326,7 +330,8 @@ describe('adding plugins', function () {
         var testPlugin2 = {
             config: {},
             plugin: function () {
-                this.testFunc = function () { }
+                this.testFunc = function () {
+                }
             }
         };
 
@@ -336,51 +341,56 @@ describe('adding plugins', function () {
     });
 });
 
-// describe('changing configuration', function () {
-//     it('returns the current configuration if no parameters passed', function () {
-//         expect(Push.config()).toBe({
-//             serviceWorker: './serviceWorker.js'
-//         })
-//     });
-//
-//     it('adds a configuration if one is specified', function () {
-//         Push.config({
-//             a: 1
-//         });
-//
-//         expect(Push.config().a).toBeDefined();
-//         expect(Push.config().a).toBe(1);
-//     });
-//
-//     it('should be capable of performing a deep merge', function () {
-//         Push.config({
-//             b: {
-//                 c: 1,
-//                 d: {
-//                     e: 2,
-//                     f: 3
-//                 }
-//             }
-//         });
-//
-//         Push.config({
-//             b: {
-//                 d: {
-//                     e: 2,
-//                     f: 4
-//                 },
-//                 g: 5
-//             }
-//         });
-//
-//         expect(Push.config().b).toBeDefined();
-//         expect(Push.config().b).toBe({
-//             c: 1,
-//             d: {
-//                 e: 2,
-//                 f: 4,
-//             },
-//             g: 5
-//         });
-//     });
-// });
+describe('changing configuration', function () {
+    it('returns the current configuration if no parameters passed', function () {
+        var output = {
+            serviceWorker: './serviceWorker.js'
+        };
+
+        expect(JSON.stringify(Push.config())).toBe(JSON.stringify(output));
+    });
+
+    it('adds a configuration if one is specified', function () {
+        Push.config({
+            a: 1
+        });
+
+        expect(Push.config().a).toBeDefined();
+        expect(Push.config().a).toBe(1);
+    });
+
+    it('should be capable of performing a deep merge', function () {
+        var input1 = {
+            b: {
+                c: 1,
+                d: {
+                    e: 2,
+                    f: 3
+                }
+            }
+        };
+        var input2 = {
+            b: {
+                d: {
+                    e: 2,
+                    f: 4
+                },
+                g: 5
+            }
+        };
+        var output = {
+            c: 1,
+            d: {
+                e: 2,
+                f: 4,
+            },
+            g: 5
+        };
+
+        Push.config(input1);
+        Push.config(input2);
+
+        expect(Push.config().b).toBeDefined();
+        expect(JSON.stringify(Push.config().b)).toBe(JSON.stringify(output));
+    });
+});

@@ -2,9 +2,8 @@ import Messages from './messages';
 
 export default class Permission {
 
-    constructor(win, doc) {
+    constructor(win) {
         this._win = win;
-        this._doc = doc;
         this.DEFAULT = 'default';
         this.GRANTED = 'granted';
         this.DENIED = 'denied';

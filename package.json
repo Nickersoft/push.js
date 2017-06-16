@@ -2,10 +2,10 @@
   "name": "push.js",
   "version": "0.0.13",
   "description": "A compact, cross-browser solution for the Javascript Notifications API",
-  "main": "push.js",
+  "main": "bin/push.min.js",
   "scripts": {
     "clean": "rm -rf bin",
-    "build": "npm run clean && mkdir -p bin && browserify src/main.js -t [ babelify --presets [ es2015 ] ] -o bin/push.min.js",
+    "build": "npm run clean && mkdir -p bin && browserify src/index.js -s Push -t [ babelify --presets [ es2015 ] ] -o bin/push.min.js",
     "test": "karma start tests/karma.conf.js",
     "prepublish": "npm run build"
   },

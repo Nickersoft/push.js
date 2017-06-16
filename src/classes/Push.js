@@ -11,7 +11,7 @@ import WebKitAgent from './agents/WebKitAgent';
 
 export default class Push {
 
-    constructor(win, doc) {
+    constructor(win) {
         /* Private variables */
 
         /* ID to use for new notifications */
@@ -23,11 +23,8 @@ export default class Push {
         /* Window object */
         this._win = win;
 
-        /* Document object */
-        this._doc = doc;
-
         /* Public variables */
-        this.Permission = new Permission(win, doc);
+        this.Permission = new Permission(win);
 
         /* Agents */
         this._agents = {
@@ -39,7 +36,7 @@ export default class Push {
         };
 
         this._configuration = {
-
+            serviceWorker: './serviceWorker.js'
         }
     }
 
