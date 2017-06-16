@@ -5,7 +5,7 @@
   "main": "push.js",
   "scripts": {
     "clean": "rm -rf bin",
-    "build": "npm run clean && mkdir -p bin && browserify src/main.js -d -t [ babelify --presets [ es2015 ] --sourceMapsAbsolute ] -t uglifyify | exorcist bin/push.min.js.map > bin/push.min.js",
+    "build": "npm run clean && mkdir -p bin && browserify src/main.js -t [ babelify --presets [ es2015 ] ] -o bin/push.min.js",
     "test": "karma start tests/karma.conf.js",
     "prepublish": "npm run build"
   },
@@ -26,19 +26,21 @@
   },
   "homepage": "https://github.com/Nickersoft/push.js",
   "devDependencies": {
-    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
-    "browserify": "^14.0.0",
-    "coveralls": "^2.11.15",
-    "exorcist": "^0.4.0",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^1.0.0",
-    "karma-firefox-launcher": "^0.1.7",
-    "karma-jasmine": "^0.3.8",
-    "karma-mocha-reporter": "^1.3.0",
+    "browserify": "^14.4.0",
+    "coveralls": "^2.13.1",
+    "jasmine-core": "^2.6.3",
+    "karma": "^1.7.0",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-mocha-reporter": "^2.2.3",
     "karma-sourcemap-loader": "^0.3.7",
-    "uglify-js": "^2.6.2",
-    "uglifyify": "^3.0.4"
+    "uglify-js": "^3.0.17",
+    "uglifyify": "^4.0.0"
+  },
+  "dependencies": {
+    "exorcist": "^0.4.0"
   }
 }

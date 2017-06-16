@@ -1,6 +1,6 @@
 /**
- * Push
- * =======
+ * Push v1.0-beta
+ * ==============
  * A compact, cross-browser solution for the JavaScript Notifications API
  *
  * Credits
@@ -37,7 +37,7 @@
  */
 import Push from './classes/Push';
 
-(((global, factory) => {
+((global, factory) => {
     console.log('called4');
     'use strict';
 
@@ -47,11 +47,11 @@ import Push from './classes/Push';
         define(() => new factory(global, global.document));
     }
 
-    /* Use CommonJS */
-    else if (typeof module !== 'undefined' && module.exports) {
-        console.log('called2');
-        module.exports = new factory(global, global.document);
-    }
+    // /* Use CommonJS */
+    // else if (typeof module !== 'undefined' && module.exports) {
+    //     console.log('called2');
+    //     module.exports = new factory(global, global.document);
+    // }
 
     /* Use Browser */
     else {
@@ -59,4 +59,4 @@ import Push from './classes/Push';
         global.Push = new factory(global, global.document);
     }
 
-}))(typeof window !== 'undefined' ? window : this, Push);
+})(typeof window !== 'undefined' ? window : this, Push);

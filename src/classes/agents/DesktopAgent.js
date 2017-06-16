@@ -11,7 +11,7 @@ export default class DesktopAgent extends AbstractAgent {
      * Returns a boolean denoting support
      * @returns {Boolean} boolean denoting whether webkit notifications are supported
      */
-    static isSupported() {
+    isSupported() {
         return this._win.Notification !== undefined;
     }
 
@@ -21,7 +21,7 @@ export default class DesktopAgent extends AbstractAgent {
      * @param options - notification options array
      * @returns {Notification}
      */
-    static create(title, options) {
+    create(title, options) {
         return new this._win.Notification(
             title,
             {
@@ -37,7 +37,7 @@ export default class DesktopAgent extends AbstractAgent {
      * Close a given notification
      * @param notification - notification to close
      */
-    static close(notification) {
+    close(notification) {
         notification.close();
     }
 }

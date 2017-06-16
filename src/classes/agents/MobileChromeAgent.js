@@ -11,7 +11,7 @@ export default class DesktopAgent extends AbstractAgent {
      * Returns a boolean denoting support
      * @returns {Boolean} boolean denoting whether webkit notifications are supported
      */
-    static isSupported() {
+    isSupported() {
         return this._win.navigator !== undefined;
     }
 
@@ -21,7 +21,7 @@ export default class DesktopAgent extends AbstractAgent {
      * @param options - notification options array
      * @returns {Notification}
      */
-    static create(id, title, options, lastWorkerPath, callback) {
+    create(id, title, options, lastWorkerPath, callback) {
         /* Register ServiceWorker using lastWorkerPath */
         this._win.navigator.serviceWorker.register(lastWorkerPath);
 
@@ -48,7 +48,8 @@ export default class DesktopAgent extends AbstractAgent {
                     vibrate: options.vibrate,
                     tag: options.tag,
                     data: localData,
-                    requireInteraction: options.requireInteraction
+                    requireInteraction: options.requireInteraction,
+                    silent: options.silent
                 }
             ).then(() => {
                 /* Find the most recent notification and add it to the global array */
@@ -66,7 +67,7 @@ export default class DesktopAgent extends AbstractAgent {
     /**
      * Close all notification
      */
-    static close() {
+    close() {
         this._win.external.msSiteModeClearIconOverlay()
     }
 }

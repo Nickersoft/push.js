@@ -31,6 +31,15 @@ export default class Push {
 
         /* Public variables */
         this.Permission = new Permission(win, doc);
+
+        /* Agents */
+        this._agents = {
+            desktop: new DesktopAgent(win),
+            chrome: new MobileChromeAgent(win),
+            firefox: new MobileFirefoxAgent(win),
+            ms: new MSAgent(win),
+            webkit: new WebKitAgent(win)
+        };
     }
 
     /**
@@ -44,27 +53,29 @@ export default class Push {
         const notification = this._notifications[id];
 
         if (notification !== undefined) {
+            success = this._removeNotification(id);
 
             /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
-            if (DesktopAgent.isSupported())
-                DesktopAgent.close(notification);
+            if (this._agents.desktop.isSupported())
+                this._agents.desktop.close(notification);
 
             /* Legacy WebKit browsers */
-            else if (WebKitAgent.isSupported())
-                WebKitAgent.close(notification);
+            else if (this._agents.webkit.isSupported())
+                this._agents.webkit.close(notification);
 
             /* IE9 */
-            else if (MSAgent.isSupported())
-                MSAgent.close();
+            else if (this._agents.ms.isSupported())
+                this._agents.ms.close();
 
             else {
                 success = false;
-                this._removeNotification(id);
                 throw new Error('Unable to close notification: unknown interface');
             }
+
+            return success;
         }
 
-        return success;
+        return false;
     };
 
     /**
@@ -74,7 +85,7 @@ export default class Push {
      * @private
      */
     _addNotification(notification) {
-        const id = currentId;
+        const id = this._currentId;
         this._notifications[id] = notification;
         this._currentId++;
         return id;
@@ -87,22 +98,13 @@ export default class Push {
      * @private
      */
     _removeNotification(id) {
-        const dict = {};
-        let key, success = false;
+        let success = false;
 
-        for (key in this._notifications) {
-            if (this._notifications.hasOwnProperty(key)) {
-                if (key != id)
-                    dict[key] = this._notifications[key];
-                else {
-                    /* We're successful if we omit the given ID from the new array */
-                    success = true;
-                }
-            }
+        if (this._notifications.hasOwnProperty(id)) {
+            /* We're successful if we omit the given ID from the new array */
+            delete this._notifications[id];
+            success = true;
         }
-
-        /* Overwrite the current notifications dictionary with the filtered one */
-        this._notifications = dict;
 
         return success;
     };
@@ -120,11 +122,11 @@ export default class Push {
 
         /* Wrapper used to get/close notification later on */
         wrapper = {
-            get() {
+            get: () => {
                 return this._notifications[id];
             },
 
-            close() {
+            close: () => {
                 this._closeNotification(id);
             }
         };
@@ -155,21 +157,21 @@ export default class Push {
         this._lastWorkerPath = options.serviceWorker || 'serviceWorker.js';
 
         /* onClose event handler */
-        onClose = function (id) {
+        onClose = (id) => {
             /* A bit redundant, but covers the cases when close() isn't explicitly called */
             this._removeNotification(id);
-            if (isFunction(options.onClose)) {
+            if (Util.isFunction(options.onClose)) {
                 options.onClose.call(this, notification);
             }
         };
 
         /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
-        if (DesktopAgent.isSupported()) {
+        if (this._agents.desktop.isSupported()) {
             try {
-                notification = DesktopAgent.create(title, options);
+                notification = this._agents.desktop.create(title, options);
             } catch (e) {
-                if (MobileChromeAgent.isSupported()) {
-                    MobileChromeAgent.create(
+                if (this._agents.chrome.isSupported()) {
+                    this._agents.chrome.create(
                         this._currentId,
                         title,
                         options,
@@ -190,17 +192,17 @@ export default class Push {
                     );
                 }
             }
-        /* Legacy WebKit browsers */
-        } else if (WebKitAgent.isSupported())
-            notification = WebKitAgent.create(title, options);
+            /* Legacy WebKit browsers */
+        } else if (this._agents.webkit.isSupported())
+            notification = this._agents.webkit.create(title, options);
 
         /* Firefox Mobile */
-        else if (MobileFirefoxAgent.isSupported())
-            MobileFirefoxAgent.create(title, options);
+        else if (this._agents.firefox.isSupported())
+            this._agents.firefox.create(title, options);
 
         /* IE9 */
-        else if (MSAgent.isSupported())
-            notification = MSAgent.create(title, options);
+        else if (this._agents.ms.isSupported())
+            notification = this._agents.ms.create(title, options);
 
         /* Unknown */
         else
@@ -264,7 +266,7 @@ export default class Push {
             promiseCallback = (resolve, reject) => {
                 this.Permission.request(() => {
                     try {
-                        createCallback(title, options, resolve);
+                        this._createCallback(title, options, resolve);
                     } catch (e) {
                         reject(e);
                     }
@@ -275,7 +277,7 @@ export default class Push {
         } else {
             promiseCallback = (resolve, reject) => {
                 try {
-                    createCallback(title, options, resolve);
+                    this._createCallback(title, options, resolve);
                 } catch (e) {
                     reject(e);
                 }
@@ -331,4 +333,18 @@ export default class Push {
 
         return success;
     };
+
+    /**
+     * Denotes whether Push is supported in the current browser
+     * @returns {boolean}
+     */
+    supported() {
+        let supported = false;
+
+        for (var agent in this._agents) {
+            supported = supported || this._agents[agent].isSupported()
+        }
+
+        return supported;
+    }
 }
