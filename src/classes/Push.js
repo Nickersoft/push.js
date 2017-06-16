@@ -20,9 +20,6 @@ export default class Push {
         /* Map of open notifications */
         this._notifications = {};
 
-        /* Testing variable for the last service worker path used */
-        this._lastWorkerPath = null;
-
         /* Window object */
         this._win = win;
 
@@ -40,6 +37,10 @@ export default class Push {
             ms: new MSAgent(win),
             webkit: new WebKitAgent(win)
         };
+
+        this._configuration = {
+
+        }
     }
 
     /**
@@ -153,9 +154,6 @@ export default class Push {
         /* Set empty settings if none are specified */
         options = options || {};
 
-        /* Set the last service worker path for testing */
-        this._lastWorkerPath = options.serviceWorker || 'serviceWorker.js';
-
         /* onClose event handler */
         onClose = (id) => {
             /* A bit redundant, but covers the cases when close() isn't explicitly called */
@@ -175,7 +173,7 @@ export default class Push {
                         this._currentId,
                         title,
                         options,
-                        this._lastWorkerPath(),
+                        this.config().serviceWorker,
                         (notifications) => {
                             let id = this._addNotification(notifications[notifications.length - 1]);
 
@@ -237,16 +235,6 @@ export default class Push {
         /* By default, pass an empty wrapper */
         resolve({});
     };
-
-    /**
-     * Internal function that returns the path of the last service worker used
-     * For testing purposes only
-     * @return {String} The service worker path
-     * @private
-     */
-    _lastWorkerPath() {
-        return this._lastWorkerPath;
-    }
 
     /**
      * Creates and displays a new notification
@@ -346,5 +334,40 @@ export default class Push {
         }
 
         return supported;
+    }
+
+    /**
+     * Modifies settings or returns all settings if no parameter passed
+     * @param settings
+     */
+    config(settings) {
+        if (typeof settings !== 'undefined' || settings !== null && Util.isObject(settings))
+            Util.objectMerge(this._configuration, settings);
+        return this._configuration;
+    }
+
+    /**
+     * Copies the functions from a plugin to the main library
+     * @param plugin
+     */
+    extend(manifest) {
+        var plugin, Plugin,
+            hasProp = {}.hasOwnProperty;
+
+        if (!hasProp.call(manifest, 'plugin')) {
+            throw new Error(Messages.errors.invalid_plugin);
+        } else {
+            if (hasProp.call(manifest, 'config') && Util.isObject(manifest.config) && manifest.config !== null) {
+                this.config(manifest.config);
+            }
+
+            Plugin = manifest.plugin;
+            plugin = new Plugin(this.config())
+
+            for (var member in plugin) {
+                if (hasProp.call(plugin, member) && Util.isFunction(plugin[member]))
+                    this[member] = plugin[member];
+            }
+        }
     }
 }
