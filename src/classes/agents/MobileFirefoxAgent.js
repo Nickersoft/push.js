@@ -6,29 +6,29 @@ import AbstractAgent from './AbstractAgent';
  */
 export default class MobileFirefoxAgent extends AbstractAgent {
 
-    /**
-     * Returns a boolean denoting support
-     * @returns {Boolean} boolean denoting whether webkit notifications are supported
-     */
-    isSupported() {
-        return this._win.navigator.mozNotification !== undefined;
-    }
+  /**
+   * Returns a boolean denoting support
+   * @returns {Boolean} boolean denoting whether webkit notifications are supported
+   */
+  isSupported() {
+    return this._win.navigator.mozNotification !== undefined;
+  }
 
-    /**
-     * Creates a new notification
-     * @param title - notification title
-     * @param options - notification options array
-     * @returns {Notification}
-     */
-    create(title, options) {
-        let notification = this._win.navigator.mozNotification.createNotification(
-            title,
-            options.body,
-            options.icon
-        );
+  /**
+   * Creates a new notification
+   * @param title - notification title
+   * @param options - notification options array
+   * @returns {Notification}
+   */
+  create(title, options) {
+    let notification = this._win.navigator.mozNotification.createNotification(
+      title,
+      options.body,
+      options.icon
+    );
 
-        notification.show();
+    notification.show();
 
-        return notification;
-    }
+    return notification;
+  }
 }

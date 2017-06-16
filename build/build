@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+const browserify = require('browserify')
+const fs = require('fs');
+const uglify = require("uglify-js");
+const yaml = require('js-yaml');
+const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/build.config.yml`, 'utf8'));
+
+const outputDirectory = `${__dirname}/${config.outputDirectory}`;
+
+if (!fs.existsSync(outputDirectory)) {
+  fs.mkdirSync(outputDirectory);
+}
+const bundler = browserify(`${__dirname}/${config.inputPath}`);
+config.transforms.forEach((transform) => {
+  const name = transform.name;
+  delete transform.name;
+  bundler.transform(name, transform);
+});
+
+bundler.bundle().pipe(fs.createWriteStream(`${outputDirectory}/${config.outputFile}`));
+
+console.log("File compiled successfully");

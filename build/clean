@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const rimraf = require('rimraf');
+const fs = require('fs')
+const yaml = require('js-yaml')
+const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/build.config.yml`, 'utf8'));
+
+const outputDirectory = `${__dirname}/${config.outputDirectory}`;
+
+rimraf(outputDirectory, function () {
+  console.log("Output directory cleaned successfully");
+});
