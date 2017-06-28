@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/Nickersoft/push.js.svg?branch=master)](https://travis-ci.org/Nickersoft/push.js) [![npm version](https://badge.fury.io/js/push.js.svg)](https://npmjs.com/package/push.js) [![npm](https://img.shields.io/npm/dt/push.js.svg)](https://npmjs.com/package/push.js) [![Coverage Status](https://coveralls.io/repos/github/Nickersoft/push.js/badge.svg?branch=master)](https://coveralls.io/github/Nickersoft/push.js?branch=master) [![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
 
+*Now a proud user of*
+
+[<img src="https://raw.githubusercontent.com/Nickersoft/push.js/browserstack/browserstack.png" width="200px" />](https://browserstack.com)
+
 ### What is Push? ###
 
 Push is the fastest way to get up and running with Javascript desktop notifications. A fairly new addition to the
