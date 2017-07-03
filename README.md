@@ -4,7 +4,7 @@
 
 *Now a proud user of*
 
-[<img src="https://raw.githubusercontent.com/Nickersoft/push.js/browserstack/browserstack.png" width="200px" />](https://browserstack.com)
+[<img src="https://raw.githubusercontent.com/Nickersoft/push.js/v1.0/browserstack.png" width="200px" />](https://browserstack.com)
 
 ### What is Push? ###
 
