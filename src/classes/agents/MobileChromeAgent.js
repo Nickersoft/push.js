@@ -1,18 +1,20 @@
 import AbstractAgent from './AbstractAgent';
 import Util from '../Util';
+import Messages from '../Messages';
 
 /**
  * Notification agent for modern desktop browsers:
  * Safari 6+, Firefox 22+, Chrome 22+, Opera 25+
  */
-export default class DesktopAgent extends AbstractAgent {
+export default class MobileChromeAgent extends AbstractAgent {
 
   /**
    * Returns a boolean denoting support
    * @returns {Boolean} boolean denoting whether webkit notifications are supported
    */
   isSupported() {
-    return this._win.navigator !== undefined;
+    return this._win.navigator !== undefined &&
+      this._win.navigator.serviceWorker !== undefined;
   }
 
   /**
@@ -52,7 +54,6 @@ export default class DesktopAgent extends AbstractAgent {
           silent: options.silent
         }
       ).then(() => {
-        /* Find the most recent notification and add it to the global array */
         registration.getNotifications().then(notifications => {
           /* Send an empty message so the ServiceWorker knows who the client is */
           registration.active.postMessage('');
@@ -60,7 +61,11 @@ export default class DesktopAgent extends AbstractAgent {
           /* Trigger callback */
           callback(notifications);
         });
+      }).catch(function(error) {
+        console.error(Messages.sw_notification_error + error.message);
       });
+    }).catch(function(error) {
+      console.error(Messages.sw_registration_error + error.message);
     });
   }
 

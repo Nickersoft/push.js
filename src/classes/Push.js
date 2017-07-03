@@ -1,13 +1,12 @@
-import Messages from './Messages';
-import Permission from './Permission';
-import Util from './Util';
-
+import Messages from "./Messages";
+import Permission from "./Permission";
+import Util from "./Util";
 /* Import notification agents */
-import DesktopAgent from './agents/DesktopAgent';
-import MobileChromeAgent from './agents/MobileChromeAgent';
-import MobileFirefoxAgent from './agents/MobileFirefoxAgent';
-import MSAgent from './agents/MSAgent';
-import WebKitAgent from './agents/WebKitAgent';
+import DesktopAgent from "./agents/DesktopAgent";
+import MobileChromeAgent from "./agents/MobileChromeAgent";
+import MobileFirefoxAgent from "./agents/MobileFirefoxAgent";
+import MSAgent from "./agents/MSAgent";
+import WebKitAgent from "./agents/WebKitAgent";
 
 export default class Push {
 
@@ -140,6 +139,25 @@ export default class Push {
   };
 
   /**
+   * Find the most recent notification from a ServiceWorker and add it to the global array
+   * @param notifications
+   * @private
+   */
+  _serviceWorkerCallback(notifications, options, resolve) {
+    let id = this._addNotification(notifications[notifications.length - 1]);
+
+    /* Listen for close requests from the ServiceWorker */
+    navigator.serviceWorker.addEventListener('message', event => {
+      const data = JSON.parse(event.data);
+
+      if (data.action === 'close' && Number.isInteger(data.id))
+        this._removeNotification(data.id);
+    });
+
+    resolve(this._prepareNotification(id, options));
+  };
+
+  /**
    * Callback function for the 'create' method
    * @return {void}
    * @private
@@ -163,29 +181,16 @@ export default class Push {
     /* Safari 6+, Firefox 22+, Chrome 22+, Opera 25+ */
     if (this._agents.desktop.isSupported()) {
       try {
+        /* Create a notification using the API if possible */
         notification = this._agents.desktop.create(title, options);
       } catch (e) {
-        if (this._agents.chrome.isSupported()) {
-          this._agents.chrome.create(
-            this._currentId,
-            title,
-            options,
-            this.config().serviceWorker,
-            (notifications) => {
-              let id = this._addNotification(notifications[notifications.length - 1]);
+        const id = this._currentId;
+        const sw = this.config().serviceWorker;
+        const cb = (notifications) => this._serviceWorkerCallback(notifications, options, resolve);
 
-              /* Listen for close requests from the ServiceWorker */
-              navigator.serviceWorker.addEventListener('message', event => {
-                const data = JSON.parse(event.data);
-
-                if (data.action === 'close' && Number.isInteger(data.id))
-                  this._removeNotification(data.id);
-              });
-
-              resolve(this._prepareNotification(id, options));
-            }
-          );
-        }
+        /* Create a Chrome ServiceWorker notification if it isn't supported */
+        if (this._agents.chrome.isSupported())
+          this._agents.chrome.create(id, title, options, sw, cb);
       }
       /* Legacy WebKit browsers */
     } else if (this._agents.webkit.isSupported())
@@ -326,9 +331,8 @@ export default class Push {
   supported() {
     let supported = false;
 
-    for (var agent in this._agents) {
+    for (var agent in this._agents)
       supported = supported || this._agents[agent].isSupported()
-    }
 
     return supported;
   }
