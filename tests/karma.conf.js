@@ -38,8 +38,7 @@ module.exports = function (config) {
       'karma-mocha-reporter',
       'karma-coverage',
       'karma-sourcemap-loader',
-      'karma-browserstack-launcher',
-      'karma-safari-launcher'
+      'karma-browserstack-launcher'
     ],
 
     // list of files / patterns to load in the browser
