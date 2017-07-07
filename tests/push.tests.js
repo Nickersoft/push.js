@@ -131,9 +131,10 @@ if (Push.supported()) {
       spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(false);
 
-      Push.create(TEST_TITLE);
-
-      expect(getRequestObject()).toHaveBeenCalled();
+      Push.create(TEST_TITLE).then(function() {
+        expect(getRequestObject()).toHaveBeenCalled();
+      }).catch(function () {
+      });
     });
 
     it('should update permission value if permission is granted and execute callback', function (done) {
@@ -154,9 +155,10 @@ if (Push.supported()) {
       initRequestSpy(true);
 
       Push.Permission.request();
-      Push.create(TEST_TITLE);
-
-      expect(getRequestObject()).not.toHaveBeenCalled();
+      Push.create(TEST_TITLE).then(function() {
+        expect(getRequestObject()).not.toHaveBeenCalled();
+      }).catch(function() {
+      });
     });
   });
 
@@ -178,9 +180,7 @@ if (Push.supported()) {
     });
 
     it('should return a valid notification wrapper', function (done) {
-      var promise = Push.create(TEST_TITLE);
-
-      promise.then(function (wrapper) {
+      Push.create(TEST_TITLE).then(function (wrapper) {
         expect(wrapper).not.toBe(undefined);
         expect(wrapper.get).not.toBe(undefined);
         expect(wrapper.close).not.toBe(undefined);
@@ -190,21 +190,21 @@ if (Push.supported()) {
     });
 
     it('should return promise successfully', function () {
-      var promise = Push.create(TEST_TITLE);
-      expect(promise.then).not.toBe(undefined);
+      var promise = Push.create(TEST_TITLE).then(function() {
+        expect(promise.then).not.toBe(undefined);
+      }).catch(function() {
+      });
     });
 
     it('should pass in all API options correctly', function (done) {
       // Vibrate omitted because Firefox will default to using the Notification API, not service workers
       // Timeout, requestPermission, and event listeners also omitted from this src :(
-      var promise = Push.create(TEST_TITLE, {
+      Push.create(TEST_TITLE, {
         body: TEST_BODY,
         icon: TEST_ICON,
         tag: TEST_TAG,
         silent: true
-      });
-
-      promise.then(function (wrapper) {
+      }).then(function (wrapper) {
         var notification = wrapper.get();
 
         // Some browsers, like Safari, choose to omit this info
@@ -228,6 +228,7 @@ if (Push.supported()) {
       Push.create(TEST_TITLE).then(function() {
         expect(Push.count()).toBe(1);
         done();
+      }).catch(function () {
       });
     });
 
@@ -246,8 +247,7 @@ if (Push.supported()) {
 
         options[key] = callback;
 
-        promise = Push.create(TEST_TITLE, options);
-        promise.then(function (wrapper) {
+        Push.create(TEST_TITLE, options).then(function (wrapper) {
           var notification = wrapper.get();
           notification.dispatchEvent(event);
           expect(callback).toHaveBeenCalled();

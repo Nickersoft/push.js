@@ -36,7 +36,9 @@ export default class Permission {
 
     /* Safari 6+, Chrome 23+ */
     else if (this._win.Notification && this._win.Notification.requestPermission) {
-      this._win.Notification.requestPermission().then(callback);
+      this._win.Notification.requestPermission().then(callback).catch(function () {
+        if (onDenied) onDenied();
+      });
     }
 
     /* Legacy webkit browsers */
