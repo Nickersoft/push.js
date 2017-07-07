@@ -8,8 +8,8 @@ export default class Permission {
     this.GRANTED = 'granted';
     this.DENIED = 'denied';
     this._permissions = [
-      this.DEFAULT,
       this.GRANTED,
+      this.DEFAULT,
       this.DENIED
     ];
   }
@@ -24,17 +24,10 @@ export default class Permission {
     const existing = this.get();
 
     /* Default callback */
-    let callback = result => {
-      switch (result) {
-
-        case this.GRANTED:
+    let callback = (result) => {
+        if (result === this.GRANTED || result === 0) {
           if (onGranted) onGranted();
-          break;
-
-        case this.DENIED:
-          if (onDenied) onDenied();
-          break;
-      }
+        } else if (onDenied) onDenied();
     };
 
     /* Permissions already set */
@@ -42,8 +35,9 @@ export default class Permission {
       callback(existing);
 
     /* Safari 6+, Chrome 23+ */
-    else if (this._win.Notification && this._win.Notification.requestPermission)
-      this._win.Notification.requestPermission(callback);
+    else if (this._win.Notification && this._win.Notification.requestPermission) {
+      this._win.Notification.requestPermission().then(callback);
+    }
 
     /* Legacy webkit browsers */
     else if (this._win.webkitNotifications && this._win.webkitNotifications.checkPermission)
@@ -69,16 +63,12 @@ export default class Permission {
     let permission;
 
     /* Safari 6+, Chrome 23+ */
-    if (this._win.Notification && this._win.Notification.permissionLevel)
-      permission = this._win.Notification.permissionLevel;
+    if (this._win.Notification && this._win.Notification.permission)
+      permission = this._win.Notification.permission;
 
     /* Legacy webkit browsers */
     else if (this._win.webkitNotifications && this._win.webkitNotifications.checkPermission)
       permission = this._permissions[this._win.webkitNotifications.checkPermission()];
-
-    /* Firefox 23+ */
-    else if (this._win.Notification && this._win.Notification.permission)
-      permission = this._win.Notification.permission;
 
     /* Firefox Mobile */
     else if (navigator.mozNotification)

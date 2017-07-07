@@ -26,7 +26,7 @@ module.exports = function (config) {
       reporters: [{
         type: 'lcov',
         subdir: '.'
-      }, 'BrowserStack']
+      }]
     },
 
     // frameworks to use
@@ -38,7 +38,8 @@ module.exports = function (config) {
       'karma-mocha-reporter',
       'karma-coverage',
       'karma-sourcemap-loader',
-      'karma-browserstack-launcher'
+      'karma-browserstack-launcher',
+      'karma-safari-launcher'
     ],
 
     // list of files / patterns to load in the browser
@@ -54,7 +55,7 @@ module.exports = function (config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       '**/*.js': ['sourcemap'],
-      'push.min.js': ['coverage']
+      'src/*.js': ['coverage']
     },
 
 

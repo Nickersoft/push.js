@@ -56,20 +56,25 @@ if (Push.supported()) {
   });
 
   function initRequestSpy(granted) {
-    var spy, param = (granted) ? Push.Permission.GRANTED : Push.Permission.DENIED;
+    var param_str, param_int;
+
+    param_str = (granted) ? Push.Permission.GRANTED : Push.Permission.DEFAULT;
+    param_int = (granted) ? 0 : 1;
 
     /* Safari 6+, Chrome 23+ */
-    if (window.Notification && window.Notification.requestPermission)
-      spy = spyOn(window.Notification, 'requestPermission');
-
-    /* Legacy webkit browsers */
-    else if (window.webkitNotifications && window.webkitNotifications.checkPermission)
-      spy = spyOn(window.webkitNotifications, 'requestPermission');
-
-    if (spy)
-      spy.and.callFake(function (cb) {
-        cb(param);
+    if (window.Notification && window.Notification.requestPermission) {
+      spyOn(window.Notification, 'requestPermission').and.callFake(function () {
+        return new Promise(function (resolve) {
+          resolve(param_str);
+        });
       });
+    }
+    /* Legacy webkit browsers */
+    else if (window.webkitNotifications && window.webkitNotifications.checkPermission) {
+      spyOn(window.webkitNotifications, 'requestPermission').and.callFake(function (cb) {
+        cb(param_int);
+      });
+    }
   }
 
   function getRequestObject() {
@@ -110,6 +115,7 @@ if (Push.supported()) {
     });
 
     it('should update permission value if permission is denied and execute callback', function (done) {
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(false);
 
       Push.Permission.request(NOOP, callback);
@@ -122,9 +128,9 @@ if (Push.supported()) {
     });
 
     it('should request permission if permission is not granted', function () {
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(false);
 
-      Push.Permission.request();
       Push.create(TEST_TITLE);
 
       expect(getRequestObject()).toHaveBeenCalled();
@@ -157,6 +163,7 @@ if (Push.supported()) {
   describe('creating notifications', function () {
     beforeAll(function () {
       jasmine.clock().install();
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(true);
     });
 
@@ -200,9 +207,11 @@ if (Push.supported()) {
       promise.then(function (wrapper) {
         var notification = wrapper.get();
 
-        expect(notification.title).toBe(TEST_TITLE);
-        expect(notification.body).toBe(TEST_BODY);
-        expect(notification.icon).toContain(TEST_ICON); // Some browsers append the document location, so we gotta use toContain()
+        // Some browsers, like Safari, choose to omit this info
+        if (notification.title) expect(notification.title).toBe(TEST_TITLE);
+        if (notification.body)  expect(notification.body).toBe(TEST_BODY);
+        if (notification.icon)  expect(notification.icon).toContain(TEST_ICON); // Some browsers append the document location, so we gotta use toContain()
+
         expect(notification.tag).toBe(TEST_TAG);
 
         if (notification.hasOwnProperty('silent'))
@@ -213,12 +222,13 @@ if (Push.supported()) {
       });
     });
 
-    it('should return the increase the notification count', function () {
+    it('should return the increase the notification count', function (done) {
       expect(Push.count()).toBe(0);
 
-      Push.create(TEST_TITLE);
-
-      expect(Push.count()).toBe(1);
+      Push.create(TEST_TITLE).then(function() {
+        expect(Push.count()).toBe(1);
+        done();
+      });
     });
 
   });
@@ -252,6 +262,7 @@ if (Push.supported()) {
 
     beforeEach(function () {
       callback = jasmine.createSpy('callback');
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
     });
 
     it('should execute onClick listener correctly', function (done) {
@@ -280,21 +291,17 @@ if (Push.supported()) {
 
     beforeEach(function () {
       spyOn(window.Notification.prototype, 'close');
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       Push.clear();
       callback = jasmine.createSpy('callback');
     });
 
     it('should close notifications on close callback', function (done) {
-      var promise;
-
-      promise = Push.create(TEST_TITLE, {
+      Push.create(TEST_TITLE, {
         onClose: callback
-      });
-
-      expect(Push.count()).toBe(1);
-
-      promise.then(function (wrapper) {
+      }).then(function (wrapper) {
         var notification = wrapper.get();
+        expect(Push.count()).toBe(1);
         notification.dispatchEvent(new Event('close'));
         expect(Push.count()).toBe(0);
         done();
@@ -303,61 +310,58 @@ if (Push.supported()) {
     });
 
     it('should close notifications using wrapper', function (done) {
-      var promise;
-
-      promise = Push.create(TEST_TITLE, {
+      Push.create(TEST_TITLE, {
         onClose: callback
-      });
-
-      expect(Push.count()).toBe(1);
-
-      promise.then(function (wrapper) {
+      }).then(function (wrapper) {
+        expect(Push.count()).toBe(1);
         wrapper.close();
         expect(window.Notification.prototype.close).toHaveBeenCalled();
         expect(Push.count()).toBe(0);
         done();
-      }).catch(function () {
-      });
+      }).catch(function () { });
     });
 
-    it('should close notifications using given timeout', function () {
+    it('should close notifications using given timeout', function (done) {
       Push.create(TEST_TITLE, {
         timeout: TEST_TIMEOUT
-      });
+      }).then(function() {
+        expect(Push.count()).toBe(1);
+        expect(window.Notification.prototype.close).not.toHaveBeenCalled();
 
-      expect(Push.count()).toBe(1);
-      expect(window.Notification.prototype.close).not.toHaveBeenCalled();
+        jasmine.clock().tick(TEST_TIMEOUT);
 
-      jasmine.clock().tick(TEST_TIMEOUT);
-
-      expect(window.Notification.prototype.close).toHaveBeenCalled();
-      expect(Push.count()).toBe(0);
+        expect(window.Notification.prototype.close).toHaveBeenCalled();
+        expect(Push.count()).toBe(0);
+        done();
+      }).catch(function () { });;
     });
 
-    it('should close a notification given a tag', function () {
+    it('should close a notification given a tag', function (done) {
       Push.create(TEST_TITLE, {
         tag: TEST_TAG
-      });
-
-      expect(Push.count()).toBe(1);
-      expect(Push.close(TEST_TAG)).toBeTruthy();
-      expect(window.Notification.prototype.close).toHaveBeenCalled();
-      expect(Push.count()).toBe(0);
+      }).then(function() {
+        expect(Push.count()).toBe(1);
+        expect(Push.close(TEST_TAG)).toBeTruthy();
+        expect(window.Notification.prototype.close).toHaveBeenCalled();
+        expect(Push.count()).toBe(0);
+        done();
+      }).catch(function () { });;
     });
 
-    it('should close all notifications when cleared', function () {
+    it('should close all notifications when cleared', function (done) {
       Push.create(TEST_TITLE, {
         tag: TEST_TAG
-      });
-
-      Push.create('hello world!', {
-        tag: TEST_TAG_2
-      });
-
-      expect(Push.count()).toBeGreaterThan(0);
-      expect(Push.clear()).toBeTruthy();
-      expect(window.Notification.prototype.close).toHaveBeenCalled();
-      expect(Push.count()).toBe(0);
+      }).then(function() {
+        Push.create('hello world!', {
+          tag: TEST_TAG_2
+        }).then(function() {
+          expect(Push.count()).toBeGreaterThan(0);
+          expect(Push.clear()).toBeTruthy();
+          expect(window.Notification.prototype.close).toHaveBeenCalled();
+          expect(Push.count()).toBe(0);
+          done();
+        }).catch(function () { });;
+      }).catch(function () { });;
     });
   });
 
