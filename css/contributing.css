@@ -1,0 +1,41 @@
+.contributing {
+    background: #f8f8f8;
+}
+
+.contributing .content {
+    font-size: 16px;
+    line-height: 1.5em;
+    padding-top: 8em;
+    min-height: 500px;
+    display: block;
+    overflow: hidden;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.contributing h1 {
+    color: #333;
+    font-weight: 600;
+    line-height: 2em;
+}
+
+.contributing p {
+    color: #222;
+    line-height: 1.5em;
+    text-align: justify;
+    padding: 0.5em 0;
+    margin: 0;
+}
+
+.contributing #donate_form {
+    margin-top: 2em;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+@media (max-width: 800px) {
+    .contributing .content {
+        width: 75%;
+        padding-top: 10em;
+    }
+}

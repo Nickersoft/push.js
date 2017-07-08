@@ -1,0 +1,19 @@
+main:
+  - title: Contribute
+    url: /contribute
+  - title: Docs
+    url: /docs/introduction
+    base: /docs/
+  - title: Home
+    url: /
+documentation:
+  - title: Introduction
+    url: /docs/introduction
+  - title: Quick Start
+    url: /docs/quick-start
+  - title: Permissions
+    url: /docs/permissions
+  - title: Options & Configuration
+    url: /docs/options
+  - title: Plugins
+    url: /docs/plugins
