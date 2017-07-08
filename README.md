@@ -1,6 +1,12 @@
 # Push.js
 
-[![Build Status](https://travis-ci.org/Nickersoft/push.js.svg?branch=master)](https://travis-ci.org/Nickersoft/push.js) [![npm version](https://badge.fury.io/js/push.js.svg)](https://npmjs.com/package/push.js) [![npm](https://img.shields.io/npm/dt/push.js.svg)](https://npmjs.com/package/push.js) [![Coverage Status](https://coveralls.io/repos/github/Nickersoft/push.js/badge.svg?branch=master)](https://coveralls.io/github/Nickersoft/push.js?branch=master) [![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
+[![Build Status](https://img.shields.io/travis/Nickersoft/push.js.svg)](https://travis-ci.org/Nickersoft/push.js) 
+[![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
+[![npm](https://img.shields.io/npm/dt/push.js.svg)](https://npmjs.com/package/push.js) 
+[![Coverage Status](https://img.shields.io/coveralls/Nickersoft/push.js.svg)](https://coveralls.io/github/Nickersoft/push.js?branch=master) 
+[![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
+![David Dependencies](https://img.shields.io/david/Nickersoft/push.js.svg)
+[![Code Climate](https://img.shields.io/codeclimate/github/Nickersoft/push.js.svg)](https://codeclimate.com/github/Nickersoft/push.js)
 
 *Now a proud user of*
 
