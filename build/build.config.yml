@@ -7,3 +7,4 @@ transforms:
   - name: uglifyify
   - name: babelify
     presets: ["es2015"]
+    plugins: ["transform-strict-mode"]

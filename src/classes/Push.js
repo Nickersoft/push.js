@@ -74,7 +74,7 @@ export default class Push {
     }
 
     return false;
-  };
+  }
 
   /**
    * Adds a notification to the global dictionary of notifications
@@ -87,7 +87,7 @@ export default class Push {
     this._notifications[id] = notification;
     this._currentId++;
     return id;
-  };
+  }
 
   /**
    * Removes a notification with the given ID
@@ -105,7 +105,7 @@ export default class Push {
     }
 
     return success;
-  };
+  }
 
   /**
    * Creates the wrapper for a given notification
@@ -137,7 +137,7 @@ export default class Push {
     }
 
     return wrapper;
-  };
+  }
 
   /**
    * Find the most recent notification from a ServiceWorker and add it to the global array
@@ -156,7 +156,7 @@ export default class Push {
     });
 
     resolve(this._prepareNotification(id, options));
-  };
+  }
 
   /**
    * Callback function for the 'create' method
@@ -239,7 +239,7 @@ export default class Push {
 
     /* By default, pass an empty wrapper */
     resolve(null);
-  };
+  }
 
   /**
    * Creates and displays a new notification
@@ -278,7 +278,7 @@ export default class Push {
     }
 
     return new Promise(promiseCallback);
-  };
+  }
 
   /**
    * Returns the notification count
@@ -289,10 +289,10 @@ export default class Push {
     let key;
 
     for (key in this._notifications)
-      count++;
+      if (this._notifications.hasOwnProperty(key)) count++;
 
     return count;
-  };
+  }
 
   /**
    * Closes a notification with the given tag
@@ -303,16 +303,18 @@ export default class Push {
     let key, notification;
 
     for (key in this._notifications) {
-      notification = this._notifications[key];
+      if (this._notifications.hasOwnProperty(key)) {
+        notification = this._notifications[key];
 
-      /* Run only if the tags match */
-      if (notification.tag === tag) {
+        /* Run only if the tags match */
+        if (notification.tag === tag) {
 
-        /* Call the notification's close() method */
-        return this._closeNotification(key);
+          /* Call the notification's close() method */
+          return this._closeNotification(key);
+        }
       }
     }
-  };
+  }
 
   /**
    * Clears all notifications
@@ -322,10 +324,11 @@ export default class Push {
     let key, success = true;
 
     for (key in this._notifications)
-      success = success && this._closeNotification(key);
+      if (this._notifications.hasOwnProperty(key))
+        success = success && this._closeNotification(key);
 
     return success;
-  };
+  }
 
   /**
    * Denotes whether Push is supported in the current browser
@@ -335,7 +338,8 @@ export default class Push {
     let supported = false;
 
     for (var agent in this._agents)
-      supported = supported || this._agents[agent].isSupported()
+      if (this._agents.hasOwnProperty(agent))
+        supported = supported || this._agents[agent].isSupported()
 
     return supported;
   }

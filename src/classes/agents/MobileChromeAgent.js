@@ -18,6 +18,14 @@ export default class MobileChromeAgent extends AbstractAgent {
   }
 
   /**
+   * Returns the function body as a string
+   * @param func
+   */
+  getFunctionBody(func) {
+    return func.toString().match(/function[^{]+\{([\s\S]*)\}$/)[1];
+  }
+
+  /**
    * Creates a new notification
    * @param title - notification title
    * @param options - notification options array
@@ -33,8 +41,8 @@ export default class MobileChromeAgent extends AbstractAgent {
         id: id,
         link: options.link,
         origin: document.location.href,
-        onClick: (Util.isFunction(options.onClick)) ? options.onClick.toString() : '',
-        onClose: (Util.isFunction(options.onClose)) ? options.onClose.toString() : ''
+        onClick: (Util.isFunction(options.onClick)) ? this.getFunctionBody(options.onClick) : '',
+        onClose: (Util.isFunction(options.onClose)) ? this.getFunctionBody(options.onClose) : ''
       };
 
       /* Merge the local data with user-provided data */

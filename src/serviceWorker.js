@@ -1,15 +1,18 @@
+/* eslint eqeqeq: "off", curly: "error" */
 'use strict';
 
 function isFunction(obj) {
-  obj && {}.toString.call(obj) === '[object Function]';
-};
+  return obj && {}.toString.call(obj) === '[object Function]';
+}
 
 function runFunctionString(funcStr) {
   if (funcStr.trim().length > 0) {
-    eval('var func = ' + funcStr);
-    if (isFunction(func)) func();
+    var func = new Function(funcStr);
+    if (isFunction(func)) {
+      func();
+    }
   }
-};
+}
 
 self.addEventListener('message', function (event) {
   self.client = event.source;
@@ -23,12 +26,10 @@ self.onnotificationclose = function (event) {
     id: event.notification.data.id,
     action: 'close'
   }));
-};
+}
 
 self.onnotificationclick = function (event) {
-  var link = void 0;
-  var origin = void 0;
-  var href = void 0;
+  var link, origin, href;
 
   runFunctionString(event.notification.data.onClick);
 
@@ -43,21 +44,26 @@ self.onnotificationclick = function (event) {
     event.waitUntil(clients.matchAll({
       type: "window"
     }).then(function (clientList) {
-      var client = void 0;
-      var full_url = void 0;
+      var client, full_url;
 
       for (var i = 0; i < clientList.length; i++) {
         client = clientList[i];
         full_url = href + link;
 
-        if (full_url[full_url.length - 1] !== '/' && client.url[client.url.length - 1] == '/') full_url += '/';
+        if (full_url[full_url.length - 1] !== '/' && client.url[client.url.length - 1] === '/'){
+          full_url += '/';
+        }
 
-        if (client.url == full_url && 'focus' in client) return client.focus();
+        if (client.url === full_url && 'focus' in client){
+          return client.focus();
+        }
       }
 
-      if (clients.openWindow) return clients.openWindow('/' + link);
+      if (clients.openWindow) {
+        return clients.openWindow('/' + link);
+      }
     }).catch(function (error) {
       console.error("A ServiceWorker error occurred: " + error.message);
     }));
   }
-};
+}
