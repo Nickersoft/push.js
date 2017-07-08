@@ -45,7 +45,10 @@ Push.config({
 ```
 
 By default, `serviceWorker` and `fallback` are the only available configuration
-options (more available via [plugins](/docs/plugins)). 
+options (more available via [plugins](/docs/plugins)). If not specified, `serviceWorker` will automatically
+look for the *minified* service worker file in the directory from which your script is called. So if your
+JavaScript executes on `https://example.com/johndoe`,  it will look for the script at 
+`https://example.com/johndoe/serviceWorker.min.js`.
 
 **You will probably need to set the `serviceWorker` option if your Push installation
  cannot find its service worker file.**
