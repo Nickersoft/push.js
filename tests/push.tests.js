@@ -10,7 +10,7 @@ var
   TEST_TAG = 'foo',
   TEST_TAG_2 = 'bar',
   TEST_ICON = 'icon',
-  TEST_SW_DEFAULT = "./serviceWorker.js",
+  TEST_SW_DEFAULT = "./serviceWorker.min.js",
 
   NOOP = function () {
     return null;

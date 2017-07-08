@@ -1,6 +1,8 @@
 inputPath: "../src/index.js"
+swPath: "../src/serviceWorker.js"
 outputDirectory: '../bin'
 outputFile: "push"
+swFile: "serviceWorker"
 transforms:
   - name: uglifyify
   - name: babelify
