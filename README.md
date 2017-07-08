@@ -1,4 +1,4 @@
-# Push.js
+# [<img src="https://raw.githubusercontent.com/Nickersoft/push.js/v1.0/logo.png" width="200">](http://pushjs.net)
 
 [![Build Status](https://img.shields.io/travis/Nickersoft/push.js.svg)](https://travis-ci.org/Nickersoft/push.js) 
 [![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
