@@ -1,6 +1,6 @@
 inputPath: "../src/index.js"
 outputDirectory: '../bin'
-outputFile: "push.min.js"
+outputFile: "push"
 transforms:
   - name: uglifyify
   - name: babelify
