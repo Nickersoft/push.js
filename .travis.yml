@@ -1,4 +1,14 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=0304c6a4e3413b3413cb522cbb54ada73da807fc425f1f2ea764f14725d66f0f
+    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 language: node_js
 node_js:
   - stable
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+script:
+  - npm run test
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
