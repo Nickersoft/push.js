@@ -45,8 +45,7 @@ export default class Permission {
     else if (this._win.webkitNotifications && this._win.webkitNotifications.checkPermission)
       this._win.webkitNotifications.requestPermission(callback);
 
-    else
-      throw new Error(Messages.errors.incompatible);
+    else if (onGranted) onGranted(); // let it continue by default
   };
 
   /**
@@ -77,11 +76,11 @@ export default class Permission {
       permission = this.GRANTED;
 
     /* IE9+ */
-    else if (this._win.external && this._win.external.msIsSiteMode() !== undefined)
+    else if (this._win.external && this._win.external.msIsSiteMode)
       permission = this._win.external.msIsSiteMode() ? this.GRANTED : this.DEFAULT;
 
     else
-      throw new Error(Messages.errors.incompatible);
+      permission = this.GRANTED;
 
     return permission;
   };

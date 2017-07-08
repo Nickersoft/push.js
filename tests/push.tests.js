@@ -1,6 +1,8 @@
 var
   BROWSER_CHROME = 'Chrome',
   BROWSER_FIREFOX = 'Firefox',
+  BROWSER_EDGE = 'Edge',
+  BROWSER_OPERA = 'Opera',
 
   TEST_TITLE = 'title',
   TEST_BODY = 'body',
@@ -8,7 +10,7 @@ var
   TEST_TAG = 'foo',
   TEST_TAG_2 = 'bar',
   TEST_ICON = 'icon',
-  TEST_SW_DEFAULT = "./base/src/serviceWorker.js",
+  TEST_SW_DEFAULT = "./serviceWorker.js",
 
   NOOP = function () {
     return null;
@@ -16,7 +18,7 @@ var
 
 describe('proper support detection', function () {
   function isBrowser(browser) {
-    return platform.name === browser;
+    return platform.name.toLowerCase() === browser.toLowerCase();
   }
 
   function getVersion() {
@@ -47,6 +49,136 @@ describe('proper support detection', function () {
     } else {
       pending();
     }
+  });
+
+  it('should detect Opera support correctly', function () {
+    if (isBrowser(BROWSER_OPERA)) {
+      if (getVersion() > 23)
+        expect(isSupported()).toBeTruthy();
+      else
+        expect(isSupported()).toBeFalsy();
+    } else {
+      pending();
+    }
+  });
+
+  it('should detect Edge support correctly', function () {
+    if (isBrowser(BROWSER_EDGE)) {
+      if (getVersion() > 14)
+        expect(isSupported()).toBeTruthy();
+      else
+        expect(isSupported()).toBeFalsy();
+    } else {
+      pending();
+    }
+  });
+});
+
+describe('adding plugins', function () {
+  it('reject invalid plugin manifests', function () {
+    var testPlugin = function () {
+      this.testFunc = function () {
+      }
+    };
+
+    expect(Push.extend.bind(Push, testPlugin)).toThrow()
+  });
+
+  it('accept valid plugin manifests', function () {
+    var testPlugin = {
+      plugin: function () {
+        this.testFunc = function () {
+        }
+      }
+    };
+
+    Push.extend(testPlugin);
+
+    expect(Push.testFunc).toBeDefined()
+  });
+
+  it('only allow object-based configs', function () {
+    spyOn(window.Push, 'config');
+
+    var testPlugin = {
+      config: null,
+      plugin: function () {
+        this.testFunc = function () {
+        }
+      }
+    };
+
+    Push.extend(testPlugin);
+
+    expect(Push.config.calls.count()).toEqual(1); // config() is called one by default in extend()
+
+    var testPlugin2 = {
+      config: {},
+      plugin: function () {
+        this.testFunc = function () {
+        }
+      }
+    };
+
+    Push.extend(testPlugin2);
+
+    expect(Push.config.calls.count()).toBeGreaterThan(1);
+  });
+});
+
+describe('changing configuration', function () {
+  it('returns the current configuration if no parameters passed', function () {
+    var output = {
+      serviceWorker: TEST_SW_DEFAULT,
+      fallback: function (payload) {
+      }
+    };
+
+    expect(JSON.stringify(Push.config())).toBe(JSON.stringify(output));
+  });
+
+  it('adds a configuration if one is specified', function () {
+    Push.config({
+      a: 1
+    });
+
+    expect(Push.config().a).toBeDefined();
+    expect(Push.config().a).toBe(1);
+  });
+
+  it('should be capable of performing a deep merge', function () {
+    var input1 = {
+      b: {
+        c: 1,
+        d: {
+          e: 2,
+          f: 3
+        }
+      }
+    };
+    var input2 = {
+      b: {
+        d: {
+          e: 2,
+          f: 4
+        },
+        g: 5
+      }
+    };
+    var output = {
+      c: 1,
+      d: {
+        e: 2,
+        f: 4,
+      },
+      g: 5
+    };
+
+    Push.config(input1);
+    Push.config(input2);
+
+    expect(Push.config().b).toBeDefined();
+    expect(JSON.stringify(Push.config().b)).toBe(JSON.stringify(output));
   });
 });
 
@@ -131,7 +263,7 @@ if (Push.supported()) {
       spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(false);
 
-      Push.create(TEST_TITLE).then(function() {
+      Push.create(TEST_TITLE).then(function () {
         expect(getRequestObject()).toHaveBeenCalled();
       }).catch(function () {
       });
@@ -155,9 +287,9 @@ if (Push.supported()) {
       initRequestSpy(true);
 
       Push.Permission.request();
-      Push.create(TEST_TITLE).then(function() {
+      Push.create(TEST_TITLE).then(function () {
         expect(getRequestObject()).not.toHaveBeenCalled();
-      }).catch(function() {
+      }).catch(function () {
       });
     });
   });
@@ -190,9 +322,9 @@ if (Push.supported()) {
     });
 
     it('should return promise successfully', function () {
-      var promise = Push.create(TEST_TITLE).then(function() {
+      var promise = Push.create(TEST_TITLE).then(function () {
         expect(promise.then).not.toBe(undefined);
-      }).catch(function() {
+      }).catch(function () {
       });
     });
 
@@ -209,8 +341,8 @@ if (Push.supported()) {
 
         // Some browsers, like Safari, choose to omit this info
         if (notification.title) expect(notification.title).toBe(TEST_TITLE);
-        if (notification.body)  expect(notification.body).toBe(TEST_BODY);
-        if (notification.icon)  expect(notification.icon).toContain(TEST_ICON); // Some browsers append the document location, so we gotta use toContain()
+        if (notification.body) expect(notification.body).toBe(TEST_BODY);
+        if (notification.icon) expect(notification.icon).toContain(TEST_ICON); // Some browsers append the document location, so we gotta use toContain()
 
         expect(notification.tag).toBe(TEST_TAG);
 
@@ -225,7 +357,7 @@ if (Push.supported()) {
     it('should return the increase the notification count', function (done) {
       expect(Push.count()).toBe(0);
 
-      Push.create(TEST_TITLE).then(function() {
+      Push.create(TEST_TITLE).then(function () {
         expect(Push.count()).toBe(1);
         done();
       }).catch(function () {
@@ -318,13 +450,14 @@ if (Push.supported()) {
         expect(window.Notification.prototype.close).toHaveBeenCalled();
         expect(Push.count()).toBe(0);
         done();
-      }).catch(function () { });
+      }).catch(function () {
+      });
     });
 
     it('should close notifications using given timeout', function (done) {
       Push.create(TEST_TITLE, {
         timeout: TEST_TIMEOUT
-      }).then(function() {
+      }).then(function () {
         expect(Push.count()).toBe(1);
         expect(window.Notification.prototype.close).not.toHaveBeenCalled();
 
@@ -333,141 +466,78 @@ if (Push.supported()) {
         expect(window.Notification.prototype.close).toHaveBeenCalled();
         expect(Push.count()).toBe(0);
         done();
-      }).catch(function () { });;
+      }).catch(function () {
+      });
+      ;
     });
 
     it('should close a notification given a tag', function (done) {
       Push.create(TEST_TITLE, {
         tag: TEST_TAG
-      }).then(function() {
+      }).then(function () {
         expect(Push.count()).toBe(1);
         expect(Push.close(TEST_TAG)).toBeTruthy();
         expect(window.Notification.prototype.close).toHaveBeenCalled();
         expect(Push.count()).toBe(0);
         done();
-      }).catch(function () { });;
+      }).catch(function () {
+      });
+      ;
     });
 
     it('should close all notifications when cleared', function (done) {
       Push.create(TEST_TITLE, {
         tag: TEST_TAG
-      }).then(function() {
+      }).then(function () {
         Push.create('hello world!', {
           tag: TEST_TAG_2
-        }).then(function() {
+        }).then(function () {
           expect(Push.count()).toBeGreaterThan(0);
           expect(Push.clear()).toBeTruthy();
           expect(window.Notification.prototype.close).toHaveBeenCalled();
           expect(Push.count()).toBe(0);
           done();
-        }).catch(function () { });;
-      }).catch(function () { });;
+        }).catch(function () {
+        });
+        ;
+      }).catch(function () {
+      });
+      ;
     });
   });
+} else {
+  describe('fallback functionality', function () {
+    it('should ensure fallback method fires correctly', function () {
+      var fallback = jasmine.createSpy('fallback');
 
-  describe('adding plugins', function () {
-    it('reject invalid plugin manifests', function () {
-      var testPlugin = function () {
-        this.testFunc = function () {
-        }
-      };
-
-      expect(Push.extend.bind(Push, testPlugin)).toThrow()
-    });
-
-    it('accept valid plugin manifests', function () {
-      var testPlugin = {
-        plugin: function () {
-          this.testFunc = function () {
-          }
-        }
-      };
-
-      Push.extend(testPlugin);
-
-      expect(Push.testFunc).toBeDefined()
-    });
-
-    it('only allow object-based configs', function () {
-      spyOn(window.Push, 'config');
-
-      var testPlugin = {
-        config: null,
-        plugin: function () {
-          this.testFunc = function () {
-          }
-        }
-      };
-
-      Push.extend(testPlugin);
-
-      expect(Push.config.calls.count()).toEqual(1); // config() is called one by default in extend()
-
-      var testPlugin2 = {
-        config: {},
-        plugin: function () {
-          this.testFunc = function () {
-          }
-        }
-      };
-
-      Push.extend(testPlugin2);
-
-      expect(Push.config.calls.count()).toBeGreaterThan(1);
-    });
-  });
-
-  describe('changing configuration', function () {
-    it('returns the current configuration if no parameters passed', function () {
-      var output = {
-        serviceWorker: TEST_SW_DEFAULT
-      };
-
-      expect(JSON.stringify(Push.config())).toBe(JSON.stringify(output));
-    });
-
-    it('adds a configuration if one is specified', function () {
       Push.config({
-        a: 1
+        fallback: fallback
       });
 
-      expect(Push.config().a).toBeDefined();
-      expect(Push.config().a).toBe(1);
+      Push.create(TEST_TITLE).then(function (done) {
+        expect(fallback).toHaveBeenCalled();
+        done();
+      }).catch(function() {
+      });
     });
 
-    it('should be capable of performing a deep merge', function () {
-      var input1 = {
-        b: {
-          c: 1,
-          d: {
-            e: 2,
-            f: 3
-          }
+    it('should ensure all notification options are passed to the fallback', function (done) {
+      Push.config({
+        fallback: function(payload) {
+          expect(payload.title).toBe(TEST_TITLE);
+          expect(payload.body).toBe(TEST_BODY);
+          expect(payload.icon).toBe(TEST_ICON);
+          expect(payload.tag).toBe(TEST_TAG);
+          done();
         }
-      };
-      var input2 = {
-        b: {
-          d: {
-            e: 2,
-            f: 4
-          },
-          g: 5
-        }
-      };
-      var output = {
-        c: 1,
-        d: {
-          e: 2,
-          f: 4,
-        },
-        g: 5
-      };
+      });
 
-      Push.config(input1);
-      Push.config(input2);
-
-      expect(Push.config().b).toBeDefined();
-      expect(JSON.stringify(Push.config().b)).toBe(JSON.stringify(output));
+      Push.create(TEST_TITLE, {
+        body: TEST_BODY,
+        icon: TEST_ICON,
+        tag: TEST_TAG
+      }).catch(function() {
+      });
     });
   });
 }

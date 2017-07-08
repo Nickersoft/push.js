@@ -53,8 +53,7 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      './src/**/*.js': ['sourcemap'],
-      './bin/push.min.js': ['coverage']
+      './bin/push.min.js': ['sourcemap', 'coverage']
     },
 
 

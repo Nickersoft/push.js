@@ -35,7 +35,8 @@ export default class Push {
     };
 
     this._configuration = {
-      serviceWorker: './serviceWorker.js'
+      serviceWorker: './serviceWorker.js',
+      fallback: function(payload) {}
     }
   }
 
@@ -204,9 +205,11 @@ export default class Push {
     else if (this._agents.ms.isSupported())
       notification = this._agents.ms.create(title, options);
 
-    /* Unknown */
-    else
-      throw new Error(Messages.errors.unknown_interface);
+    /* Default fallback */
+    else {
+      options.title = title;
+      this.config().fallback(options);
+    }
 
     if (notification !== null) {
       const id = this._addNotification(notification);
@@ -235,7 +238,7 @@ export default class Push {
     }
 
     /* By default, pass an empty wrapper */
-    resolve({});
+    resolve(null);
   };
 
   /**
