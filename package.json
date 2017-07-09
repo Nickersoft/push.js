@@ -11,9 +11,7 @@
     "prepublish": "npm run build"
   },
   "files": [
-    "test",
-    "*.js",
-    "*.html",
+    "bin",
     "*.md"
   ],
   "repository": {
