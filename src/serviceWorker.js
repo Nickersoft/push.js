@@ -63,7 +63,7 @@ self.onnotificationclick = function (event) {
         return clients.openWindow('/' + link);
       }
     }).catch(function (error) {
-      console.error("A ServiceWorker error occurred: " + error.message);
+      throw new Error("A ServiceWorker error occurred: " + error.message);
     }));
   }
 }

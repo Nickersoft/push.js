@@ -70,10 +70,10 @@ export default class MobileChromeAgent extends AbstractAgent {
           callback(notifications);
         });
       }).catch(function(error) {
-        console.error(Messages.sw_notification_error + error.message);
+        throw new Error(Messages.errors.sw_notification_error + error.message);
       });
     }).catch(function(error) {
-      console.error(Messages.sw_registration_error + error.message);
+      throw new Error(Messages.errors.sw_registration_error + error.message);
     });
   }
 

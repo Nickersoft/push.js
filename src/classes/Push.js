@@ -67,7 +67,7 @@ export default class Push {
 
       else {
         success = false;
-        throw new Error('Unable to close notification: unknown interface');
+        throw new Error(Messages.errors.unknown_interface);
       }
 
       return success;
@@ -251,7 +251,7 @@ export default class Push {
 
     /* Fail if no or an invalid title is provided */
     if (!Util.isString(title)) {
-      throw new Error('PushError: Title of notification must be a string');
+      throw new Error(Messages.errors.invalid_title);
     }
 
     /* Request permission if it isn't granted */
@@ -264,7 +264,7 @@ export default class Push {
             reject(e);
           }
         }, () => {
-          reject("Permission request declined");
+          reject(Messages.errors.permission_denied);
         });
       };
     } else {
