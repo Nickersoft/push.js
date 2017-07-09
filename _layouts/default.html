@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>{{ page.title }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" href="/images/favicon.ico" />
+    <meta name="description" content="The world's most versatile desktop notifications framework">
+    <meta name="keywords" content="push,notifications,api,javascript,jquery,desktop,mobile,js,notification,shim,wrapper,nickersoft,advanced,versatile,framework,plugins,extend,tutorial,documentation">
+    <meta name="author" content="Tyler Nickerson">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/documentation.css">
+    <link rel="stylesheet" href="/css/contributing.css">
+    <link rel="stylesheet" href="/css/code.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,700" media="all">
+</head>
+<body>
+<header>
+    <div class="container">
+        <nav class="main-nav">
+            <ul>
+                {% include nav.html %}
+            </ul>
+        </nav>
+        <a href="/"><img class="logo" src="/images/logo.svg"/></a>
+        <nav class="mobile-nav">
+            <ul>
+                {% include nav.html %}
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="content">
+    {{ content }}
+</div>
+<footer>
+    <div class="container">
+        <div class="browserstack">
+            <span>Powered by</span>
+            <a href="https://browserstack.com" target="_blank"><img src="/images/browserstack.svg" class="logo" /></a>
+        </div>
+        <p class="nametag"><span>Made with ♥ by </span><a href="http://tylernickerson.com">Tyler Nickerson</a></p>
+    </div>
+</footer>
+{% if page.custom_js %}
+{% for js_file in page.custom_js %}
+<script src='{{ js_file }}' type="text/javascript"></script>
+{% endfor %}
+{% endif %}
+<script>
+    // Google analytics
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-24989915-5', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

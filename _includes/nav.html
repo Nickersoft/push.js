@@ -1,0 +1,22 @@
+{% for entry in site.data.navigation.main %}
+{% capture fullurl %}{{ site.baseurl }}{{ entry.url }}{% endcapture %}
+{% if fullurl == page.url %}
+{% assign current_page = fullurl %}
+{% break %}
+{% elsif page.url contains fullurl %}
+{% assign current_page = fullurl %}
+{% break %}
+{% elsif page.url contains entry.base %}
+{% assign current_page = fullurl %}
+{% break %}
+{% endif %}
+{% endfor %}
+
+{% for entry in site.data.navigation.main %}
+{% if entry.url == current_page %}
+{% assign current = ' class="active"' %}
+{% else %}
+{% assign current = null %}
+{% endif %}
+<li {{ current }}><a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
+{% endfor %}

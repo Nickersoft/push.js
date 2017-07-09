@@ -1,98 +1,16 @@
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-    <meta charset="UTF-8">
-    <title>Push.js</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <meta name="description" content="A cross-browser solution for the JavaScript Notifications API">
-    <meta name="keywords" content="push,notifications,javascript,jquery,desktop,mobile,js,notification,shim,wrapper,nickersoft">
-    <meta name="author" content="Tyler Nickerson">
-    <link rel="icon" href="favicon.ico" />
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css">
-    <link rel="stylesheet" type="text/css" href="normalize.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheet.css" media="screen">
-    <style>
-        #donate_form input {
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
-</head>
-<body>
-    <main>
-        <h1>Push.js</h1>
-        <h2>JavaScript notifications for every browser<sup>*</sup></h2>
-        <section class="buttons">
-            <a class="button" href="https://github.com/Nickersoft/push.js" target="_blank">Github</a>
-            <a class="button" href="https://npmjs.com/package/push.js" target="_blank">NPM</a>
-            <a class="button" href="javascript:void(0);" id="demoButton">Demo</a>
-        </section>
-        <section class="content">
-            <p>Push is easily installable via <a href="https://npmjs.com" target="_blank">NPM</a>:</p>
-            <pre><code class="language-bash"><span class="cursor">></span> npm install push.js</code></pre>
-            <p>Or, if you prefer, you can use <a href="https://bower.io" target="_blank">Bower</a> instead:</p>
-            <pre><code class="language-bash"><span class="cursor">></span> bower install push.js</code></pre>
-            <p>Then, creating a notification is as easy as:</p>
-            <pre><code class="language-javascript">Push.create("Hello world!", {
-    body: "How's it hangin'?",
-    icon: 'icon.png',
-    timeout: 4000,
-    onClick: function () {
-        window.focus();
-        this.close();
-    }
-});</code></pre>
-            <p>
-                Go ahead and try it by clicking the "Demo" button above! For more documentation, checkout
-                <a href="https://github.com/Nickersoft/push.js" target="_blank">the official repo</a>.
-            </p>
-            <p>
-                If you're really feeling fiesty, you can check out
-                <a href="http://tylernickerson.com" target="_blank">the kid who made this,</a>
-                and if you're really, <i>really</i> feeling fiesty, could can contribute to the development of Push.js:
-                <form id="donate_form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                    <input type="hidden" name="cmd" value="_s-xclick">
-                    <input type="hidden" name="hosted_button_id" value="RST36KZSU28BW">
-                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-                </form>
-            </p>
-        </section>
-        <footer>
-            "Every browser" being Firefox 22+, Chrome 5+, Safari 6+, Opera 25+, Android Browser 4.4+,
-            Blackberry Browser 10+, Opera Mobile 37+, Firefox Android 47+, and Samsung Internet. Trying to get IE included
-            on the list :)
-        </footer>
-    </main>
-
-    <script type="text/javascript" src="push.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-24989915-5', 'auto');
-        ga('send', 'pageview');
-
-        document.getElementById('demoButton').onclick = function () {
-            Push.create('Hello world!', {
-                body: 'How\'s it hangin\'?',
-                icon: 'icon.png',
-                timeout: 4000,
-                onClick: function () {
-                    console.log("Fired!");
-                    window.focus();
-                    this.close();
-                },
-                vibrate: [200, 100, 200, 100, 200, 100, 200]
-            });
-        };
-    </script>
-
-</body>
-
-</html>
+---
+layout: default
+title: Push v1.0 | Javascript Notification Framework
+custom_js:
+- https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js
+- https://www.gstatic.com/firebasejs/4.1.2/firebase-messaging.js
+- /scripts/push.min.js
+- /scripts/main.js
+---
+<section class="hero">
+    <div class="small-container">
+        <h1>The world's most versatile desktop notifications framework reaches 1.0</h1>
+        <p class="sub-text">Complete with support for ES2015, third-party plugins, and much more</p>
+        <a id="demo_button" href="#" class="button">View Demo</a>
+    </div>
+</section>

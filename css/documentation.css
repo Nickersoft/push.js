@@ -1,0 +1,168 @@
+.documentation a {
+    cursor: pointer;
+}
+
+.documentation {
+    background: #f8f8f8;
+    overflow: hidden;
+}
+
+.documentation .sidebar {
+    background: #fff;
+    border-right: 1px solid #eee;
+    padding-top: 6em;
+    padding-left: 2em;
+    position: fixed;
+    width: 225px;
+    height: 100%;
+    top: 0;
+}
+
+.documentation .mobile-sidebar {
+    background: #fff;
+    position: fixed;
+    width: 100%;
+    top: 9.2em;
+    overflow: scroll;
+    border-bottom: 1px solid #eee;
+    display: none;
+}
+
+.documentation .mobile-sidebar ul {
+    white-space: nowrap;
+}
+
+.documentation .mobile-sidebar ul li {
+    display: inline-block;
+    padding: 1em 4em;
+    line-height: 1em;
+}
+
+.documentation .content {
+    font-size: 16px;
+    line-height: 1.5em;
+    margin-left: 225px;
+    padding-top: 6em;
+    min-height: 800px;
+    display: block;
+    overflow: hidden;
+    padding-left: 3em;
+    width: calc(100% - 300px);
+    margin-bottom: 50px;
+}
+
+.documentation .content p:first-child {
+    margin-top: 0;
+}
+
+.documentation h1, h2, h3, h4, h5, h6 {
+    text-align: left;
+}
+
+.documentation h1 {
+    color: #333;
+    font-weight: 600;
+    line-height: 2em;
+}
+
+.documentation h2 {
+    color: #444;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    padding: 0.5em 0;
+}
+
+.documentation h3 {
+    color: #555;
+    font-size: 1.25em;
+    line-height: 1.25em;
+    padding: 0.5em 0;
+}
+
+.documentation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.documentation ul li {
+    cursor: pointer;
+}
+
+.documentation ul li a {
+    color: #777;
+    display: block;
+    padding: 1em 0;
+    text-decoration: none;
+}
+
+.documentation ul li.active > a {
+    color: #24223C;
+}
+
+.documentation ul li:not(.active) a:hover {
+    color: #444;
+}
+
+.documentation p {
+    color: #222;
+    line-height: 1.5em;
+    text-align: justify;
+    padding: 0.5em 0;
+    margin: 0;
+}
+
+.documentation table {
+    background: #fff;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #eee;
+    margin-bottom: 25px;
+}
+
+.documentation table thead {
+    background: #24223C;
+    color: #fff;
+}
+
+.documentation table thead th {
+    padding: 10px 0;
+}
+
+.documentation table td {
+    padding: 25px;
+}
+
+.documentation table tr {
+    border-bottom: 1px solid #eee;
+}
+
+.documentation table tr:last-child {
+    border: 0;
+}
+
+.documentation table tr:nth-child(even) {
+    background: #fbfbfb;
+}
+
+.documentation .highlight {
+    overflow: auto;
+}
+
+@media (max-width: 800px) {
+    .documentation .sidebar {
+        display: none;
+    }
+
+    .documentation .mobile-sidebar {
+        display: block;
+    }
+
+    .documentation .content {
+        padding-top: 14em;
+        padding-left: 3em;
+        padding-right: 3em;
+        width: 100%;
+        margin-left: 0;
+    }
+}
