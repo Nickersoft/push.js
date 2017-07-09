@@ -12,7 +12,8 @@
   },
   "files": [
     "bin",
-    "*.md"
+    "*.md",
+    "*.png"
   ],
   "repository": {
     "type": "git",
