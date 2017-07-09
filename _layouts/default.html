@@ -1,9 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <title>{{ page.title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>{{ page.title }}</title>
+    <link rel="icon" href="/images/favicon.ico" />
+    <meta name="description" content="The world's most versatile desktop notifications framework">
+    <meta name="keywords" content="push,notifications,api,javascript,jquery,desktop,mobile,js,notification,shim,wrapper,nickersoft,advanced,versatile,framework,plugins,extend,tutorial,documentation">
+    <meta name="author" content="Tyler Nickerson">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/documentation.css">
     <link rel="stylesheet" href="/css/contributing.css">
@@ -31,7 +35,11 @@
 </div>
 <footer>
     <div class="container">
-        <p class="center-text">Made with ♥ by <a href="http://tylernickerson.com">Tyler Nickerson</a></p>
+        <div class="browserstack">
+            <span>Powered by</span>
+            <a href="https://browserstack.com" target="_blank"><img src="/images/browserstack.svg" class="logo" /></a>
+        </div>
+        <p class="nametag"><span>Made with ♥ by </span><a href="http://tylernickerson.com">Tyler Nickerson</a></p>
     </div>
 </footer>
 {% if page.custom_js %}

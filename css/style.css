@@ -102,6 +102,37 @@ footer {
     z-index: 100;
 }
 
+footer .browserstack {
+    display: inline-block;
+    text-align: center;
+    padding: 50px 0;
+    margin: 0 auto;
+    width: 48%;
+    float: left;
+}
+
+footer .browserstack span {
+    display: block;
+    opacity: 0.85;
+}
+
+footer .browserstack img {
+    margin: -0.75em auto 0;
+    width: 20em;
+}
+
+footer .nametag {
+    display: inline-block;
+    width: 48%;
+    float: right;
+    text-align: center;
+    padding: 55px 0;
+}
+
+footer .nametag span {
+    opacity: 0.75;
+}
+
 img.logo {
     margin-top: 1.5em;
     margin-left: 1.5em;
@@ -238,72 +269,6 @@ nav.mobile-nav li:hover{
     text-align: center;
 }
 
-.columns:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.spacing {
-    padding: 50px 0;
-}
-
-.column {
-    box-sizing: border-box;
-    float: left;
-}
-
-.column.third {
-    width: 33%;
-    padding: 0 20px;
-    text-align: center;
-}
-
-.column.half {
-    width: 50%;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-.blog-post {
-    max-width: 750px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.blog-post .date {
-    float: right;
-}
-
-.comment {
-    border: 1px solid #CCC;
-    padding: 20px 50px;
-    color: #777;
-    position: relative;
-    font-size: .9em;
-    margin: 30px 0;
-}
-
-.comment h4 {
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    top: 40px;
-    left: 143px;
-}
-
-.comment span.date {
-    position: absolute;
-    top: 64px;
-    left: 142px;
-}
-
-.comment .profile-image img {
-    width: 80px;
-    height: 80px;
-    border-radius: 100px;
-}
-
 hr {
     border: 1px solid #eee;
     margin: 60px 0;
@@ -338,6 +303,13 @@ input[type="submit"] {
 @media (max-width: 800px) {
     body {
         font-size: 14px;
+    }
+
+    footer .browserstack,
+    footer .nametag {
+        display: block;
+        padding: 40px 0;
+        width: 100%;
     }
 
     nav.main-nav {
