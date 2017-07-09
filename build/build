@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+
+const browserify = require('browserify');
+const fs = require('fs');
+const yaml = require('js-yaml');
+const {StringDecoder} = require('string_decoder');
+const UglifyJS = require("uglify-js");
+
+// Load the license and config info
+const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/build.config.yml`, 'utf8'));
+const outputDirectory = `${__dirname}/${config.outputDirectory}`;
+const license = fs.readFileSync(`${__dirname}/license.txt`, 'utf8').trim();
+
+// Create the output directory
+if (!fs.existsSync(outputDirectory)) {
+  fs.mkdirSync(outputDirectory);
+}
+
+// Create a Browserify instance
+const bundler = browserify(`${__dirname}/${config.inputPath}`, {
+  standalone: "Push",
+  debug: true
+});
+
+// Apply transforms
+if(config.hasOwnProperty('transforms')) {
+  config.transforms.forEach((transform) => {
+    const name = transform.name;
+    delete transform.name;
+    bundler.transform(name, transform);
+  });
+}
+
+// Bundle Push using Browserify
+bundler.bundle((error, data) => {
+  if(error)
+    console.error(error);
+
+  // Read and minify the Browserified, Babelified output
+  const clean = new StringDecoder('utf8').write(data);
+  const push = UglifyJS.minify(
+    clean,
+    {
+      sourceMap: {
+        filename: `${config.outputFile}.js`,
+        content: 'inline',
+        url: `${config.outputFile}.min.js.map`
+      },
+      output: {
+        comments: true,
+        preamble: license
+      }
+    }
+  );
+
+  // Read and minify the service worker
+  const sw = fs.readFileSync(`${__dirname}/${config.swPath}`, 'utf8');
+  const swm = UglifyJS.minify(sw);
+
+  // Write Push
+  fs.writeFileSync(`${outputDirectory}/${config.outputFile}.js`, clean);
+  fs.writeFileSync(`${outputDirectory}/${config.outputFile}.min.js`, push.code);
+  fs.writeFileSync(`${outputDirectory}/${config.outputFile}.min.js.map`, push.map);
+
+  // Write Service Worker
+  fs.writeFileSync(`${outputDirectory}/${config.swFile}.js`, sw);
+  fs.writeFileSync(`${outputDirectory}/${config.swFile}.min.js`, swm.code);
+});
+
+console.log("File compiled successfully");
