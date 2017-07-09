@@ -1,8 +1,8 @@
 {
   "name": "push.js",
-  "version": "0.0.13",
+  "version": "1.0.0",
   "description": "A compact, cross-browser solution for the Javascript Notifications API",
-  "main": "push.js",
+  "main": "bin/push.min.js",
   "authors": [
     "Tyler Nickerson"
   ],
@@ -17,8 +17,10 @@
     "coverage",
     "node_modules",
     "bower_components",
-    "test",
-    "/*.json",
-    "karma.*"
+    "tests",
+    "src",
+    "build",
+    "*.lock",
+    "*.json"
   ]
 }
