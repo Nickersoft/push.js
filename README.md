@@ -1,4 +1,4 @@
-# [<img src="https://raw.githubusercontent.com/Nickersoft/push.js/v1.0/logo.png" width="200">](http://pushjs.org)
+# [<img src="https://raw.githubusercontent.com/Nickersoft/push.js/master/logo.png" width="200">](http://pushjs.org)
 
 [![Build Status](https://img.shields.io/travis/Nickersoft/push.js.svg)](https://travis-ci.org/Nickersoft/push.js) 
 [![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
@@ -10,7 +10,7 @@
 
 *Now a proud user of*
 
-[<img src="https://raw.githubusercontent.com/Nickersoft/push.js/v1.0/browserstack.png" width="200px" />](https://browserstack.com)
+[<img src="https://raw.githubusercontent.com/Nickersoft/push.js/master/browserstack.png" width="200px" />](https://browserstack.com)
 
 ### What is Push? ###
 
