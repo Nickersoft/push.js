@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/Nickersoft/push.js.svg)](https://travis-ci.org/Nickersoft/push.js) 
 [![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
-[![npm](https://img.shields.io/npm/dt/push.js.svg)](https://npmjs.com/package/push.js) 
+[![npm](https://img.shields.io/npm/dm/push.js.svg)](https://npmjs.com/package/push.js) 
 [![Coverage Status](https://img.shields.io/coveralls/Nickersoft/push.js.svg)](https://coveralls.io/github/Nickersoft/push.js?branch=master) 
 [![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
 ![David Dependencies](https://img.shields.io/david/Nickersoft/push.js.svg)
