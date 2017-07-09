@@ -14,13 +14,13 @@ Push is the fastest way to get up and running with Javascript desktop notificati
 You can quickly install Push via [npm](http://npmjs.com):
 
 ```bash
-$ npm install pushjs --save
+$ npm install push.js --save
 ```
 
 Or, if you want something a little more lightweight, you can give [Bower](http://bower.io) a try:
 
 ```bash
-$ bower install pushjs --save
+$ bower install push.js --save
 ```
 
 
