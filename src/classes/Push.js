@@ -35,7 +35,7 @@ export default class Push {
     };
 
     this._configuration = {
-      serviceWorker: './serviceWorker.min.js',
+      serviceWorker: '/serviceWorker.min.js',
       fallback: function(payload) {}
     }
   }
