@@ -22,7 +22,7 @@ export default class MobileChromeAgent extends AbstractAgent {
    * @param func
    */
   getFunctionBody(func) {
-    return func.toString().match(/function[^{]+\{([\s\S]*)\}$/)[1];
+    return func.toString().match(/function[^{]+{([\s\S]*)}$/)[1];
   }
 
   /**
@@ -31,9 +31,9 @@ export default class MobileChromeAgent extends AbstractAgent {
    * @param options - notification options array
    * @returns {Notification}
    */
-  create(id, title, options, lastWorkerPath, callback) {
-    /* Register ServiceWorker using lastWorkerPath */
-    this._win.navigator.serviceWorker.register(lastWorkerPath);
+  create(id, title, options, serviceWorker, callback) {
+    /* Register ServiceWorker */
+    this._win.navigator.serviceWorker.register(serviceWorker);
 
     this._win.navigator.serviceWorker.ready.then(registration => {
       /* Local data the service worker will use */
@@ -62,6 +62,7 @@ export default class MobileChromeAgent extends AbstractAgent {
           silent: options.silent
         }
       ).then(() => {
+
         registration.getNotifications().then(notifications => {
           /* Send an empty message so the ServiceWorker knows who the client is */
           registration.active.postMessage('');

@@ -188,10 +188,10 @@ export default class Push {
         const id = this._currentId;
         const sw = this.config().serviceWorker;
         const cb = (notifications) => this._serviceWorkerCallback(notifications, options, resolve);
-
         /* Create a Chrome ServiceWorker notification if it isn't supported */
-        if (this._agents.chrome.isSupported())
+        if (this._agents.chrome.isSupported()) {
           this._agents.chrome.create(id, title, options, sw, cb);
+        }
       }
       /* Legacy WebKit browsers */
     } else if (this._agents.webkit.isSupported())
