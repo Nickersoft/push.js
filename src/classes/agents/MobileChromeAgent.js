@@ -82,6 +82,6 @@ export default class MobileChromeAgent extends AbstractAgent {
    * Close all notification
    */
   close() {
-    this._win.external.msSiteModeClearIconOverlay()
+    // Can't do this with service workers
   }
 }
