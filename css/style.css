@@ -99,6 +99,7 @@ footer {
     font-weight: 300;
     line-height: 0.85em;
     position: relative;
+    overflow: hidden;
     z-index: 100;
 }
 
