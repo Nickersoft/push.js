@@ -5,7 +5,7 @@
 [![npm](https://img.shields.io/npm/dm/push.js.svg)](https://npmjs.com/package/push.js) 
 [![Coverage Status](https://img.shields.io/coveralls/Nickersoft/push.js.svg)](https://coveralls.io/github/Nickersoft/push.js?branch=master) 
 [![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
-![David Dependencies](https://img.shields.io/david/Nickersoft/push.js.svg)
+![David Dev Dependencies](https://img.shields.io/david/dev/nickersoft/push.js.svg)
 [![Code Climate](https://img.shields.io/codeclimate/github/Nickersoft/push.js.svg)](https://codeclimate.com/github/Nickersoft/push.js)
 
 *Now a proud user of*
