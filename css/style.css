@@ -146,7 +146,7 @@ img.logo {
 section.hero {
     color: #fff;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+DQo8ZyBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjA1Ij4NCjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMSIgeT0iMCI+PC9yZWN0Pg0KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxIiB5PSI0MCI+PC9yZWN0Pg0KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxIiB5PSI4MCI+PC9yZWN0Pg0KPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTAwIiB4PSI0MCI+PC9yZWN0Pg0KPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTAwIiB4PSI4MCI+PC9yZWN0Pg0KPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTAwIiB4PSIwIj48L3JlY3Q+DQo8L2c+DQogIA0KPC9zdmc+DQo="), linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
-    padding: 20em 5em 12em;
+    padding: 22em 5em 16em;
     text-shadow: 0 2px 20px rgba(0,0,0,0.2);
 }
 
@@ -168,7 +168,7 @@ section.hero .button {
     font-weight: 400;
     font-size: 0.75em;
     line-height: 4em;
-    width: 40%;
+    width: 20em;
     margin: 35px auto;
     display: block;
     text-align: center;
