@@ -31,12 +31,15 @@ self.onnotificationclose = function (event) {
 self.onnotificationclick = function (event) {
   var link, origin, href;
 
-  runFunctionString(event.notification.data.onClick);
-
   if (typeof event.notification.data.link !== 'undefined' && event.notification.data.link !== null) {
     origin = event.notification.data.origin;
     link = event.notification.data.link;
     href = origin.substring(0, origin.indexOf('/', 8)) + '/';
+
+    /* Removes prepending slash, as we don't need it */
+    if (link[0] === '/') {
+        link = (link.length > 1) ? link.substring(1, link.length) : '';
+    }
 
     event.notification.close();
 
@@ -50,7 +53,8 @@ self.onnotificationclick = function (event) {
         client = clientList[i];
         full_url = href + link;
 
-        if (full_url[full_url.length - 1] !== '/' && client.url[client.url.length - 1] === '/'){
+        /* Covers case where full_url might be http://example.com/john and the client URL is http://example.com/john/ */
+        if (full_url[full_url.length - 1] !== '/' && client.url[client.url.length - 1] === '/') {
           full_url += '/';
         }
 
@@ -66,4 +70,6 @@ self.onnotificationclick = function (event) {
       throw new Error("A ServiceWorker error occurred: " + error.message);
     }));
   }
+
+  runFunctionString(event.notification.data.onClick);
 }
