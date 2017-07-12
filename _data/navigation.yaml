@@ -1,6 +1,4 @@
 main:
-  - title: Contribute
-    url: /contribute
   - title: Docs
     url: /docs/introduction
     base: /docs/
