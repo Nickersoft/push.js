@@ -4,7 +4,7 @@ function demo() {
     Push.create('Hello world!', {
         body: 'How\'s it hangin\'?',
         icon: '/images/icon.png',
-        link: '/',
+        link: '/#',
         timeout: 4000,
         onClick: function () {
             console.log("Fired!");
