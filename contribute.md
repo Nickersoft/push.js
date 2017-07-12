@@ -1,8 +1,8 @@
 ---
-layout: contributing
+layout: contribute
 title: Push v1.0 | Javascript Notification Framework
 ---
-# Contributing
+# Push Push.js Forward
 If you'd like to contribute to the future development of Push, we'd love your help! If you're
 a developer eager who's eager to hop on your next open source contribution, 
 [check out our open GitHub issues](https://github.com/Nickersoft/push/issues) or 
