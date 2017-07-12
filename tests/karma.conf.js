@@ -45,7 +45,7 @@ module.exports = function (config) {
     files: [
       './node_modules/platform/platform.js',
       './node_modules/babel-polyfill/dist/polyfill.min.js',
-      './bin/push.min.js',
+      './bin/push.js',
       './tests/push.tests.js',
       './src/serviceWorker.js',
     ],
@@ -53,7 +53,7 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      './bin/push.min.js': ['sourcemap', 'coverage']
+      './bin/push.js': ['sourcemap', 'coverage']
     },
 
 
