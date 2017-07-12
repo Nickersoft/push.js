@@ -13,7 +13,7 @@
     padding-top: 6em;
     padding-left: 2em;
     position: fixed;
-    width: 225px;
+    width: 200px;
     height: 100%;
     top: 0;
 }
@@ -41,14 +41,15 @@
 .documentation .content {
     font-size: 16px;
     line-height: 1.5em;
-    margin-left: 225px;
+    margin-left: 200px;
     padding-top: 6em;
     min-height: 800px;
     display: block;
     overflow: hidden;
     padding-left: 3em;
-    width: calc(100% - 300px);
+    width: calc(100% - 275px);
     margin-bottom: 50px;
+    max-width: 1200px;
 }
 
 .documentation .content p:first-child {
@@ -57,26 +58,25 @@
 
 .documentation h1, h2, h3, h4, h5, h6 {
     text-align: left;
+    line-height: 1.25em;
 }
 
 .documentation h1 {
     color: #333;
     font-weight: 600;
-    line-height: 2em;
+    padding: 0.25em 0;
 }
 
 .documentation h2 {
     color: #444;
     font-size: 1.5em;
-    line-height: 1.5em;
-    padding: 0.5em 0;
+    padding: 0.25em 0;
 }
 
 .documentation h3 {
     color: #555;
     font-size: 1.25em;
-    line-height: 1.25em;
-    padding: 0.5em 0;
+    padding: 0.25em 0;
 }
 
 .documentation ul {
@@ -118,6 +118,7 @@
     border-spacing: 0;
     border: 1px solid #eee;
     margin-bottom: 25px;
+    margin-top: 0.5em;
 }
 
 .documentation table thead {
