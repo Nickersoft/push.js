@@ -3,19 +3,25 @@
 }
 
 .documentation {
-    background: #f8f8f8;
+    background: #fff;
     overflow: hidden;
 }
 
 .documentation .sidebar {
-    background: #fff;
-    border-right: 1px solid #eee;
-    padding-top: 6em;
-    padding-left: 2em;
-    position: fixed;
-    width: 200px;
-    height: 100%;
-    top: 0;
+    padding: 6em 2em 0;
+    position: absolute;
+    width: 300px;
+    float: left;
+}
+
+.documentation .sidebar ul {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1em;
+    margin-bottom: 2em;
+}
+
+.documentation .sidebar ul li a {
+    padding: 20px 0;
 }
 
 .documentation .mobile-sidebar {
@@ -39,17 +45,17 @@
 }
 
 .documentation .content {
+    background: #f8f8f8;
+    border-left: 1px solid #eee;
     font-size: 16px;
     line-height: 1.5em;
-    margin-left: 200px;
-    padding-top: 6em;
+    margin-left: 300px;
     min-height: 800px;
     display: block;
     overflow: hidden;
-    padding-left: 3em;
-    width: calc(100% - 275px);
-    margin-bottom: 50px;
+    width: calc(100% - 300px);
     max-width: 1200px;
+    padding: 6em 75px 50px 3em;
 }
 
 .documentation .content p:first-child {
