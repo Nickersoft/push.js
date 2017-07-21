@@ -1,5 +1,3 @@
-var button = document.getElementById("demo_button");
-
 function demo() {
     Push.create('Hello world!', {
         body: 'How\'s it hangin\'?',
@@ -15,7 +13,6 @@ function demo() {
     });
 }
 
-if (button !== null) {
-    button.onclick = demo;
-}
-
+$(document).ready(function() {
+    $("#demo_button").click(demo);
+});
