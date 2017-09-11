@@ -21,12 +21,12 @@ var Permission = function () {
   function Permission(i) {
     _classCallCheck(this, Permission);
 
-    this._win = i, this.DEFAULT = "default", this.GRANTED = "granted", this.DENIED = "denied", this._permissions = [this.GRANTED, this.DEFAULT, this.DENIED];
+    this._win = i, this.GRANTED = "granted", this.DEFAULT = "default", this.DENIED = "denied", this._permissions = [this.GRANTED, this.DEFAULT, this.DENIED];
   }
 
   _createClass(Permission, [{
     key: "request",
-    value: function request(i, t) {
+    value: function request() {
       var _this = this;
 
       var s = this.get();var n = function n() {
@@ -184,13 +184,9 @@ var Push = function () {
           s(t);
         }
       } : function (e, s) {
-        _this4.Permission.request(function () {
-          try {
-            _this4._createCallback(t, i, e);
-          } catch (t) {
-            s(t);
-          }
-        }, function () {
+        _this4.Permission.request().then(function () {
+          _this4._createCallback(t, i, e);
+        }).catch(function () {
           s(_Messages2.default.errors.permission_denied);
         });
       }, new Promise(e);

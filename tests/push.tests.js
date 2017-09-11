@@ -249,7 +249,7 @@ if (Push.supported()) {
       spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(false);
 
-      Push.Permission.request(NOOP, callback);
+      Push.Permission.request().then(NOOP).catch(callback);
 
       setTimeout(function () {
         expect(Push.Permission.has()).toBe(false);
@@ -272,7 +272,7 @@ if (Push.supported()) {
       spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.GRANTED);
       initRequestSpy(true);
 
-      Push.Permission.request(callback, NOOP);
+      Push.Permission.request().then(callback).catch(NOOP);
 
       setTimeout(function () {
         expect(Push.Permission.has()).toBe(true);

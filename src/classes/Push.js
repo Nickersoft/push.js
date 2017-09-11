@@ -257,15 +257,11 @@ export default class Push {
     /* Request permission if it isn't granted */
     if (!this.Permission.has()) {
       promiseCallback = (resolve, reject) => {
-        this.Permission.request(() => {
-          try {
-            this._createCallback(title, options, resolve);
-          } catch (e) {
-            reject(e);
-          }
-        }, () => {
+        this.Permission.request().then(() => {
+          this._createCallback(title, options, resolve);
+        }).catch(() => {
           reject(Messages.errors.permission_denied);
-        });
+        })
       };
     } else {
       promiseCallback = (resolve, reject) => {
