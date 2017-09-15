@@ -245,7 +245,20 @@ if (Push.supported()) {
       expect(typeof Push.Permission.get()).toBe('string');
     });
 
-    it('should update permission value if permission is denied and execute callback', function (done) {
+    it('should update permission value if permission is denied and execute callback (deprecated)', function (done) {
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
+      initRequestSpy(false);
+
+      Push.Permission.request(NOOP, callback);
+
+      setTimeout(function () {
+        expect(Push.Permission.has()).toBe(false);
+        expect(callback).toHaveBeenCalled();
+        done();
+      }, 500);
+    });
+
+    it('should update permission value if permission is denied and execute callback (with promise)', function (done) {
       spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.DEFAULT);
       initRequestSpy(false);
 
@@ -268,7 +281,20 @@ if (Push.supported()) {
       });
     });
 
-    it('should update permission value if permission is granted and execute callback', function (done) {
+    it('should update permission value if permission is granted and execute callback (deprecated)', function (done) {
+      spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.GRANTED);
+      initRequestSpy(true);
+
+      Push.Permission.request(callback, NOOP);
+
+      setTimeout(function () {
+        expect(Push.Permission.has()).toBe(true);
+        expect(callback).toHaveBeenCalled();
+        done();
+      }, 500);
+    });
+
+    it('should update permission value if permission is granted and execute callback (with promise)', function (done) {
       spyOn(Push.Permission, 'get').and.returnValue(Push.Permission.GRANTED);
       initRequestSpy(true);
 
