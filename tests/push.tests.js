@@ -193,18 +193,18 @@ if (Push.supported()) {
     param_str = (granted) ? Push.Permission.GRANTED : Push.Permission.DEFAULT;
     param_int = (granted) ? 0 : 1;
 
-    /* Safari 6+, Chrome 23+ */
-    if (window.Notification && window.Notification.requestPermission) {
+    /* Safari 6+, Legacy webkit browsers */
+    if (window.webkitNotifications && window.webkitNotifications.checkPermission) {
+      spyOn(window.webkitNotifications, 'requestPermission').and.callFake(function (cb) {
+        cb(param_int);
+      });
+    }
+    /* Chrome 23+ */
+    else if (window.Notification && window.Notification.requestPermission) {
       spyOn(window.Notification, 'requestPermission').and.callFake(function () {
         return new Promise(function (resolve) {
           resolve(param_str);
         });
-      });
-    }
-    /* Legacy webkit browsers */
-    else if (window.webkitNotifications && window.webkitNotifications.checkPermission) {
-      spyOn(window.webkitNotifications, 'requestPermission').and.callFake(function (cb) {
-        cb(param_int);
       });
     }
   }
@@ -212,14 +212,13 @@ if (Push.supported()) {
   function getRequestObject() {
     var obj = {};
 
-    /* Safari 6+, Chrome 23+ */
-    if (window.Notification && window.Notification.requestPermission)
-      return window.Notification.requestPermission;
-
-    /* Legacy webkit browsers */
-    else if (window.webkitNotifications && window.webkitNotifications.checkPermission)
+    /* Safari 6+, Legacy webkit browsers */
+    if (window.webkitNotifications && window.webkitNotifications.checkPermission)
       return window.webkitNotifications.requestPermission;
 
+    /* Chrome 23+ */
+    else if (window.Notification && window.Notification.requestPermission)
+      return window.Notification.requestPermission;
     return null;
   }
 

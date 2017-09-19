@@ -21,7 +21,9 @@ export default class Permission {
   request(onGranted, onDenied) {
     const existing = this.get();
 
-    var resolve = (result) => {
+    var resolve = (result = this._win.Notification.permission) => {
+      if (typeof(result)==='undefined' && this._win.webkitNotifications)
+        result = this._win.webkitNotifications.checkPermission();
       if (result === this.GRANTED || result === 0) {
         if (onGranted) onGranted();
       } else if (onDenied) onDenied();
@@ -31,17 +33,20 @@ export default class Permission {
     if (existing !== this.DEFAULT) {
       resolve(existing);
     }
-    /* Safari 6+, Chrome 23+ */
+    /* Safari 6+, Legacy webkit browsers */
+    else if (this._win.webkitNotifications && this._win.webkitNotifications.checkPermission) {
+      this._win.webkitNotifications.requestPermission(resolve);
+    }
+    /* Chrome 23+ */
     else if (this._win.Notification && this._win.Notification.requestPermission) {
       this._win.Notification.requestPermission().then(resolve).catch(function () {
         if (onDenied) onDenied();
       });
     }
-    /* Legacy webkit browsers */
-    else if (this._win.webkitNotifications && this._win.webkitNotifications.checkPermission)
-      this._win.webkitNotifications.requestPermission(resolve);
     /* Let the user continue by default */
-    else if (onGranted) onGranted();
+    else if (onGranted) {
+      onGranted();
+    }
   }
 
   /**
