@@ -85,11 +85,11 @@ export default class Permission {
       if (hasPermissions) {
        resolver(existing)
       }
-      else if (isModernAPI) {
-        this._win.Notification.requestPermission().then(result => { resolver(result) }).catch(rejectPromise)
-      }
       else if (isWebkitAPI) {
         this._win.webkitNotifications.requestPermission(result => { resolver(result) });
+      }
+      else if (isModernAPI) {
+        this._win.Notification.requestPermission().then(result => { resolver(result) }).catch(rejectPromise)
       }
       else resolvePromise()
     })
