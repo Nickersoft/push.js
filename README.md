@@ -1,7 +1,6 @@
 # [<img src="https://raw.githubusercontent.com/Nickersoft/push.js/master/logo.png" width="200">](http://pushjs.org)
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Nickersoft/push.js.svg)](https://greenkeeper.io/)
-
 [![Build Status](https://img.shields.io/travis/Nickersoft/push.js.svg)](https://travis-ci.org/Nickersoft/push.js) 
 [![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
 [![npm](https://img.shields.io/npm/dm/push.js.svg)](https://npmjs.com/package/push.js) 
