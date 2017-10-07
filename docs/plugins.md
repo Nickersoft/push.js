@@ -113,4 +113,4 @@ else {
 ```
 
 For a full example of a working plugin, just look at the
- [FCM plugin source](https://github.com/Nickersoft/pushjs-fcm-plugin/blob/master/index.js).
+ [FCM plugin source](https://github.com/Nickersoft/push-fcm-plugin/blob/master/push.fcm.js).
