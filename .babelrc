@@ -1,0 +1,12 @@
+{
+  "presets": [
+      [
+        "env",
+        {
+          "modules": false
+        }
+      ],
+      "stage-2"
+  ],
+  "plugins": ["external-helpers", "babel-plugin-transform-flow-strip-types"]
+}

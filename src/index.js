@@ -1,3 +1,4 @@
-import Push from './classes/Push';
+// @flow
+import { Push } from 'push';
 
-module.exports = new Push(typeof window !== 'undefined' ? window : this);
+export default new Push(typeof window !== 'undefined' ? window : global);

@@ -1,0 +1,22 @@
+[ignore]
+.*/node_modules/.*
+
+[include]
+.*/src/.*
+
+[options]
+# Add emojis to status messages because emojis are cool 😎
+emoji=true
+
+# Enabled strict argument types
+experimental.strict_type_args=true
+
+# Only run flow on the following file extensions
+module.file_ext=.js
+
+module.name_mapper='^push$' -> '<PROJECT_ROOT>/src/push/'
+module.name_mapper='^types$' -> '<PROJECT_ROOT>/src/types.js'
+module.name_mapper='^agents$' -> '<PROJECT_ROOT>/src/agents'
+
+[version]
+^0.57.3

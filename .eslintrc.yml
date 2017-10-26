@@ -1,5 +1,0 @@
----
-parser: babel-eslint
-rules:
-  complexity: off
-  no-new-func: off

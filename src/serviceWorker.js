@@ -1,4 +1,3 @@
-/* eslint eqeqeq: "off", curly: "error" */
 'use strict';
 
 function isFunction(obj) {

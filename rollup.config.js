@@ -1,6 +1,14 @@
-/**
- * Push v1.0-beta
- * ==============
+import path from 'path';
+import resolve from 'rollup-plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
+import alias from 'rollup-plugin-alias';
+import uglify from 'rollup-plugin-uglify';
+import { minify } from 'uglify-es';
+
+const license = `/**
+ * Push v1.0
+ * =========
  * A compact, cross-browser solution for the JavaScript Notifications API
  *
  * Credits
@@ -32,4 +40,36 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
+ */`;
+
+export default {
+    input: 'src/index.js',
+    output: {
+        file: 'bin/push.min.js',
+        format: 'umd',
+        name: 'Push'
+    },
+    banner: license,
+    plugins: [
+        babel({
+            exclude: 'node_modules/**'
+        }),
+        alias({
+            types: path.resolve(__dirname, 'src/types'),
+            push: path.resolve(__dirname, 'src/push/index'),
+            agents: path.resolve(__dirname, 'src/agents/index')
+        }),
+        commonjs(),
+        resolve(),
+        uglify(
+            {
+                output: {
+                    beautify: false,
+                    preamble: license
+                }
+            },
+            minify
+        )
+    ],
+    sourcemap: true
+};
