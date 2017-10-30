@@ -1,17 +1,22 @@
-# [<img src="https://raw.githubusercontent.com/Nickersoft/push.js/master/logo.png" width="200">](http://pushjs.org)
+<div align="center">
+    
+[<img src="https://raw.githubusercontent.com/Nickersoft/push.js/master/logo.png" width="250">](http://pushjs.org)
+<br/><br/>
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/Nickersoft/push.js.svg)](https://greenkeeper.io/)
 [![Build Status](https://img.shields.io/travis/Nickersoft/push.js.svg)](https://travis-ci.org/Nickersoft/push.js) 
-[![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
-[![npm](https://img.shields.io/npm/dm/push.js.svg)](https://npmjs.com/package/push.js) 
 [![Coverage Status](https://img.shields.io/coveralls/Nickersoft/push.js.svg)](https://coveralls.io/github/Nickersoft/push.js?branch=master) 
 [![Known Vulnerabilities](https://snyk.io/test/github/nickersoft/push.js/badge.svg)](https://snyk.io/test/github/nickersoft/push.js) 
-![David Dev Dependencies](https://img.shields.io/david/dev/nickersoft/push.js.svg)
-[![Code Climate](https://img.shields.io/codeclimate/github/Nickersoft/push.js.svg)](https://codeclimate.com/github/Nickersoft/push.js)
+[![Maintainability](https://api.codeclimate.com/v1/badges/52747084d9786c1570df/maintainability)](https://codeclimate.com/github/Nickersoft/push.js/maintainability)
+
+[![npm version](https://img.shields.io/npm/v/push.js.svg)](https://npmjs.com/package/push.js) 
+[![npm](https://img.shields.io/npm/dm/push.js.svg)](https://npmjs.com/package/push.js)
+[![Greenkeeper badge](https://badges.greenkeeper.io/Nickersoft/push.js.svg)](https://greenkeeper.io/) 
 
 *Now a proud user of*
 
 [<img src="https://raw.githubusercontent.com/Nickersoft/push.js/master/browserstack.png" width="200px" />](https://browserstack.com)
+
+</div>
 
 ### What is Push? ###
 
