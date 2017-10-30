@@ -1,18 +1,23 @@
 env:
   global:
-    - CC_TEST_REPORTER_ID=0304c6a4e3413b3413cb522cbb54ada73da807fc425f1f2ea764f14725d66f0f
-    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+  - CC_TEST_REPORTER_ID=71e04b5c32896d7201c79e2db2af1a89fc375f668392802961019875e71b179f
+  - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct;
+    else git log -1 --skip 1 --pretty=format:%ct; fi)
+  - secure: AwJJp7im+vXzxa/UsYu/EJNppu+ss9l0GW8ftaXLNnMRkLJyo6m24DCJuhfH/ynxrSq5b2Zc7gEqDfxVWUgpNR+rrHZoHe+R/QnL60sqQXE2KvblDvG4o4e9F7vFp1xsohJ3/TTm6footWEiVlP25oVkQgi/oWhFsygJD6VGerDa2CodtU2r4p6UV5KuI8mUZuQg+rndkosMZa1BkZcz6v8e1AmJkGiIl/Agw0ye6C9iav4KoU+EXRyoxEq+dTAuhnVKA3CntOngoPDrUTQy5303x6Gzaz7uByWIyIR+uEud65RvCBduxCgREazkXdCqd/vCS65gYYktxl3fNG2so5VpKAbF/pTOylWexB10xhB+k+alIxhl3QytUx1pqDR4WI6c8d6ot+sZd7AjwvlyWdwDPuLoDB2eA18K3HbFMgjONmJFFI3gyKfyg1z5FfZm6dogfuQGZeSyxuedDAo+FygKGbgvBa+JHerR1WjU+TnFcVpwgaX/sma8Q4ff9WYLw2YOIiSi0H5V5tDi8lrtOqZmIYH4Vv2Cbl1gaAsVOOo+IBfTWor4oJzAb/jRKuNbqvhUJIqW6RYS7f8c/LMrcdn+LWHGj3zcFQ+LNFxID4OCghf7A3FvmE8A5XD07w04ofnWzrgqzgWy5+38Qj23l5IpFNgD2XGNohk7JpeGm3E=
 language: node_js
 node_js:
-  - stable
+- stable
 before_install: yarn global add greenkeeper-lockfile@1
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - greenkeeper-lockfile-update
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- ./cc-test-reporter before-build
+- greenkeeper-lockfile-update
 script:
-  - npm run test
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-after_script: 
-  - greenkeeper-lockfile-upload
-  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+- npm run test
+- if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code
+  $TRAVIS_TEST_RESULT; fi
+after_script:
+- greenkeeper-lockfile-upload
+- cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
