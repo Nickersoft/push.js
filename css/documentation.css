@@ -49,6 +49,7 @@
     border-left: 1px solid #eee;
     font-size: 16px;
     line-height: 1.5em;
+    font-weight: 300;
     margin-left: 300px;
     min-height: 800px;
     display: block;
@@ -76,12 +77,16 @@
 .documentation h2 {
     color: #444;
     font-size: 1.5em;
+    font-weight: 400;
+    line-height: 1em;
     padding: 0.25em 0;
 }
 
 .documentation h3 {
     color: #555;
     font-size: 1.25em;
+    font-weight: 300;
+    line-height: 1em;
     padding: 0.25em 0;
 }
 
@@ -113,7 +118,7 @@
 .documentation p {
     color: #222;
     line-height: 1.5em;
-    text-align: justify;
+    /*text-align: justify;*/
     padding: 0.5em 0;
     margin: 0;
 }
