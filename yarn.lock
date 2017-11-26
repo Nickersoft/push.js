@@ -2660,7 +2660,7 @@ lexical-scope@^1.2.0:
   dependencies:
     astw "^2.0.0"
 
-lint-staged@5.0.0:
+lint-staged@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-5.0.0.tgz#f1c670e03e2fdf3f3d0eb81f72d3bcf658770e54"
   dependencies:
@@ -3715,9 +3715,9 @@ rollup-pluginutils@^2.0.1:
     estree-walker "^0.3.0"
     micromatch "^2.3.11"
 
-rollup@^0.51.0:
-  version "0.51.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.51.1.tgz#16288ceafbed0a629d3a127c1e92e503f182e8b1"
+rollup@0.52.0:
+  version "0.52.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.52.0.tgz#cdb6927f53bf7b7fb09af3a936b9c8ee49b161e2"
 
 rxjs@^5.4.2:
   version "5.5.2"
