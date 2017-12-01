@@ -1523,6 +1523,12 @@ debug@^2.6.8:
   dependencies:
     ms "2.0.0"
 
+debug@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
+  dependencies:
+    ms "2.0.0"
+
 decamelize@^1.0.0, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
@@ -2660,14 +2666,15 @@ lexical-scope@^1.2.0:
   dependencies:
     astw "^2.0.0"
 
-lint-staged@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-5.0.0.tgz#f1c670e03e2fdf3f3d0eb81f72d3bcf658770e54"
+lint-staged@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-6.0.0.tgz#7ab7d345f2fe302ff196f1de6a005594ace03210"
   dependencies:
     app-root-path "^2.0.0"
     chalk "^2.1.0"
     commander "^2.11.0"
     cosmiconfig "^3.1.0"
+    debug "^3.1.0"
     dedent "^0.7.0"
     execa "^0.8.0"
     find-parent-dir "^0.3.0"
@@ -3715,7 +3722,7 @@ rollup-pluginutils@^2.0.1:
     estree-walker "^0.3.0"
     micromatch "^2.3.11"
 
-rollup@0.52.0:
+rollup@^0.52.0:
   version "0.52.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.52.0.tgz#cdb6927f53bf7b7fb09af3a936b9c8ee49b161e2"
 
