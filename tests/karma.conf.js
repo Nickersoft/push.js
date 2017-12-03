@@ -45,7 +45,7 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             './node_modules/platform/platform.js',
-            './node_modules/babel-polyfill/dist/polyfill.min.js',
+            './node_modules/@babel/polyfill/dist/polyfill.min.js',
             './bin/push.min.js',
             './tests/push.tests.js',
             './src/serviceWorker.min.js'
