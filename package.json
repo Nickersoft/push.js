@@ -32,7 +32,7 @@
         "@babel/preset-stage-2": "^7.0.0-beta.34",
         "browserify": "^14.5.0",
         "coveralls": "^3.0.0",
-        "flow-bin": "^0.60.1",
+        "flow-bin": "^0.61.0",
         "husky": "^0.14.3",
         "jasmine-core": "^2.8.0",
         "js-yaml": "^3.10.0",
