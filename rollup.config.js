@@ -47,7 +47,8 @@ export default {
     output: {
         file: 'bin/push.min.js',
         format: 'umd',
-        name: 'Push'
+        name: 'Push',
+        sourcemap: true
     },
     banner: license,
     plugins: [
@@ -70,6 +71,5 @@ export default {
             },
             minify
         )
-    ],
-    sourcemap: true
+    ]
 };
