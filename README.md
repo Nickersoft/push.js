@@ -18,6 +18,9 @@
 
 </div>
 
+> ## Important Notice
+> Push is currently looking for co-maintainers of the repo. The guy who originally made this library, [Tyler Nickerson](https://tylernickerson.com), while still visiting this repo from time to time, is busy trying to work on his company [Linguistic](https://github.com/linguistic) right now. As a result, he may not have time to answer everyone or fix bugs as quickly as they would like him too. If you find it pretty easy to find your way around this code and think you could help some people out, shoot me a message at [nickersoft@gmail.com](mailto:nickersoft@gmail.com) and let's talk.
+
 ### What is Push? ###
 
 Push is the fastest way to get up and running with Javascript desktop notifications. A fairly new addition to the
