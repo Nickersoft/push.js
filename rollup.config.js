@@ -3,10 +3,11 @@ import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import alias from 'rollup-plugin-alias';
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-es';
+import { terser } from 'rollup-plugin-terser';
 
 const license = `/**
+ * @license
+ *
  * Push v1.0.9
  * =========
  * A compact, cross-browser solution for the JavaScript Notifications API
@@ -45,11 +46,12 @@ const license = `/**
 const common = {
     input: 'src/index.js',
     output: {
+        banner: license,
+        file: 'bin/push.min.js',
         format: 'umd',
         name: 'Push',
         sourcemap: true
     },
-    banner: license,
     plugins: [
         babel({
             exclude: 'node_modules/**'
@@ -80,15 +82,22 @@ export default [
         },
         plugins: [
             ...common.plugins,
-            uglify(
-                {
-                    output: {
-                        beautify: false,
-                        preamble: license
+            terser({
+                output: {
+                    comments: function(node, comment) {
+                        var text = comment.value;
+                        var type = comment.type;
+                        if (type == 'comment2') {
+                            // multiline comment
+                            return /@preserve|@license|@cc_on/i.test(text);
+                        }
+                        // beautify: false,
+                        // preamble: license
                     }
-                },
-                minify
-            )
+                }
+                // ,
+                // minify
+            })
         ]
     }
 ];
