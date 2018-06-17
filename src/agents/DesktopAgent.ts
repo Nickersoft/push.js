@@ -1,21 +1,19 @@
-// @flow
-import { AbstractAgent } from 'agents';
-import { Util } from 'push';
-import type { PushOptions, GenericNotification, Global } from 'types';
+import { AbstractAgent } from '@push/agents';
+import { Util } from '@push/core';
 
 /**
  * Notification agent for modern desktop browsers:
  * Safari 6+, Firefox 22+, Chrome 22+, Opera 25+
  */
 export default class DesktopAgent extends AbstractAgent {
-    _win: Global;
+    private win: Global;
 
     /**
      * Returns a boolean denoting support
      * @returns {Boolean} boolean denoting whether webkit notifications are supported
      */
     isSupported() {
-        return this._win.Notification !== undefined;
+        return this.win.Notification !== undefined;
     }
 
     /**
@@ -25,7 +23,7 @@ export default class DesktopAgent extends AbstractAgent {
      * @returns {Notification}
      */
     create(title: string, options: PushOptions) {
-        return new this._win.Notification(title, {
+        return new this.win.Notification(title, {
             icon:
                 Util.isString(options.icon) ||
                 Util.isUndefined(options.icon) ||

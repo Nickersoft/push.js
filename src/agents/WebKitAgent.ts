@@ -1,19 +1,17 @@
-// @flow
 import { AbstractAgent } from 'agents';
-import type { Global, GenericNotification, PushOptions } from 'types';
 
 /**
  * Notification agent for old Chrome versions (and some) Firefox
  */
 export default class WebKitAgent extends AbstractAgent {
-    _win: Global;
+    private win: Global;
 
     /**
      * Returns a boolean denoting support
      * @returns {Boolean} boolean denoting whether webkit notifications are supported
      */
     isSupported() {
-        return this._win.webkitNotifications !== undefined;
+        return this.win.webkitNotifications !== undefined;
     }
 
     /**
@@ -23,7 +21,7 @@ export default class WebKitAgent extends AbstractAgent {
      * @returns {Notification}
      */
     create(title: string, options: PushOptions) {
-        let notification = this._win.webkitNotifications.createNotification(
+        let notification = this.win.webkitNotifications.createNotification(
             options.icon,
             title,
             options.body

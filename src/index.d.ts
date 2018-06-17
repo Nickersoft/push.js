@@ -1,11 +1,11 @@
-export type GenericNotification = Notification | webkitNotifications;
+// type GenericNotification = Notification | webkitNotifications;
 
-export type Global = {
+interface Global {
     Notification?: Notification,
-    webkitNotifications?: webkitNotifications
-};
+    // webkitNotifications?: webkitNotifications
+}
 
-export type PushOptions = {
+interface PushOptions {
     body?: string,
     icon?: string,
     link?: string,
@@ -16,9 +16,9 @@ export type PushOptions = {
     silent?: boolean,
     onClick?: Function,
     onError?: Function
-};
+}
 
-export type PluginManifest = {
+interface PluginManifest {
     plugin: {},
     config?: {}
-};
+}

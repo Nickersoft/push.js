@@ -1,4 +1,3 @@
-// @flow
 const errorPrefix = 'PushError:';
 
 export default {

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "noEmit": true,
+        "pretty": true,
+        "skipLibCheck": true,
+        "baseUrl": "src",
+        "paths": {
+            "@push/agents/*": ["agents/*"],
+            "@push/core/*": ["core/*"]
+        }
+    }
+}

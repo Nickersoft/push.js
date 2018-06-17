@@ -1,9 +1,9 @@
-import path from "path";
-import resolve from "rollup-plugin-node-resolve";
-import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
-import alias from "rollup-plugin-alias";
-import { terser } from "rollup-plugin-terser";
+import path from 'path';
+import resolve from 'rollup-plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
+import alias from 'rollup-plugin-alias';
+import { terser } from 'rollup-plugin-terser';
 
 const license = `/**
  * @license
@@ -44,47 +44,48 @@ const license = `/**
  */`;
 
 const common = {
-  input: "src/index.js",
-  output: {
-    banner: license,
-    file: "bin/push.min.js",
-    format: "umd",
-    name: "Push",
-    sourcemap: true
-  },
-  plugins: [
-    babel({
-      exclude: "node_modules/**"
-    }),
-    alias({
-      types: path.resolve(__dirname, "src/types"),
-      push: path.resolve(__dirname, "src/push/index"),
-      agents: path.resolve(__dirname, "src/agents/index")
-    }),
-    commonjs(),
-    resolve(),
-    terser({
-      output: {
-        beautify: false,
-        preamble: license
-      }
-    })
-  ]
+    input: 'src/index.ts',
+    output: {
+        banner: license,
+        file: 'bin/push.min.js',
+        format: 'umd',
+        name: 'Push',
+        sourcemap: true
+    },
+    plugins: [
+        babel({
+            exclude: 'node_modules/**'
+        }),
+        alias({
+            resolve: ['.ts'],
+            types: path.resolve(__dirname, 'src/types'),
+            push: path.resolve(__dirname, 'src/push/index'),
+            agents: path.resolve(__dirname, 'src/agents/index')
+        }),
+        commonjs(),
+        resolve(),
+        terser({
+            output: {
+                beautify: false,
+                preamble: license
+            }
+        })
+    ]
 };
 
 export default [
-  {
-    ...common,
-    output: {
-      ...common.output,
-      file: "bin/push.js"
+    {
+        ...common,
+        output: {
+            ...common.output,
+            file: 'bin/push.js'
+        }
+    },
+    {
+        ...common,
+        output: {
+            ...common.output,
+            file: 'bin/push.min.js'
+        }
     }
-  },
-  {
-    ...common,
-    output: {
-      ...common.output,
-      file: "bin/push.min.js"
-    }
-  }
 ];

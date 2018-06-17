@@ -1,14 +1,12 @@
-// @flow
-import { Util, Messages } from 'push';
-import { AbstractAgent } from 'agents';
-import type { Global, GenericNotification, PushOptions } from 'types';
+import { Util, Messages } from '@push/core';
+import { AbstractAgent } from '@push/agents';
 
 /**
  * Notification agent for modern desktop browsers:
  * Safari 6+, Firefox 22+, Chrome 22+, Opera 25+
  */
 export default class MobileChromeAgent extends AbstractAgent {
-    _win: Global;
+    private win: Global;
 
     /**
      * Returns a boolean denoting support
@@ -16,8 +14,8 @@ export default class MobileChromeAgent extends AbstractAgent {
      */
     isSupported() {
         return (
-            this._win.navigator !== undefined &&
-            this._win.navigator.serviceWorker !== undefined
+            this.win.navigator !== undefined &&
+            this.win.navigator.serviceWorker !== undefined
         );
     }
 
@@ -48,9 +46,9 @@ export default class MobileChromeAgent extends AbstractAgent {
         callback: (GenericNotification[]) => void
     ) {
         /* Register ServiceWorker */
-        this._win.navigator.serviceWorker.register(serviceWorker);
+        this.win.navigator.serviceWorker.register(serviceWorker);
 
-        this._win.navigator.serviceWorker.ready
+        this.win.navigator.serviceWorker.ready
             .then(registration => {
                 /* Local data the service worker will use */
                 let localData = {

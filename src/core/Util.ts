@@ -1,27 +1,26 @@
-// @flow
 export default class Util {
-    static isUndefined(obj) {
+    static isUndefined(obj: any) {
         return obj === undefined;
     }
 
-    static isNull(obs) {
+    static isNull(obj: any) {
         return obj === null;
     }
 
-    static isString(obj) {
+    static isString(obj: any) {
         return typeof obj === 'string';
     }
 
-    static isFunction(obj) {
+    static isFunction(obj: any) {
         return obj && {}.toString.call(obj) === '[object Function]';
     }
 
-    static isObject(obj) {
+    static isObject(obj: any) {
         return typeof obj === 'object';
     }
 
-    static objectMerge(target, source) {
-        for (var key in source) {
+    static objectMerge(target: object, source: object) {
+        for (const key in source) {
             if (
                 target.hasOwnProperty(key) &&
                 this.isObject(target[key]) &&

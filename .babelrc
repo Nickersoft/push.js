@@ -9,6 +9,7 @@
     "@babel/preset-flow"
   ],
   "plugins": [
+    "@babel/preset-typescript",
     "@babel/plugin-transform-flow-strip-types",
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-syntax-import-meta",

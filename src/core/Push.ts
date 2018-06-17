@@ -1,6 +1,4 @@
-// @flow
-import { Messages, Permission, Util } from 'push';
-import type { PluginManifest, GenericNotification, PushOptions } from 'types';
+import { Messages, Permission, Util } from '@push/core';
 
 /* Import notification agents */
 import {

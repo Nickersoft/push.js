@@ -1,10 +1,7 @@
-// @flow
-import type { Global } from 'types';
-
 export default class Permission {
     // Private members
-    _permissions: string[];
-    _win: Global;
+    private permissions: string[];
+    private win: Global;
 
     // Public members
     GRANTED: string;
@@ -12,33 +9,33 @@ export default class Permission {
     DENIED: string;
 
     constructor(win: Global) {
-        this._win = win;
+        this.win = win;
         this.GRANTED = 'granted';
         this.DEFAULT = 'default';
         this.DENIED = 'denied';
-        this._permissions = [this.GRANTED, this.DEFAULT, this.DENIED];
+        this.permissions = [this.GRANTED, this.DEFAULT, this.DENIED];
     }
 
     /**
-   * Requests permission for desktop notifications
-   * @param {Function} onGranted - Function to execute once permission is granted
-   * @param {Function} onDenied - Function to execute once permission is denied
-   * @return {void, Promise}
-   */
+     * Requests permission for desktop notifications
+     * @param {Function} onGranted - Function to execute once permission is granted
+     * @param {Function} onDenied - Function to execute once permission is denied
+     * @return {void, Promise}
+     */
     request(onGranted: () => void, onDenied: () => void) {
         return arguments.length > 0
-            ? this._requestWithCallback(...arguments)
+            ? this.requestWithCallback(...arguments)
             : this._requestAsPromise();
     }
 
     /**
-   * Old permissions implementation deprecated in favor of a promise based one
-   * @deprecated Since V1.0.4
-   * @param {Function} onGranted - Function to execute once permission is granted
-   * @param {Function} onDenied - Function to execute once permission is denied
-   * @return {void}
-   */
-    _requestWithCallback(onGranted: () => void, onDenied: () => void) {
+     * Old permissions implementation deprecated in favor of a promise based one
+     * @deprecated Since V1.0.4
+     * @param {Function} onGranted - Function to execute once permission is granted
+     * @param {Function} onDenied - Function to execute once permission is denied
+     * @return {void}
+     */
+    private requestWithCallback(onGranted: () => void, onDenied: () => void) {
         const existing = this.get();
 
         var resolved = false;
@@ -57,14 +54,14 @@ export default class Permission {
         if (existing !== this.DEFAULT) {
             resolve(existing);
         } else if (
-            this._win.webkitNotifications &&
-            this._win.webkitNotifications.checkPermission
+            this.win.webkitNotifications &&
+            this.win.webkitNotifications.checkPermission
         ) {
             /* Safari 6+, Legacy webkit browsers */
-            this._win.webkitNotifications.requestPermission(resolve);
+            this.win.webkitNotifications.requestPermission(resolve);
         } else if (
-            this._win.Notification &&
-            this._win.Notification.requestPermission
+            this.win.Notification &&
+            this.win.Notification.requestPermission
         ) {
             /* Safari 12+ */
             /* This resolve argument will only be used in Safari */
@@ -83,9 +80,9 @@ export default class Permission {
     }
 
     /**
-   * Requests permission for desktop notifications in a promise based way
-   * @return {Promise}
-   */
+     * Requests permission for desktop notifications in a promise based way
+     * @return {Promise}
+     */
     _requestAsPromise(): Promise<void> {
         const existing = this.get();
 
@@ -96,12 +93,12 @@ export default class Permission {
 
         /* Safari 6+, Chrome 23+ */
         var isModernAPI =
-            this._win.Notification && this._win.Notification.requestPermission;
+            this.win.Notification && this.win.Notification.requestPermission;
 
         /* Legacy webkit browsers */
         var isWebkitAPI =
-            this._win.webkitNotifications &&
-            this._win.webkitNotifications.checkPermission;
+            this.win.webkitNotifications &&
+            this.win.webkitNotifications.checkPermission;
 
         return new Promise((resolvePromise, rejectPromise) => {
             var resolved = false;
@@ -115,7 +112,7 @@ export default class Permission {
             if (hasPermissions) {
                 resolver(existing);
             } else if (isWebkitAPI) {
-                this._win.webkitNotifications.requestPermission(result => {
+                this.win.webkitNotifications.requestPermission(result => {
                     resolver(result);
                 });
             } else if (isModernAPI) {
@@ -132,37 +129,37 @@ export default class Permission {
     }
 
     /**
-   * Returns whether Push has been granted permission to run
-   * @return {Boolean}
-   */
+     * Returns whether Push has been granted permission to run
+     * @return {Boolean}
+     */
     has() {
         return this.get() === this.GRANTED;
     }
 
     /**
-   * Gets the permission level
-   * @return {Permission} The permission level
-   */
+     * Gets the permission level
+     * @return {Permission} The permission level
+     */
     get() {
         let permission;
 
         /* Safari 6+, Chrome 23+ */
-        if (this._win.Notification && this._win.Notification.permission)
-            permission = this._win.Notification.permission;
+        if (this.win.Notification && this.win.Notification.permission)
+            permission = this.win.Notification.permission;
         else if (
-            this._win.webkitNotifications &&
-            this._win.webkitNotifications.checkPermission
+            this.win.webkitNotifications &&
+            this.win.webkitNotifications.checkPermission
         )
             /* Legacy webkit browsers */
-            permission = this._permissions[
-                this._win.webkitNotifications.checkPermission()
+            permission = this.permissions[
+                this.win.webkitNotifications.checkPermission()
             ];
         else if (navigator.mozNotification)
             /* Firefox Mobile */
             permission = this.GRANTED;
-        else if (this._win.external && this._win.external.msIsSiteMode)
+        else if (this.win.external && this.win.external.msIsSiteMode)
             /* IE9+ */
-            permission = this._win.external.msIsSiteMode()
+            permission = this.win.external.msIsSiteMode()
                 ? this.GRANTED
                 : this.DEFAULT;
         else permission = this.GRANTED;

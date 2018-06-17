@@ -1,13 +1,11 @@
-// @flow
-import { AbstractAgent } from 'agents';
-import { Util } from 'push';
-import type { PushOptions, Global } from 'types';
+import { AbstractAgent } from '@push/agents';
+import { Util } from '@push/core';
 
 /**
  * Notification agent for IE9
  */
 export default class MSAgent extends AbstractAgent {
-    _win: Global;
+    private win: Global;
 
     /**
      * Returns a boolean denoting support
@@ -15,8 +13,8 @@ export default class MSAgent extends AbstractAgent {
      */
     isSupported() {
         return (
-            this._win.external !== undefined &&
-            this._win.external.msIsSiteMode !== undefined
+            this.win.external !== undefined &&
+            this.win.external.msIsSiteMode !== undefined
         );
     }
 
@@ -28,16 +26,16 @@ export default class MSAgent extends AbstractAgent {
      */
     create(title: string, options: PushOptions) {
         /* Clear any previous notifications */
-        this._win.external.msSiteModeClearIconOverlay();
+        this.win.external.msSiteModeClearIconOverlay();
 
-        this._win.external.msSiteModeSetIconOverlay(
+        this.win.external.msSiteModeSetIconOverlay(
             Util.isString(options.icon) || Util.isUndefined(options.icon)
                 ? options.icon
                 : options.icon.x16,
             title
         );
 
-        this._win.external.msSiteModeActivate();
+        this.win.external.msSiteModeActivate();
 
         return null;
     }
@@ -47,6 +45,6 @@ export default class MSAgent extends AbstractAgent {
      * @param notification - notification to close
      */
     close() {
-        this._win.external.msSiteModeClearIconOverlay();
+        this.win.external.msSiteModeClearIconOverlay();
     }
 }
