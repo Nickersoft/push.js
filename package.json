@@ -5,7 +5,8 @@
   "main": "bin/push.min.js",
   "scripts": {
     "clean": "rimraf bin/",
-    "build": "rollup -c && uglifyjs --source-map -o bin/serviceWorker.min.js src/serviceWorker.js",
+    "tc": "tsc --noEmit",
+    "build": "tsc && rollup -c && uglifyjs --source-map -o bin/serviceWorker.min.js src/serviceWorker.js",
     "test": "npm run build && karma start tests/karma.conf.js",
     "test:chrome": "PUSHJS_TEST_BROWSER=Chrome npm run test",
     "test:opera": "PUSHJS_TEST_BROWSER=Opera npm run test",

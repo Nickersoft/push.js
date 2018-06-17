@@ -78,6 +78,7 @@ export default class Permission {
             onGranted();
         }
     }
+  }
 
     /**
      * Requests permission for desktop notifications in a promise based way

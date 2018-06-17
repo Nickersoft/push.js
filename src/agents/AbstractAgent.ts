@@ -1,7 +1,7 @@
 export default class AbstractAgent {
-    private win: Global;
+  protected win: Global;
 
-    constructor(win: Global) {
-        this.win = win;
-    }
+  constructor(win: Global) {
+    this.win = win;
+  }
 }
