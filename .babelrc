@@ -1,12 +1,17 @@
 {
-  "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "modules": false
-        }
-      ],
-      "@babel/preset-stage-2"
-  ],
-  "plugins": ["@babel/plugin-transform-flow-strip-types"]
+    presets: [
+        [
+            '@babel/preset-env',
+            {
+                modules: false
+            }
+        ],
+        [
+            '@babel/preset-stage-2',
+            {
+                decoratorsLegacy: true
+            }
+        ]
+    ],
+    plugins: ['@babel/plugin-transform-flow-strip-types']
 }

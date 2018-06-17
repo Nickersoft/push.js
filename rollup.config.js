@@ -3,7 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import alias from 'rollup-plugin-alias';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
 
 const license = `/**
@@ -45,12 +45,12 @@ const license = `/**
 export default {
     input: 'src/index.js',
     output: {
+        banner: license,
         file: 'bin/push.min.js',
         format: 'umd',
         name: 'Push',
         sourcemap: true
     },
-    banner: license,
     plugins: [
         babel({
             exclude: 'node_modules/**'
