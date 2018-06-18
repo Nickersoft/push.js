@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "module": "es6",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "pretty": true,
-    "skipLibCheck": true,
     "baseUrl": "src",
+    "module": "es6",
     "noEmit": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "noImplicitAny": true,
     "paths": {
       "@push/agents": ["agents/index"],
       "@push/core": ["core/index"]
-    }
+    },
+    "preserveConstEnums": true,
+    "pretty": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   }
 }

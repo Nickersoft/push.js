@@ -134,7 +134,7 @@ export default class Push {
    * @private
    */
   _prepareNotification(id: number, options: PushOptions) {
-    let wrapper;
+    let wrapper: NotificationWrapper;
 
     /* Wrapper used to get/close notification later on */
     wrapper = {
@@ -362,7 +362,7 @@ export default class Push {
   supported() {
     let supported = false;
 
-    for (var agent in this._agents)
+    for (const agent in this._agents)
       if (this._agents.hasOwnProperty(agent))
         supported = supported || this._agents[agent].isSupported();
 

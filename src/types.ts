@@ -1,11 +1,27 @@
 type GenericNotification = Notification | webkitNotifications;
 
+interface LegacyNavigator extends Navigator {
+    mozNotification: {
+        createNotification: Function
+    }
+}
+
+interface NotificationWrapper {
+    get: Function,
+    close: Function
+}
+
+interface LegacyNotification extends Notification {
+    requestPermission: Function,
+    vibrate: boolean
+}
+
 interface Global {
-    Notification?: Notification,
-    navigator?: Navigator,
+    Notification?: LegacyNotification,
+    navigator?: LegacyNavigator,
     webkitNotifications?: webkitNotifications,
     external?: {
-        msIsSiteMode?: boolean,
+        msIsSiteMode?: Function,
         msSiteModeClearIconOverlay?: Function,
         msSiteModeSetIconOverlay?: Function,
         msSiteModeActivate?: Function

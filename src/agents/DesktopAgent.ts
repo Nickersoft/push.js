@@ -1,5 +1,5 @@
-import { AbstractAgent } from "@push/agents";
-import { Util } from "@push/core";
+import { AbstractAgent } from '@push/agents';
+import { Util } from '@push/core';
 
 /**
  * Notification agent for modern desktop browsers:

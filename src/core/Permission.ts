@@ -137,6 +137,7 @@ export default class Permission {
         return this.get() === this.GRANTED;
     }
 
+<<<<<<< HEAD
     /**
      * Gets the permission level
      * @return {Permission} The permission level
@@ -167,4 +168,36 @@ export default class Permission {
 
         return permission;
     }
+=======
+  /**
+   * Gets the permission level
+   * @return {Permission} The permission level
+   */
+  get(): NotificationPermission {
+    let permission: NotificationPermission;
+
+    /* Safari 6+, Chrome 23+ */
+    if (this.win.Notification && this.win.Notification.permission)
+      permission = this.win.Notification.permission;
+    else if (
+      this.win.webkitNotifications &&
+      this.win.webkitNotifications.checkPermission
+    )
+      /* Legacy webkit browsers */
+      permission = this.permissions[
+        this.win.webkitNotifications.checkPermission()
+      ];
+    else if (navigator.mozNotification)
+      /* Firefox Mobile */
+      permission = this.GRANTED;
+    else if (this.win.external && this.win.external.msIsSiteMode)
+      /* IE9+ */
+      permission = this.win.external.msIsSiteMode()
+        ? this.GRANTED
+        : this.DEFAULT;
+    else permission = this.GRANTED;
+
+    return permission;
+  }
+>>>>>>> More improvements
 }
