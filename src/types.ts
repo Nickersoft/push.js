@@ -31,7 +31,8 @@ interface Global {
 interface PushOptions {
     body?: string,
     icon?: string | {
-        x16?: string
+        x16?: string,
+        x32?: string
     },
     title?: string,
     link?: string,

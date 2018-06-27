@@ -19,7 +19,7 @@ export default class Util {
     return typeof obj === "object";
   }
 
-  static objectMerge(target: object, source: object) {
+  static objectMerge(target: { [key: string]: any}, source: { [key: string]: any}) {
     for (const key in source) {
       if (
         target.hasOwnProperty(key) &&
