@@ -4,6 +4,10 @@ export default class Util {
         return obj === undefined;
     }
 
+    static isNull(obs) {
+        return obj === null;
+    }
+
     static isString(obj) {
         return typeof obj === 'string';
     }

@@ -27,7 +27,9 @@ export default class DesktopAgent extends AbstractAgent {
     create(title: string, options: PushOptions) {
         return new this._win.Notification(title, {
             icon:
-                Util.isString(options.icon) || Util.isUndefined(options.icon)
+                Util.isString(options.icon) ||
+                Util.isUndefined(options.icon) ||
+                Util.isNull(options.icon)
                     ? options.icon
                     : options.icon.x32,
             body: options.body,
