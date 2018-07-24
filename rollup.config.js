@@ -42,10 +42,9 @@ const license = `/**
  * THE SOFTWARE.
  */`;
 
-export default {
+const common = {
     input: 'src/index.js',
     output: {
-        file: 'bin/push.min.js',
         format: 'umd',
         name: 'Push',
         sourcemap: true
@@ -61,15 +60,35 @@ export default {
             agents: path.resolve(__dirname, 'src/agents/index')
         }),
         commonjs(),
-        resolve(),
-        uglify(
-            {
-                output: {
-                    beautify: false,
-                    preamble: license
-                }
-            },
-            minify
-        )
+        resolve()
     ]
 };
+
+export default [
+    {
+        ...common,
+        output: {
+            ...common.output,
+            file: 'bin/push.js'
+        }
+    },
+    {
+        ...common,
+        output: {
+            ...common.output,
+            file: 'bin/push.min.js'
+        },
+        plugins: [
+            ...common.plugins,
+            uglify(
+                {
+                    output: {
+                        beautify: false,
+                        preamble: license
+                    }
+                },
+                minify
+            )
+        ]
+    }
+];
