@@ -12,7 +12,7 @@
         "prepublish": "npm run build",
         "precommit": "lint-staged && npm run build && git add ./bin"
     },
-    "files": ["bin", "*.md", "*.png"],
+    "files": ["bin", "*.md", "*.png", "*.d.ts"],
     "repository": {
         "type": "git",
         "url": "https://github.com/Nickersoft/push.js"
