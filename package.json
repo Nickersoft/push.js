@@ -33,7 +33,7 @@
         "browserify": "^16.0.0",
         "coveralls": "^3.0.0",
         "flow-bin": "^0.65.0",
-        "husky": "^0.14.3",
+        "husky": "^1.0.0",
         "jasmine-core": "^2.8.0",
         "js-yaml": "^3.10.0",
         "karma": "^2.0.0",
