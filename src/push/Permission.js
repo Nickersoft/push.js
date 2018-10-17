@@ -20,11 +20,11 @@ export default class Permission {
     }
 
     /**
-   * Requests permission for desktop notifications
-   * @param {Function} onGranted - Function to execute once permission is granted
-   * @param {Function} onDenied - Function to execute once permission is denied
-   * @return {void, Promise}
-   */
+     * Requests permission for desktop notifications
+     * @param {Function} onGranted - Function to execute once permission is granted
+     * @param {Function} onDenied - Function to execute once permission is denied
+     * @return {void, Promise}
+     */
     request(onGranted: () => void, onDenied: () => void) {
         return arguments.length > 0
             ? this._requestWithCallback(...arguments)
@@ -32,22 +32,26 @@ export default class Permission {
     }
 
     /**
-   * Old permissions implementation deprecated in favor of a promise based one
-   * @deprecated Since V1.0.4
-   * @param {Function} onGranted - Function to execute once permission is granted
-   * @param {Function} onDenied - Function to execute once permission is denied
-   * @return {void}
-   */
+     * Old permissions implementation deprecated in favor of a promise based one
+     * @deprecated Since V1.0.4
+     * @param {Function} onGranted - Function to execute once permission is granted
+     * @param {Function} onDenied - Function to execute once permission is denied
+     * @return {void}
+     */
     _requestWithCallback(onGranted: () => void, onDenied: () => void) {
         const existing = this.get();
 
+        var resolved = false;
         var resolve = (result = this._win.Notification.permission) => {
+            if (resolved) return;
+            resolved = true;
             if (typeof result === 'undefined' && this._win.webkitNotifications)
                 result = this._win.webkitNotifications.checkPermission();
             if (result === this.GRANTED || result === 0) {
                 if (onGranted) onGranted();
             } else if (onDenied) onDenied();
         };
+        var request;
 
         /* Permissions already set */
         if (existing !== this.DEFAULT) {
@@ -62,13 +66,14 @@ export default class Permission {
             this._win.Notification &&
             this._win.Notification.requestPermission
         ) {
-            /* Chrome 23+ */
-            this._win.Notification
-                .requestPermission()
-                .then(resolve)
-                .catch(function() {
+            /* Safari 12+ */
+            request = this._win.Notification.requestPermission(resolve);
+            if (request && request.then) {
+                /* Chrome 23+ */
+                request.then(resolve).catch(function() {
                     if (onDenied) onDenied();
                 });
+            }
         } else if (onGranted) {
             /* Let the user continue by default */
             onGranted();
@@ -76,9 +81,9 @@ export default class Permission {
     }
 
     /**
-   * Requests permission for desktop notifications in a promise based way
-   * @return {Promise}
-   */
+     * Requests permission for desktop notifications in a promise based way
+     * @return {Promise}
+     */
     _requestAsPromise(): Promise<void> {
         const existing = this.get();
 
@@ -97,8 +102,13 @@ export default class Permission {
             this._win.webkitNotifications.checkPermission;
 
         return new Promise((resolvePromise, rejectPromise) => {
-            var resolver = result =>
+            var resolved = false;
+            var resolver = result => {
+                if (resolved) return;
+                resolved = true;
                 isGranted(result) ? resolvePromise() : rejectPromise();
+            };
+            var request;
 
             if (hasPermissions) {
                 resolver(existing);
@@ -107,28 +117,28 @@ export default class Permission {
                     resolver(result);
                 });
             } else if (isModernAPI) {
-                this._win.Notification
-                    .requestPermission()
-                    .then(result => {
-                        resolver(result);
-                    })
-                    .catch(rejectPromise);
+                /* Safari 12+ */
+                request = this._win.Notification.requestPermission(resolver);
+                if (request && request.then) {
+                    /* Chrome 23+ */
+                    request.then(resolver).catch(rejectPromise);
+                }
             } else resolvePromise();
         });
     }
 
     /**
-   * Returns whether Push has been granted permission to run
-   * @return {Boolean}
-   */
+     * Returns whether Push has been granted permission to run
+     * @return {Boolean}
+     */
     has() {
         return this.get() === this.GRANTED;
     }
 
     /**
-   * Gets the permission level
-   * @return {Permission} The permission level
-   */
+     * Gets the permission level
+     * @return {Permission} The permission level
+     */
     get() {
         let permission;
 
