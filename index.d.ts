@@ -1,6 +1,7 @@
 declare module 'push.js' {
 
-    export default new Push();
+    const defaultPush: Push;
+    export default defaultPush;
 
     class Push {
         Permission: PushPermission;
@@ -11,7 +12,7 @@ declare module 'push.js' {
 
         clear(): void;
 
-        config(params: PushParams)
+        config(params: PushParams): void;
     }
 
     export interface PushNotificationParams {
