@@ -70,7 +70,7 @@ export default class Permission {
             request = this._win.Notification.requestPermission(resolve);
             if (request && request.then) {
                 /* Chrome 23+ */
-                request.catch(function() {
+                request.then(resolve).catch(function() {
                     if (onDenied) onDenied();
                 });
             }
