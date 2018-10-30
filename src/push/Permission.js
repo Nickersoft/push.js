@@ -51,7 +51,6 @@ export default class Permission {
                 if (onGranted) onGranted();
             } else if (onDenied) onDenied();
         };
-        var request;
 
         /* Permissions already set */
         if (existing !== this.DEFAULT) {
@@ -67,7 +66,7 @@ export default class Permission {
             this._win.Notification.requestPermission
         ) {
             /* Safari 12+ */
-            request = this._win.Notification.requestPermission(resolve);
+            const request = this._win.Notification.requestPermission(resolve);
             if (request && request.then) {
                 /* Chrome 23+ */
                 request.then(resolve).catch(function() {
