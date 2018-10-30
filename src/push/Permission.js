@@ -107,7 +107,6 @@ export default class Permission {
                 resolved = true;
                 isGranted(result) ? resolvePromise() : rejectPromise();
             };
-            var request;
 
             if (hasPermissions) {
                 resolver(existing);
@@ -117,7 +116,7 @@ export default class Permission {
                 });
             } else if (isModernAPI) {
                 /* Safari 12+ */
-                request = this._win.Notification.requestPermission(resolver);
+                const request = this._win.Notification.requestPermission(resolver);
                 if (request && request.then) {
                     /* Chrome 23+ */
                     request.then(resolver).catch(rejectPromise);
