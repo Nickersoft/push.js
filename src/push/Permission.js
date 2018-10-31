@@ -51,6 +51,7 @@ export default class Permission {
                 if (onGranted) onGranted();
             } else if (onDenied) onDenied();
         };
+        var request;
 
         /* Permissions already set */
         if (existing !== this.DEFAULT) {
@@ -68,7 +69,7 @@ export default class Permission {
             /* Safari 12+ */
             /* This resolve argument will only be used in Safari */
             /* CHrome, instead, returns a Promise */
-            var request = this._win.Notification.requestPermission(resolve);
+            request = this._win.Notification.requestPermission(resolve);
             if (request && request.then) {
                 /* Chrome 23+ */
                 request.then(resolve).catch(function() {
@@ -109,6 +110,7 @@ export default class Permission {
                 resolved = true;
                 isGranted(result) ? resolvePromise() : rejectPromise();
             };
+            var request;
 
             if (hasPermissions) {
                 resolver(existing);
@@ -120,7 +122,7 @@ export default class Permission {
                 /* Safari 12+ */
                 /* This resolver argument will only be used in Safari */
                 /* CHrome, instead, returns a Promise */
-                var request = this._win.Notification.requestPermission(resolver);
+                request = this._win.Notification.requestPermission(resolver);
                 if (request && request.then) {
                     /* Chrome 23+ */
                     request.then(resolver).catch(rejectPromise);
