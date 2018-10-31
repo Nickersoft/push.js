@@ -68,7 +68,7 @@ export default class Permission {
             /* Safari 12+ */
             /* This resolve argument will only be used in Safari */
             /* CHrome, instead, returns a Promise */
-            const request = this._win.Notification.requestPermission(resolve);
+            var request = this._win.Notification.requestPermission(resolve);
             if (request && request.then) {
                 /* Chrome 23+ */
                 request.then(resolve).catch(function() {
@@ -120,7 +120,7 @@ export default class Permission {
                 /* Safari 12+ */
                 /* This resolver argument will only be used in Safari */
                 /* CHrome, instead, returns a Promise */
-                const request = this._win.Notification.requestPermission(resolver);
+                var request = this._win.Notification.requestPermission(resolver);
                 if (request && request.then) {
                     /* Chrome 23+ */
                     request.then(resolver).catch(rejectPromise);
