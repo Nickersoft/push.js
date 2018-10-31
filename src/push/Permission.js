@@ -66,6 +66,8 @@ export default class Permission {
             this._win.Notification.requestPermission
         ) {
             /* Safari 12+ */
+            /* This resolve argument will only be used in Safari */
+            /* CHrome, instead, returns a Promise */
             const request = this._win.Notification.requestPermission(resolve);
             if (request && request.then) {
                 /* Chrome 23+ */
@@ -116,6 +118,8 @@ export default class Permission {
                 });
             } else if (isModernAPI) {
                 /* Safari 12+ */
+                /* This resolver argument will only be used in Safari */
+                /* CHrome, instead, returns a Promise */
                 const request = this._win.Notification.requestPermission(resolver);
                 if (request && request.then) {
                     /* Chrome 23+ */
