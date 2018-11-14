@@ -41,13 +41,17 @@ export default class Permission {
     _requestWithCallback(onGranted: () => void, onDenied: () => void) {
         const existing = this.get();
 
+        var resolved = false;
         var resolve = (result = this._win.Notification.permission) => {
+            if (resolved) return;
+            resolved = true;
             if (typeof result === 'undefined' && this._win.webkitNotifications)
                 result = this._win.webkitNotifications.checkPermission();
             if (result === this.GRANTED || result === 0) {
                 if (onGranted) onGranted();
             } else if (onDenied) onDenied();
         };
+        var request;
 
         /* Permissions already set */
         if (existing !== this.DEFAULT) {
@@ -62,13 +66,16 @@ export default class Permission {
             this._win.Notification &&
             this._win.Notification.requestPermission
         ) {
-            /* Chrome 23+ */
-            this._win.Notification
-                .requestPermission()
-                .then(resolve)
-                .catch(function() {
+            /* Safari 12+ */
+            /* This resolve argument will only be used in Safari */
+            /* CHrome, instead, returns a Promise */
+            request = this._win.Notification.requestPermission(resolve);
+            if (request && request.then) {
+                /* Chrome 23+ */
+                request.then(resolve).catch(function() {
                     if (onDenied) onDenied();
                 });
+            }
         } else if (onGranted) {
             /* Let the user continue by default */
             onGranted();
@@ -97,8 +104,13 @@ export default class Permission {
             this._win.webkitNotifications.checkPermission;
 
         return new Promise((resolvePromise, rejectPromise) => {
-            var resolver = result =>
+            var resolved = false;
+            var resolver = result => {
+                if (resolved) return;
+                resolved = true;
                 isGranted(result) ? resolvePromise() : rejectPromise();
+            };
+            var request;
 
             if (hasPermissions) {
                 resolver(existing);
@@ -107,12 +119,14 @@ export default class Permission {
                     resolver(result);
                 });
             } else if (isModernAPI) {
-                this._win.Notification
-                    .requestPermission()
-                    .then(result => {
-                        resolver(result);
-                    })
-                    .catch(rejectPromise);
+                /* Safari 12+ */
+                /* This resolver argument will only be used in Safari */
+                /* CHrome, instead, returns a Promise */
+                request = this._win.Notification.requestPermission(resolver);
+                if (request && request.then) {
+                    /* Chrome 23+ */
+                    request.then(resolver).catch(rejectPromise);
+                }
             } else resolvePromise();
         });
     }
