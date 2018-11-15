@@ -1,18 +1,21 @@
 {
     "name": "push.js",
     "version": "1.0.9",
-    "description":
-        "A compact, cross-browser solution for the Javascript Notifications API",
+    "description": "A compact, cross-browser solution for the Javascript Notifications API",
     "main": "bin/push.min.js",
     "scripts": {
         "clean": "rimraf bin/",
-        "build":
-            "rollup -c && uglifyjs --source-map -o bin/serviceWorker.min.js src/serviceWorker.js",
+        "build": "rollup -c && uglifyjs --source-map -o bin/serviceWorker.min.js src/serviceWorker.js",
         "test": "npm run build && karma start tests/karma.conf.js",
         "prepublish": "npm run build",
         "precommit": "lint-staged && npm run build && git add ./bin"
     },
-    "files": ["bin", "*.md", "*.png", "*.d.ts"],
+    "files": [
+        "bin",
+        "*.md",
+        "*.png",
+        "*.d.ts"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/Nickersoft/push.js"
@@ -24,12 +27,21 @@
     },
     "homepage": "https://github.com/Nickersoft/push.js",
     "devDependencies": {
-        "@babel/core": "^7.0.0-beta.35",
+        "@babel/core": "^7.0.0-rc.2",
+        "@babel/plugin-proposal-class-properties": "^7.0.0",
+        "@babel/plugin-proposal-decorators": "^7.0.0",
+        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+        "@babel/plugin-proposal-function-sent": "^7.0.0",
+        "@babel/plugin-proposal-json-strings": "^7.0.0",
+        "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+        "@babel/plugin-proposal-throw-expressions": "^7.0.0",
+        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+        "@babel/plugin-syntax-import-meta": "^7.0.0",
         "@babel/plugin-transform-flow-strip-types": "^7.0.0-beta.35",
         "@babel/plugin-transform-strict-mode": "^7.0.0-beta.35",
         "@babel/polyfill": "^7.0.0-beta.35",
         "@babel/preset-env": "^7.0.0-beta.35",
-        "@babel/preset-stage-2": "^7.0.0-beta.35",
+        "@babel/preset-flow": "^7.0.0",
         "browserify": "^16.0.0",
         "coveralls": "^3.0.0",
         "flow-bin": "^0.65.0",
@@ -48,13 +60,16 @@
         "rimraf": "^2.6.2",
         "rollup": "^0.57.0",
         "rollup-plugin-alias": "^1.4.0",
-        "rollup-plugin-babel": "^4.0.0-beta.0",
+        "rollup-plugin-babel": "^4.0.1",
         "rollup-plugin-commonjs": "^8.2.6",
         "rollup-plugin-node-resolve": "^3.0.0",
         "rollup-plugin-uglify": "^2.0.1",
         "uglify-es": "^3.2.2"
     },
     "lint-staged": {
-        "*.{js,json,css}": ["prettier --write", "git add"]
+        "*.{js,json,css}": [
+            "prettier --write",
+            "git add"
+        ]
     }
 }

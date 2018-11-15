@@ -7,7 +7,7 @@ import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
 
 const license = `/**
- * Push v1.0
+ * Push v1.0.9
  * =========
  * A compact, cross-browser solution for the JavaScript Notifications API
  *
