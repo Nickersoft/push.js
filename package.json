@@ -27,7 +27,7 @@
     },
     "homepage": "https://github.com/Nickersoft/push.js",
     "devDependencies": {
-        "@babel/core": "^7.0.0-beta.35",
+        "@babel/core": "^7.0.0-rc.2",
         "@babel/plugin-proposal-class-properties": "^7.0.0",
         "@babel/plugin-proposal-decorators": "^7.0.0",
         "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
@@ -41,6 +41,7 @@
         "@babel/plugin-transform-strict-mode": "^7.0.0-beta.35",
         "@babel/polyfill": "^7.0.0-beta.35",
         "@babel/preset-env": "^7.0.0-beta.35",
+        "@babel/preset-flow": "^7.0.0",
         "browserify": "^16.0.0",
         "coveralls": "^3.0.0",
         "flow-bin": "^0.65.0",
@@ -63,8 +64,7 @@
         "rollup-plugin-commonjs": "^8.2.6",
         "rollup-plugin-node-resolve": "^3.0.0",
         "rollup-plugin-uglify": "^2.0.1",
-        "uglify-es": "^3.2.2",
-        "@babel/preset-flow": "^7.0.0"
+        "uglify-es": "^3.2.2"
     },
     "lint-staged": {
         "*.{js,json,css}": [
