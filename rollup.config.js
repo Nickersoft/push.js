@@ -1,9 +1,9 @@
-import path from 'path';
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
-import alias from 'rollup-plugin-alias';
-import { terser } from 'rollup-plugin-terser';
+import path from "path";
+import resolve from "rollup-plugin-node-resolve";
+import babel from "rollup-plugin-babel";
+import commonjs from "rollup-plugin-commonjs";
+import alias from "rollup-plugin-alias";
+import { terser } from "rollup-plugin-terser";
 
 const license = `/**
  * @license
@@ -44,60 +44,47 @@ const license = `/**
  */`;
 
 const common = {
-    input: 'src/index.js',
-    output: {
-        banner: license,
-        file: 'bin/push.min.js',
-        format: 'umd',
-        name: 'Push',
-        sourcemap: true
-    },
-    plugins: [
-        babel({
-            exclude: 'node_modules/**'
-        }),
-        alias({
-            types: path.resolve(__dirname, 'src/types'),
-            push: path.resolve(__dirname, 'src/push/index'),
-            agents: path.resolve(__dirname, 'src/agents/index')
-        }),
-        commonjs(),
-        resolve()
-    ]
+  input: "src/index.js",
+  output: {
+    banner: license,
+    file: "bin/push.min.js",
+    format: "umd",
+    name: "Push",
+    sourcemap: true
+  },
+  plugins: [
+    babel({
+      exclude: "node_modules/**"
+    }),
+    alias({
+      types: path.resolve(__dirname, "src/types"),
+      push: path.resolve(__dirname, "src/push/index"),
+      agents: path.resolve(__dirname, "src/agents/index")
+    }),
+    commonjs(),
+    resolve(),
+    terser({
+      output: {
+        beautify: false,
+        preamble: license
+      }
+    })
+  ]
 };
 
 export default [
-    {
-        ...common,
-        output: {
-            ...common.output,
-            file: 'bin/push.js'
-        }
-    },
-    {
-        ...common,
-        output: {
-            ...common.output,
-            file: 'bin/push.min.js'
-        },
-        plugins: [
-            ...common.plugins,
-            terser({
-                output: {
-                    comments: function(node, comment) {
-                        var text = comment.value;
-                        var type = comment.type;
-                        if (type == 'comment2') {
-                            // multiline comment
-                            return /@preserve|@license|@cc_on/i.test(text);
-                        }
-                        // beautify: false,
-                        // preamble: license
-                    }
-                }
-                // ,
-                // minify
-            })
-        ]
+  {
+    ...common,
+    output: {
+      ...common.output,
+      file: "bin/push.js"
     }
+  },
+  {
+    ...common,
+    output: {
+      ...common.output,
+      file: "bin/push.min.js"
+    }
+  }
 ];
