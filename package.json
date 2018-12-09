@@ -62,7 +62,7 @@
         "rollup-plugin-alias": "^1.4.0",
         "rollup-plugin-babel": "^4.0.1",
         "rollup-plugin-commonjs": "^8.2.6",
-        "rollup-plugin-node-resolve": "^3.0.0",
+        "rollup-plugin-node-resolve": "^4.0.0",
         "rollup-plugin-uglify": "^2.0.1",
         "uglify-es": "^3.2.2"
     },
