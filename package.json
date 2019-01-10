@@ -71,5 +71,8 @@
             "prettier --write",
             "git add"
         ]
+    },
+    "dependencies": {
+        "natives": "^1.1.6"
     }
 }
