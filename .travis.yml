@@ -6,7 +6,7 @@ env:
   - secure: AwJJp7im+vXzxa/UsYu/EJNppu+ss9l0GW8ftaXLNnMRkLJyo6m24DCJuhfH/ynxrSq5b2Zc7gEqDfxVWUgpNR+rrHZoHe+R/QnL60sqQXE2KvblDvG4o4e9F7vFp1xsohJ3/TTm6footWEiVlP25oVkQgi/oWhFsygJD6VGerDa2CodtU2r4p6UV5KuI8mUZuQg+rndkosMZa1BkZcz6v8e1AmJkGiIl/Agw0ye6C9iav4KoU+EXRyoxEq+dTAuhnVKA3CntOngoPDrUTQy5303x6Gzaz7uByWIyIR+uEud65RvCBduxCgREazkXdCqd/vCS65gYYktxl3fNG2so5VpKAbF/pTOylWexB10xhB+k+alIxhl3QytUx1pqDR4WI6c8d6ot+sZd7AjwvlyWdwDPuLoDB2eA18K3HbFMgjONmJFFI3gyKfyg1z5FfZm6dogfuQGZeSyxuedDAo+FygKGbgvBa+JHerR1WjU+TnFcVpwgaX/sma8Q4ff9WYLw2YOIiSi0H5V5tDi8lrtOqZmIYH4Vv2Cbl1gaAsVOOo+IBfTWor4oJzAb/jRKuNbqvhUJIqW6RYS7f8c/LMrcdn+LWHGj3zcFQ+LNFxID4OCghf7A3FvmE8A5XD07w04ofnWzrgqzgWy5+38Qj23l5IpFNgD2XGNohk7JpeGm3E=
 language: node_js
 node_js:
-- "8.12"
+- lts/*
 before_install: yarn global add greenkeeper-lockfile@1
 before_script:
 - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
