@@ -1,21 +1,18 @@
 {
     "name": "push.js",
-    "version": "1.0.9",
-    "description": "A compact, cross-browser solution for the Javascript Notifications API",
+    "version": "1.0.10",
+    "description":
+        "A compact, cross-browser solution for the Javascript Notifications API",
     "main": "bin/push.min.js",
     "scripts": {
         "clean": "rimraf bin/",
-        "build": "rollup -c && uglifyjs --source-map -o bin/serviceWorker.min.js src/serviceWorker.js",
+        "build":
+            "rollup -c && uglifyjs --source-map -o bin/serviceWorker.min.js src/serviceWorker.js",
         "test": "npm run build && karma start tests/karma.conf.js",
         "prepublish": "npm run build",
         "precommit": "lint-staged && npm run build && git add ./bin"
     },
-    "files": [
-        "bin",
-        "*.md",
-        "*.png",
-        "*.d.ts"
-    ],
+    "files": ["bin", "*.md", "*.png", "*.d.ts"],
     "repository": {
         "type": "git",
         "url": "https://github.com/Nickersoft/push.js"
@@ -68,10 +65,7 @@
         "uglify-es": "^3.2.2"
     },
     "lint-staged": {
-        "*.{js,json,css}": [
-            "prettier --write",
-            "git add"
-        ]
+        "*.{js,json,css}": ["prettier --write", "git add"]
     },
     "dependencies": {},
     "resolutions": {
