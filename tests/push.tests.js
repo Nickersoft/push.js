@@ -118,11 +118,11 @@ describe('changing configuration', function() {
             fallback: function(payload) {}
         };
 
-        const configKeys = Object.keys(Push.config());
+        var configKeys = Object.keys(Push.config());
 
-        Object.keys(output).forEach(k =>
-            expect(configKeys.includes(k)).toBeTruthy()
-        );
+        Object.keys(output).forEach(function(k) {
+            expect(configKeys.includes(k)).toBeTruthy();
+        });
     });
 
     it('adds a configuration if one is specified', function() {
@@ -245,7 +245,7 @@ if (Push.supported()) {
             callback = jasmine.createSpy('callback');
         });
 
-        it('should have permission stored as a string constant', function() {
+        it('should have permission stored as a string varant', function() {
             expect(typeof Push.Permission.get()).toBe('string');
         });
 
@@ -256,7 +256,7 @@ if (Push.supported()) {
 
             initRequestSpy(false);
 
-            Push.Permission.request(NOOP, () => {
+            Push.Permission.request(NOOP, function() {
                 callback();
                 expect(Push.Permission.has()).toBe(false);
                 expect(callback).toHaveBeenCalled();
@@ -273,7 +273,7 @@ if (Push.supported()) {
 
             Push.Permission.request()
                 .then(NOOP)
-                .catch(() => {
+                .catch(function() {
                     callback();
                     expect(callback).toHaveBeenCalled();
                     expect(Push.Permission.has()).toBe(false);
@@ -281,17 +281,15 @@ if (Push.supported()) {
                 });
         });
 
-        it('should request permission if permission is not granted', async function() {
+        it('should request permission if permission is not granted', function() {
             spyOn(Push.Permission, 'get').and.returnValue(
                 Push.Permission.DEFAULT
             );
             initRequestSpy(false);
 
-            try {
-                await Push.create(TEST_TITLE);
-            } catch (e) {}
-
-            expect(getRequestObject()).toHaveBeenCalled();
+            Push.create(TEST_TITLE).then(function() {
+                expect(getRequestObject()).toHaveBeenCalled();
+            });
         });
 
         it('should update permission value if permission is granted and execute callback (deprecated)', function() {
@@ -308,14 +306,14 @@ if (Push.supported()) {
             expect(callback).toHaveBeenCalled();
         });
 
-        it('should update permission value if permission is granted and execute callback (with promise)', async function() {
+        it('should update permission value if permission is granted and execute callback (with promise)', function() {
             spyOn(Push.Permission, 'get').and.returnValue(
                 Push.Permission.GRANTED
             );
 
             initRequestSpy(true);
 
-            await Push.Permission.request();
+            Push.Permission.request();
 
             jasmine.clock().tick(TEST_TIMEOUT);
 
@@ -358,11 +356,13 @@ if (Push.supported()) {
             }).toThrow();
         });
 
-        it('should return a valid notification wrapper', async function() {
-            const wrapper = await Push.create(TEST_TITLE);
-            expect(wrapper).not.toBe(undefined);
-            expect(wrapper.get).not.toBe(undefined);
-            expect(wrapper.close).not.toBe(undefined);
+        it('should return a valid notification wrapper', function(done) {
+            Push.create(TEST_TITLE).then(function(wrapper) {
+                expect(wrapper).not.toBe(undefined);
+                expect(wrapper.get).not.toBe(undefined);
+                expect(wrapper.close).not.toBe(undefined);
+                done();
+            });
         });
 
         it('should return promise successfully', function() {
@@ -373,37 +373,42 @@ if (Push.supported()) {
                 .catch(function() {});
         });
 
-        it('should pass in all API options correctly', async function() {
+        it('should pass in all API options correctly', function(done) {
             // Vibrate omitted because Firefox will default to using the Notification API, not service workers
             // Timeout, requestPermission, and event listeners also omitted from this src :(
-            const wrapper = await Push.create(TEST_TITLE, {
+            Push.create(TEST_TITLE, {
                 body: TEST_BODY,
                 icon: TEST_ICON,
                 tag: TEST_TAG,
                 silent: true
+            }).then(function(wrapper) {
+                var notification = wrapper.get();
+
+                // Some browsers, like Safari, choose to omit this info
+                if (notification.title)
+                    expect(notification.title).toBe(TEST_TITLE);
+                if (notification.body)
+                    expect(notification.body).toBe(TEST_BODY);
+                if (notification.icon)
+                    expect(notification.icon).toContain(TEST_ICON); // Some browsers append the document location, so we gotta use toContain()
+
+                expect(notification.tag).toBe(TEST_TAG);
+
+                if (notification.hasOwnProperty('silent')) {
+                    expect(notification.silent).toBe(true);
+                }
+
+                done();
             });
-
-            const notification = wrapper.get();
-
-            // Some browsers, like Safari, choose to omit this info
-            if (notification.title) expect(notification.title).toBe(TEST_TITLE);
-            if (notification.body) expect(notification.body).toBe(TEST_BODY);
-            if (notification.icon)
-                expect(notification.icon).toContain(TEST_ICON); // Some browsers append the document location, so we gotta use toContain()
-
-            expect(notification.tag).toBe(TEST_TAG);
-
-            if (notification.hasOwnProperty('silent')) {
-                expect(notification.silent).toBe(true);
-            }
         });
 
-        it('should return the increase the notification count', async function() {
+        it('should return the increase the notification count', function(done) {
             expect(Push.count()).toBe(0);
 
-            await Push.create(TEST_TITLE);
-
-            expect(Push.count()).toBe(1);
+            Push.create(TEST_TITLE).then(function() {
+                expect(Push.count()).toBe(1);
+                done();
+            });
         });
     });
 
@@ -484,86 +489,93 @@ if (Push.supported()) {
             callback = jasmine.createSpy('callback');
         });
 
-        it('should close notifications on close callback', async function() {
-            const wrapper = await Push.create(TEST_TITLE, {
+        it('should close notifications on close callback', function(done) {
+            Push.create(TEST_TITLE, {
                 onClose: callback
+            }).then(function(wrapper) {
+                var notification = wrapper.get();
+
+                expect(Push.count()).toBe(1);
+
+                notification.dispatchEvent(new Event('close'));
+
+                expect(Push.count()).toBe(0);
+
+                done();
             });
-
-            const notification = wrapper.get();
-
-            expect(Push.count()).toBe(1);
-
-            notification.dispatchEvent(new Event('close'));
-
-            expect(Push.count()).toBe(0);
         });
 
-        it('should close notifications using wrapper', async function() {
-            const wrapper = await Push.create(TEST_TITLE, {
+        it('should close notifications using wrapper', function(done) {
+            Push.create(TEST_TITLE, {
                 onClose: callback
+            }).then(function(wrapper) {
+                expect(Push.count()).toBe(1);
+
+                wrapper.close();
+
+                expect(closeSpy).toHaveBeenCalled();
+                expect(Push.count()).toBe(0);
+
+                done();
             });
-
-            expect(Push.count()).toBe(1);
-
-            wrapper.close();
-
-            expect(closeSpy).toHaveBeenCalled();
-
-            expect(Push.count()).toBe(0);
         });
 
-        it('should close notifications using given timeout', async function() {
-            await Push.create(TEST_TITLE, {
+        it('should close notifications using given timeout', function(done) {
+            Push.create(TEST_TITLE, {
                 timeout: TEST_TIMEOUT
+            }).then(function() {
+                jasmine.clock().tick(500);
+                expect(Push.count()).toBe(1);
+                expect(closeSpy).not.toHaveBeenCalled();
+                jasmine.clock().tick(TEST_TIMEOUT);
+                expect(closeSpy).toHaveBeenCalled();
+                expect(Push.count()).toBe(0);
+                done();
             });
-
-            expect(Push.count()).toBe(1);
-            expect(closeSpy).not.toHaveBeenCalled();
-
-            jasmine.clock().tick(TEST_TIMEOUT);
-
-            expect(closeSpy).toHaveBeenCalled();
-            expect(Push.count()).toBe(0);
         });
 
-        it('should close a notification given a tag', async function() {
-            await Push.create(TEST_TITLE, {
+        it('should close a notification given a tag', function(done) {
+            Push.create(TEST_TITLE, {
                 tag: TEST_TAG
+            }).then(function() {
+                expect(Push.count()).toBe(1);
+                expect(Push.close(TEST_TAG)).toBeTruthy();
+                expect(closeSpy).toHaveBeenCalled();
+                expect(Push.count()).toBe(0);
+                done();
             });
-
-            expect(Push.count()).toBe(1);
-            expect(Push.close(TEST_TAG)).toBeTruthy();
-            expect(closeSpy).toHaveBeenCalled();
-            expect(Push.count()).toBe(0);
         });
 
-        it('should close all notifications when cleared', async function() {
-            await Push.create(TEST_TITLE, {
-                tag: TEST_TAG
+        it('should close all notifications when cleared', function(done) {
+            Promise.all([
+                Push.create(TEST_TITLE, {
+                    tag: TEST_TAG
+                }),
+                Push.create('hello world!', {
+                    tag: TEST_TAG_2
+                })
+            ]).then(function() {
+                expect(Push.count()).toBeGreaterThan(0);
+                expect(Push.clear()).toBeTruthy();
+                expect(closeSpy).toHaveBeenCalled();
+                expect(Push.count()).toBe(0);
+                done();
             });
-
-            await Push.create('hello world!', {
-                tag: TEST_TAG_2
-            });
-
-            expect(Push.count()).toBeGreaterThan(0);
-            expect(Push.clear()).toBeTruthy();
-            expect(closeSpy).toHaveBeenCalled();
-            expect(Push.count()).toBe(0);
         });
     });
 } else {
     describe('fallback functionality', function() {
-        it('should ensure fallback method fires correctly', async function() {
+        it('should ensure fallback method fires correctly', function(done) {
             var fallback = jasmine.createSpy('fallback');
 
             Push.config({
                 fallback: fallback
             });
 
-            await Push.create(TEST_TITLE);
-
-            expect(fallback).toHaveBeenCalled();
+            Push.create(TEST_TITLE).then(function() {
+                expect(fallback).toHaveBeenCalled();
+                done();
+            });
         });
 
         it('should ensure all notification options are passed to the fallback', function(done) {
