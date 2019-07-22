@@ -34,7 +34,7 @@ export default class WebKitAgent extends AbstractAgent {
    * Close a given notification
    * @param notification - notification to close
    */
-  close(notification: GenericNotification) {
+  close(notification: WebkitNotifications) {
     notification.cancel();
   }
 }

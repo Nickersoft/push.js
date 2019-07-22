@@ -5,12 +5,14 @@ import { AbstractAgent } from '@push/agents';
  * Safari 6+, Firefox 22+, Chrome 22+, Opera 25+
  */
 export default class MobileFirefoxAgent extends AbstractAgent {
+  private mozNotification = (this.win.navigator as MozNavigator).mozNavigation;
+
   /**
    * Returns a boolean denoting support
    * @returns {Boolean} boolean denoting whether webkit notifications are supported
    */
   isSupported() {
-    return this.win.navigator.mozNotification !== undefined;
+    return this.mozNotification !== undefined;
   }
 
   /**
@@ -20,7 +22,7 @@ export default class MobileFirefoxAgent extends AbstractAgent {
    * @returns {Notification}
    */
   create(title: string, options: PushOptions) {
-    let notification = this.win.navigator.mozNotification.createNotification(
+    let notification = this.mozNotification.createNotification(
       title,
       options.body,
       options.icon

@@ -29,7 +29,7 @@ export default class MSAgent extends AbstractAgent {
     this.win.external.msSiteModeSetIconOverlay(
       Util.isString(options.icon) || Util.isUndefined(options.icon)
         ? options.icon
-        : options.icon.x16,
+        : (options.icon as any).x16,
       title
     );
 

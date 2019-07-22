@@ -47,7 +47,7 @@ export default class MobileChromeAgent extends AbstractAgent {
     this.win.navigator.serviceWorker.register(serviceWorker);
 
     this.win.navigator.serviceWorker.ready
-      .then(registration => {
+      .then((registration: any) => {
         /* Local data the service worker will use */
         let localData = {
           id: id,
@@ -80,7 +80,7 @@ export default class MobileChromeAgent extends AbstractAgent {
             silent: options.silent
           })
           .then(() => {
-            registration.getNotifications().then(notifications => {
+            registration.getNotifications().then((notifications: any[]) => {
               /* Send an empty message so the ServiceWorker knows who the client is */
               registration.active.postMessage('');
 
@@ -94,7 +94,7 @@ export default class MobileChromeAgent extends AbstractAgent {
             );
           });
       })
-      .catch(function(error) {
+      .catch((error: Error) => {
         throw new Error(Messages.errors.sw_registration_error + error.message);
       });
   }

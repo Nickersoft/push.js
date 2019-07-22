@@ -27,7 +27,7 @@ export default class DesktopAgent extends AbstractAgent {
         Util.isUndefined(options.icon) ||
         Util.isNull(options.icon)
           ? options.icon
-          : options.icon.x32,
+          : (options.icon as any).x32,
       body: options.body,
       tag: options.tag,
       requireInteraction: options.requireInteraction
