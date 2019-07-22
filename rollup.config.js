@@ -43,23 +43,28 @@ const license = `/**
  * THE SOFTWARE.
  */`;
 
+const fileFormats = [".js", ".ts"];
+const modules = {
+  "@push/core": path.resolve(__dirname, "src/core/index"),
+  "@push/agents": path.resolve(__dirname, "src/agents/index")
+};
+
 const common = {
-  input: "src/index.js",
+  input: "src/index.ts",
   output: {
-    banner: license,
-    file: "bin/push.min.js",
     format: "umd",
     name: "Push",
     sourcemap: true
   },
+  banner: license,
   plugins: [
     babel({
       exclude: "node_modules/**"
     }),
+    resolve({ extensions: fileFormats }),
     alias({
-      types: path.resolve(__dirname, "src/types"),
-      push: path.resolve(__dirname, "src/push/index"),
-      agents: path.resolve(__dirname, "src/agents/index")
+      ...modules,
+      resolve: fileFormats
     }),
     commonjs(),
     resolve(),

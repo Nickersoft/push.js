@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "module": "es6",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "paths": {
+      "@push/agents": ["agents/index"],
+      "@push/core": ["core/index"]
+    },
+    "preserveConstEnums": true,
+    "pretty": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  }
+}
