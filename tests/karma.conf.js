@@ -1,23 +1,23 @@
 // Karma configuration
 // Generated on Tue Jul 21 2015 22:34:30 GMT-0400 (EDT)
-var browsers, selected_browsers;
+let browsers, selected_browsers;
 
 browsers = require('./browsers.conf');
-selected_browsers = [];
+selected_browsers = Object.keys(browsers);
 
-for (var browser in browsers) {
-    selected_browsers.push(browser);
-}
+const browser = process.env.PUSHJS_TEST_BROWSER;
 
 module.exports = function(config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '../',
 
-        browserStack: {
-            username: 'Nickersoft',
-            accessKey: 'peTScQRRBpSkOGjybGpd'
-        },
+        ...(!browser && {
+            browserStack: {
+                username: 'Nickersoft',
+                accessKey: 'peTScQRRBpSkOGjybGpd'
+            }
+        }),
 
         coverageReporter: {
             // specify a common output directory
@@ -39,7 +39,9 @@ module.exports = function(config) {
             'karma-mocha-reporter',
             'karma-coverage',
             'karma-sourcemap-loader',
-            'karma-browserstack-launcher'
+            ...(browser
+                ? [`karma-${browser.toLowerCase()}-launcher`]
+                : ['karma-browserstack-launcher'])
         ],
 
         // list of files / patterns to load in the browser
@@ -60,7 +62,7 @@ module.exports = function(config) {
         // src results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['mocha', 'coverage'],
+        reporters: ['mocha', 'coverage', ...(!browser ? ['BrowserStack'] : [])],
 
         // web server port
         port: 9876,
@@ -77,13 +79,13 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: selected_browsers,
+        browsers: browser ? [browser] : selected_browsers,
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the src and exits
         singleRun: true,
 
         // custom browser launchers for BrowserStack
-        customLaunchers: browsers
+        ...(!browser && { customLaunchers: browsers })
     });
 };

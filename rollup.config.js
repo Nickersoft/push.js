@@ -1,12 +1,13 @@
-import path from 'path';
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
-import alias from 'rollup-plugin-alias';
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-es';
+import path from "path";
+import resolve from "rollup-plugin-node-resolve";
+import babel from "rollup-plugin-babel";
+import commonjs from "rollup-plugin-commonjs";
+import alias from "rollup-plugin-alias";
+import { terser } from "rollup-plugin-terser";
 
 const license = `/**
+ * @license
+ *
  * Push v1.0.9
  * =========
  * A compact, cross-browser solution for the JavaScript Notifications API
@@ -43,52 +44,47 @@ const license = `/**
  */`;
 
 const common = {
-    input: 'src/index.js',
-    output: {
-        format: 'umd',
-        name: 'Push',
-        sourcemap: true
-    },
+  input: "src/index.js",
+  output: {
     banner: license,
-    plugins: [
-        babel({
-            exclude: 'node_modules/**'
-        }),
-        alias({
-            types: path.resolve(__dirname, 'src/types'),
-            push: path.resolve(__dirname, 'src/push/index'),
-            agents: path.resolve(__dirname, 'src/agents/index')
-        }),
-        commonjs(),
-        resolve()
-    ]
+    file: "bin/push.min.js",
+    format: "umd",
+    name: "Push",
+    sourcemap: true
+  },
+  plugins: [
+    babel({
+      exclude: "node_modules/**"
+    }),
+    alias({
+      types: path.resolve(__dirname, "src/types"),
+      push: path.resolve(__dirname, "src/push/index"),
+      agents: path.resolve(__dirname, "src/agents/index")
+    }),
+    commonjs(),
+    resolve(),
+    terser({
+      output: {
+        beautify: false,
+        preamble: license
+      }
+    })
+  ]
 };
 
 export default [
-    {
-        ...common,
-        output: {
-            ...common.output,
-            file: 'bin/push.js'
-        }
-    },
-    {
-        ...common,
-        output: {
-            ...common.output,
-            file: 'bin/push.min.js'
-        },
-        plugins: [
-            ...common.plugins,
-            uglify(
-                {
-                    output: {
-                        beautify: false,
-                        preamble: license
-                    }
-                },
-                minify
-            )
-        ]
+  {
+    ...common,
+    output: {
+      ...common.output,
+      file: "bin/push.js"
     }
+  },
+  {
+    ...common,
+    output: {
+      ...common.output,
+      file: "bin/push.min.js"
+    }
+  }
 ];
