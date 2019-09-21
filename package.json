@@ -50,7 +50,7 @@
         "coveralls": "^3.0.5",
         "flow-bin": "^0.103.0",
         "husky": "^3.0.1",
-        "jasmine-core": "^3.4.0",
+        "jasmine-core": "^3.5.0",
         "js-yaml": "^3.13.1",
         "karma": "^4.2.0",
         "karma-browserstack-launcher": "~1.4.0",
