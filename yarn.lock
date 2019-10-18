@@ -4070,10 +4070,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^2.0.0"
     inherits "^2.0.1"
 
-rollup-plugin-alias@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-alias/-/rollup-plugin-alias-1.5.2.tgz#f15a1cc8ee0debf74ab5c2bb68a944a66b568411"
-  integrity sha512-ODeZXhTxpD48sfcYLAFc1BGrsXKDj7o1CSNH3uYbdK3o0NxyMmaQPTNgW+ko+am92DLC8QSTe4kyxTuEkI5S5w==
+rollup-plugin-alias@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-alias/-/rollup-plugin-alias-2.1.0.tgz#5976ec890a95ce060f190b0d5cc5edcb5b23b916"
+  integrity sha512-fbPLCkulSyNAqMvyvucGxlWCVE/+cqkFsFXN4exCX2Poti/+R0LgkhwOj/zqaytaZ4i1rCSXh+zZkVjgxlUBGg==
   dependencies:
     slash "^3.0.0"
 
