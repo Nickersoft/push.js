@@ -32,7 +32,7 @@
     "homepage": "https://github.com/Nickersoft/push.js",
     "devDependencies": {
         "@babel/core": "^7.7.7",
-        "@babel/plugin-proposal-class-properties": "^7.5.5",
+        "@babel/plugin-proposal-class-properties": "^7.7.4",
         "@babel/plugin-proposal-decorators": "^7.4.4",
         "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
         "@babel/plugin-proposal-function-sent": "^7.5.0",
