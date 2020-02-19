@@ -1,11 +1,12 @@
 declare module 'push.js' {
+
     const defaultPush: Push;
     export default defaultPush;
 
     class Push {
         Permission: PushPermission;
 
-        create(title: string, params?: PushNotificationParams): Promise<PushNotification>;
+        create(title: string, params?: PushNotificationParams): Promise<PushNotification>
 
         close(tag: string): void;
 
@@ -37,8 +38,7 @@ declare module 'push.js' {
         GRANTED: string;
         DENIED: string;
 
-        request(): Promise<void>;
-        request(onGranted: () => void, onDenied?: () => void): void;
+        request(onGranted?: Function, onDenied?: Function): void;
 
         has(): boolean;
 
