@@ -45,7 +45,7 @@
         "@babel/plugin-transform-strict-mode": "^7.8.3",
         "@babel/polyfill": "^7.8.3",
         "@babel/preset-env": "^7.8.6",
-        "@babel/preset-flow": "^7.0.0",
+        "@babel/preset-flow": "^7.8.3",
         "browserify": "^16.3.0",
         "coveralls": "^3.0.5",
         "flow-bin": "^0.103.0",
