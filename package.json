@@ -47,7 +47,7 @@
         "@babel/preset-env": "^7.5.5",
         "@babel/preset-flow": "^7.0.0",
         "browserify": "^16.3.0",
-        "coveralls": "^3.0.5",
+        "coveralls": "^3.0.12",
         "flow-bin": "^0.103.0",
         "husky": "^3.0.1",
         "jasmine-core": "^3.4.0",
