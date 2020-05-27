@@ -57,7 +57,7 @@
         "karma-chrome-launcher": "^3.0.0",
         "karma-coverage": "^1.1.2",
         "karma-firefox-launcher": "^1.1.0",
-        "karma-jasmine": "^2.0.1",
+        "karma-jasmine": "^3.2.0",
         "karma-mocha-reporter": "^2.2.5",
         "karma-opera-launcher": "^1.0.0",
         "karma-safari-launcher": "^1.0.0",
