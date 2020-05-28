@@ -36,7 +36,7 @@
         "@babel/plugin-proposal-decorators": "^7.10.1",
         "@babel/plugin-proposal-export-namespace-from": "^7.10.1",
         "@babel/plugin-proposal-function-sent": "^7.10.1",
-        "@babel/plugin-proposal-json-strings": "^7.2.0",
+        "@babel/plugin-proposal-json-strings": "^7.10.1",
         "@babel/plugin-proposal-numeric-separator": "^7.2.0",
         "@babel/plugin-proposal-throw-expressions": "^7.2.0",
         "@babel/plugin-syntax-dynamic-import": "^7.2.0",
