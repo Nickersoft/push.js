@@ -50,7 +50,7 @@ If you feel like this library is your jam and you want to contribute (or you thi
 check out Push's neat [contributing guidelines](CONTRIBUTING.md) on how you can make your mark.
 
 ### Credits ###
-Push is based off work the following work:
+Push is based off the following work:
 
 1. [HTML5-Desktop-Notifications](https://github.com/ttsvetko/HTML5-Desktop-Notifications) by [Tsvetan Tsvetkov](https://github.com/ttsvetko)
 2. [notify.js](https://github.com/alexgibson/notify.js) by [Alex Gibson](https://github.com/alexgibson)
