@@ -248,22 +248,24 @@ export default class Push {
             const wrapper = this._prepareNotification(id, options);
 
             /* Notification callbacks */
-            if (Util.isFunction(options.onShow))
-                notification.addEventListener('show', options.onShow);
+            if (Util.isFunction(notification.addEventListener)) {
+              if (Util.isFunction(options.onShow))
+                  notification.addEventListener('show', options.onShow);
 
-            if (Util.isFunction(options.onError))
-                notification.addEventListener('error', options.onError);
+              if (Util.isFunction(options.onError))
+                  notification.addEventListener('error', options.onError);
 
-            if (Util.isFunction(options.onClick))
-                notification.addEventListener('click', options.onClick);
+              if (Util.isFunction(options.onClick))
+                  notification.addEventListener('click', options.onClick);
 
-            notification.addEventListener('close', () => {
-                onClose(id);
-            });
+              notification.addEventListener('close', () => {
+                  onClose(id);
+              });
 
-            notification.addEventListener('cancel', () => {
-                onClose(id);
-            });
+              notification.addEventListener('cancel', () => {
+                  onClose(id);
+              });
+            }
 
             /* Return the wrapper so the user can call close() */
             resolve(wrapper);
