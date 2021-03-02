@@ -22,7 +22,7 @@ declare module 'push.js' {
         timeout?: number;
         tag?: string;
         requireInteraction?: boolean;
-        vibrate?: boolean;
+        vibrate?: number[];
         silent?: boolean;
         onClick?: Function;
         onError?: Function;
