@@ -12,7 +12,7 @@ export type PushOptions = {
     timeout?: number,
     tag?: string,
     requireInteraction?: boolean,
-    vibrate?: boolean,
+    vibrate?: number[],
     silent?: boolean,
     onClick?: Function,
     onError?: Function
