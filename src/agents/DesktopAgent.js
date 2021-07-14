@@ -34,7 +34,8 @@ export default class DesktopAgent extends AbstractAgent {
                     : options.icon.x32,
             body: options.body,
             tag: options.tag,
-            requireInteraction: options.requireInteraction
+            requireInteraction: options.requireInteraction,
+            silent: options.silent
         });
     }
 
