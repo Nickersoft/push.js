@@ -52,7 +52,7 @@
         "husky": "^3.0.1",
         "jasmine-core": "^3.4.0",
         "js-yaml": "^3.13.1",
-        "karma": "^4.2.0",
+        "karma": "^6.3.14",
         "karma-browserstack-launcher": "~1.4.0",
         "karma-chrome-launcher": "^3.0.0",
         "karma-coverage": "^1.1.2",
